@@ -1,0 +1,5 @@
+module domain {
+
+    exports entity;
+
+}
