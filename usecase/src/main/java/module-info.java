@@ -1,0 +1,5 @@
+module usecase {
+
+    requires domain;
+
+}
