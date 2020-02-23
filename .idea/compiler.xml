@@ -8,13 +8,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="usecase" />
-        <module name="adapter" />
+        <module name="controller" />
         <module name="domain" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="adapter" target="9" />
       <module name="application" target="1.8" />
+      <module name="controller" target="9" />
       <module name="domain" target="9" />
       <module name="usecase" target="9" />
     </bytecodeTargetLevel>
