@@ -8,6 +8,7 @@
       <list>
         <option value="$PROJECT_DIR$/domain/pom.xml" />
         <option value="$PROJECT_DIR$/usecase/pom.xml" />
+        <option value="$PROJECT_DIR$/adapter/pom.xml" />
       </list>
     </option>
   </component>

@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="usecase" />
+        <module name="adapter" />
         <module name="domain" />
       </profile>
     </annotationProcessing>
