@@ -1,5 +1,6 @@
-package me.jun.community.domain;
+package me.jun.community.entity;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -11,6 +12,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@Builder
 public class Comment {
 
     @Id
