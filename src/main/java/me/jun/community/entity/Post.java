@@ -1,5 +1,6 @@
-package me.jun.community.domain;
+package me.jun.community.entity;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@Builder
 public class Post {
 
     @Id
@@ -21,12 +23,8 @@ public class Post {
     @ManyToOne
     private final Account account;
 
-    private final String author;
-
     private final String title;
 
     private final String content;
-
-
 
 }
