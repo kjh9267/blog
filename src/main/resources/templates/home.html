@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Guest Book</title>
+</head>
+<body>
+
+<h3> Write your Comment </h3>
+<form method = "post" action ="/write">
+    title: <input type="text" name="title"/>
+    author: <input type="text" name="author"/>
+    password: <input type="password" name="password"/>
+    content: <input type="text" name="content"/>
+    <input type="submit" value="submit"/>
+</form>
+
+<h3>list</h3>
+<ul th:each="post: ${list}">
+    <h4>title</h4> <p th:text="${post.title}"></p>
+    <h4>author</h4> <p th:text="${post.author}"></p>
+    <h4>content</h4> <p th:text="${post.content}"></p>
+    <h4>delete</h4>
+    <form method="post" action="/delete">
+        <input type="password" name="password"/>
+        <input type="hidden" name="id" th:value="${post.id}"/>
+        <input type="submit" value="delete"/>
+    </form></p>
+</ul>
+
+</body>
+</html>
