@@ -4,6 +4,6 @@ spring boot
 # 
 - [x] domain
 - [x] dto
-- [ ] controller
-- [ ] service
+- [x] controller
+- [x] service
 - [x] view
