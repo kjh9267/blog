@@ -1,4 +1,4 @@
-package me.jun.guestbooktemp.domain.post;
+package me.jun.guestbook.domain.post;
 
 import lombok.*;
 
