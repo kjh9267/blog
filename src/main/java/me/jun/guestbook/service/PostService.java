@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -29,5 +30,14 @@ public class PostService {
     public void savePost(PostSaveDto dto) {
         Post entity = dto.toEntity();
         postRepository.save(entity);
+    }
+
+    public void deletePost(Long requestId, String requestPassword) {
+        Optional<Post> entity = postRepository.findById(requestId);
+        String password = entity.get().getPassword();
+
+        if(requestPassword.equals(password)) {
+            postRepository.delete(entity.get());
+        }
     }
 }
