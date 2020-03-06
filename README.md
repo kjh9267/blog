@@ -3,7 +3,7 @@ spring boot
 
 # 
 - [x] domain
-- [ ] dto
+- [x] dto
 - [ ] controller
 - [ ] service
 - [ ] view
