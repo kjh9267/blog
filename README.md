@@ -6,4 +6,4 @@ spring boot
 - [x] dto
 - [ ] controller
 - [ ] service
-- [ ] view
+- [x] view
