@@ -26,4 +26,10 @@ public class PostController {
         postService.savePost(postSaveDto);
         return "redirect:home";
     }
+
+    @PostMapping("/delete")
+    public String delete(Long id, String password) {
+        postService.deletePost(id, password);
+        return "redirect:home";
+    }
 }
