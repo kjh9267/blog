@@ -7,3 +7,4 @@ spring boot
 - [x] controller
 - [x] service
 - [x] view
+- [x] aop (data access logging)
