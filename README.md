@@ -8,3 +8,4 @@ spring boot
 - [x] service
 - [x] view
 - [x] aop (data access logging)
+- [x] exception handler
