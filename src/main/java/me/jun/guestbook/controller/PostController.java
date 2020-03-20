@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
+
 @Controller
 public class PostController {
 
@@ -22,7 +24,7 @@ public class PostController {
     }
 
     @PostMapping("/write")
-    public String write(@ModelAttribute PostSaveDto postSaveDto) {
+    public String write(@ModelAttribute @Valid PostSaveDto postSaveDto) {
         postService.savePost(postSaveDto);
         return "redirect:home";
     }
