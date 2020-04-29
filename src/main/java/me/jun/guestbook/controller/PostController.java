@@ -19,7 +19,7 @@ public class PostController {
 
     @GetMapping("/home")
     public String getList(Model model) {
-        model.addAttribute("list", postService.getList());
+        model.addAttribute("list", postService.getPost());
         return "home";
     }
 
