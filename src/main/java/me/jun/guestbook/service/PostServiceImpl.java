@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -33,11 +32,19 @@ public class PostServiceImpl implements PostService {
     }
 
     public void deletePost(Long requestId, String requestPassword) {
-        Optional<Post> entity = postRepository.findById(requestId);
-        String password = entity.get().getPassword();
+        Post entity = from(requestId);
+        String password = entity.getPassword();
 
-        if(requestPassword.equals(password)) {
-            postRepository.delete(entity.get());
+        if(isCorrectPassword(requestPassword, password)) {
+            postRepository.delete(entity);
         }
+    }
+
+    private Post from(Long requestId) {
+        return postRepository.findById(requestId).get();
+    }
+
+    private boolean isCorrectPassword(String requestPassword, String password) {
+        return requestPassword.equals(password);
     }
 }
