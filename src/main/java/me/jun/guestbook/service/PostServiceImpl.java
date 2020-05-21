@@ -21,7 +21,7 @@ public class PostServiceImpl implements PostService {
         List<PostReadDto> list = new ArrayList<>();
 
         for(Post post: posts) {
-            list.add(new PostReadDto(post));
+            list.add(PostReadDto.from(post));
         }
         return list;
     }
