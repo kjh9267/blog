@@ -1,10 +1,12 @@
 package me.jun.guestbook.dto;
 
-import lombok.Getter;
+import lombok.*;
 import me.jun.guestbook.domain.post.Post;
 
 import java.util.Date;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
 public class PostReadDto {
 
@@ -14,11 +16,13 @@ public class PostReadDto {
     private String content;
     private Date date;
 
-    public PostReadDto(Post post) {
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.author = post.getAuthor();
-        this.content = post.getContent();
-        this.date = post.getDate();
+    public static PostReadDto from(Post post) {
+        return PostReadDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .author(post.getAuthor())
+                .content(post.getContent())
+                .date(post.getDate())
+                .build();
     }
 }
