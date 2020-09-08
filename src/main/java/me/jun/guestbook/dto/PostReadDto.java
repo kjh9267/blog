@@ -1,7 +1,7 @@
 package me.jun.guestbook.dto;
 
 import lombok.*;
-import me.jun.guestbook.domain.post.Post;
+import me.jun.guestbook.domain.post.TempPost;
 
 import java.util.Date;
 
@@ -16,13 +16,13 @@ public class PostReadDto {
     private String content;
     private Date date;
 
-    public static PostReadDto from(Post post) {
+    public static PostReadDto from(TempPost tempPost) {
         return PostReadDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .author(post.getAuthor())
-                .content(post.getContent())
-                .date(post.getDate())
+                .id(tempPost.getId())
+                .title(tempPost.getTitle())
+                .author(tempPost.getAuthor())
+                .content(tempPost.getContent())
+                .date(tempPost.getDate())
                 .build();
     }
 }
