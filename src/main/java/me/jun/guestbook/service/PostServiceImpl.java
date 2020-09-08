@@ -1,7 +1,7 @@
 package me.jun.guestbook.service;
 
-import me.jun.guestbook.domain.post.Post;
-import me.jun.guestbook.domain.post.PostRepository;
+import me.jun.guestbook.domain.post.TempPost;
+import me.jun.guestbook.domain.post.tempPostRepository;
 import me.jun.guestbook.dto.PostReadDto;
 import me.jun.guestbook.dto.PostSaveDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,34 +14,34 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     @Autowired
-    PostRepository postRepository;
+    tempPostRepository tempPostRepository;
 
     public List<PostReadDto> getPost() {
-        List<Post> posts = postRepository.findAll();
+        List<TempPost> tempPosts = tempPostRepository.findAll();
         List<PostReadDto> list = new ArrayList<>();
 
-        for(Post post: posts) {
-            list.add(PostReadDto.from(post));
+        for(TempPost tempPost : tempPosts) {
+            list.add(PostReadDto.from(tempPost));
         }
         return list;
     }
 
     public void savePost(PostSaveDto dto) {
-        Post entity = dto.toEntity();
-        postRepository.save(entity);
+        TempPost entity = dto.toEntity();
+        tempPostRepository.save(entity);
     }
 
     public void deletePost(Long requestId, String requestPassword) {
-        Post entity = from(requestId);
+        TempPost entity = from(requestId);
         String password = entity.getPassword();
 
         if(isCorrectPassword(requestPassword, password)) {
-            postRepository.delete(entity);
+            tempPostRepository.delete(entity);
         }
     }
 
-    private Post from(Long requestId) {
-        return postRepository.findById(requestId).get();
+    private TempPost from(Long requestId) {
+        return tempPostRepository.findById(requestId).get();
     }
 
     private boolean isCorrectPassword(String requestPassword, String password) {
