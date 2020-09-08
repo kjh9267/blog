@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.jun.guestbook.domain.post.Post;
+import me.jun.guestbook.domain.post.TempPost;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -29,8 +29,8 @@ public class PostSaveDto {
 
     private Date date;
 
-    public Post toEntity() {
-        return Post.builder()
+    public TempPost toEntity() {
+        return TempPost.builder()
                 .title(title)
                 .author(author)
                 .content(content)
