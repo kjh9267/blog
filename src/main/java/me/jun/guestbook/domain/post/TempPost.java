@@ -10,7 +10,7 @@ import java.util.Date;
 @Builder
 @Getter
 @Entity
-public class Post {
+public class TempPost {
 
     @Id
     @GeneratedValue
