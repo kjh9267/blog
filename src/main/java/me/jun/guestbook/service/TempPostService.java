@@ -1,15 +1,15 @@
 package me.jun.guestbook.service;
 
-import me.jun.guestbook.dto.PostReadDto;
-import me.jun.guestbook.dto.PostSaveDto;
+import me.jun.guestbook.dto.TempPostReadDto;
+import me.jun.guestbook.dto.TempPostSaveDto;
 
 import java.util.List;
 
 public interface TempPostService {
 
-    List<PostReadDto> getPost();
+    List<TempPostReadDto> getPost();
 
-    void savePost(PostSaveDto postSaveDto);
+    void savePost(TempPostSaveDto tempPostSaveDto);
 
     void deletePost(Long id, String password);
 }
