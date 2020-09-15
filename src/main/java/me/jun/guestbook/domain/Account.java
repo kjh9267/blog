@@ -28,6 +28,6 @@ public class Account {
     private String password;
 
     @Builder.Default
-    @OneToMany(mappedBy = "account")
-    private Set<Post> posts = new HashSet<>();
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private final Set<Post> posts = new HashSet<>();
 }
