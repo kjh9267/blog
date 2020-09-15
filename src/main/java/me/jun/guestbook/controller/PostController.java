@@ -1,7 +1,7 @@
 package me.jun.guestbook.controller;
 
 import me.jun.guestbook.dto.PostSaveDto;
-import me.jun.guestbook.service.PostService;
+import me.jun.guestbook.service.TempPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,23 +15,23 @@ import javax.validation.Valid;
 public class PostController {
 
     @Autowired
-    PostService postService;
+    TempPostService tempPostService;
 
     @GetMapping("/home")
     public String getList(Model model) {
-        model.addAttribute("list", postService.getPost());
+        model.addAttribute("list", tempPostService.getPost());
         return "home";
     }
 
     @PostMapping("/write")
     public String write(@ModelAttribute @Valid PostSaveDto postSaveDto) {
-        postService.savePost(postSaveDto);
+        tempPostService.savePost(postSaveDto);
         return "redirect:home";
     }
 
     @PostMapping("/delete")
     public String delete(Long id, String password) {
-        postService.deletePost(id, password);
+        tempPostService.deletePost(id, password);
         return "redirect:home";
     }
 }
