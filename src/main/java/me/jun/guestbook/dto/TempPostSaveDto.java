@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostSaveDto {
+public class TempPostSaveDto {
 
     @NotBlank(message = "title is empty")
     private String title;
