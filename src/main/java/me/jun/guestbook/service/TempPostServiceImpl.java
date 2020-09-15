@@ -1,7 +1,7 @@
 package me.jun.guestbook.service;
 
 import me.jun.guestbook.domain.post.TempPost;
-import me.jun.guestbook.domain.post.tempPostRepository;
+import me.jun.guestbook.domain.post.TempPostRepository;
 import me.jun.guestbook.dto.PostReadDto;
 import me.jun.guestbook.dto.PostSaveDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PostServiceImpl implements PostService {
+public class TempPostServiceImpl implements TempPostService {
 
     @Autowired
-    tempPostRepository tempPostRepository;
+    TempPostRepository tempPostRepository;
 
     public List<PostReadDto> getPost() {
         List<TempPost> tempPosts = tempPostRepository.findAll();
