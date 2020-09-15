@@ -3,11 +3,11 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
+import me.jun.guestbook.dto.RequestPostId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -51,10 +51,10 @@ public class PostServiceTest {
 
     @Test
     public void getPostTest() {
-        Long id = 1L;
+        RequestPostId requestPostId = new RequestPostId(1L);
 
         final Post savedPost = postRepository.save(post);
 
-        assertThat(postService.getPost(id)).isEqualTo(savedPost);
+        assertThat(postService.getPost(requestPostId)).isEqualTo(savedPost);
     }
 }
