@@ -22,7 +22,7 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Account account;
 
     public void setAccount(Account account) {

@@ -1,15 +1,22 @@
 package me.jun.guestbook.service;
 
-import me.jun.guestbook.dto.PostReadDto;
-import me.jun.guestbook.dto.PostSaveDto;
+import me.jun.guestbook.dao.PostRepository;
+import me.jun.guestbook.domain.Post;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+@Service
+public class PostService {
 
-public interface PostService {
+    private final PostRepository postRepository;
 
-    List<PostReadDto> getPost();
+    @Autowired
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
-    void savePost(PostSaveDto postSaveDto);
-
-    void deletePost(Long id, String password);
+    public Post getPost(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(IllegalAccessError::new);
+    }
 }
