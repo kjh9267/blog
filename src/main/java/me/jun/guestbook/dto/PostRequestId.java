@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Getter
-public class RequestPostId {
+public class PostRequestId {
 
     private final Long id;
 }
