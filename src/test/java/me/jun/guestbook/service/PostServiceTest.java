@@ -3,7 +3,7 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.dto.RequestPostId;
+import me.jun.guestbook.dto.PostRequestId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,10 +51,10 @@ public class PostServiceTest {
 
     @Test
     public void getPostTest() {
-        RequestPostId requestPostId = new RequestPostId(1L);
+        PostRequestId postRequestId = new PostRequestId(1L);
 
         final Post savedPost = postRepository.save(post);
 
-        assertThat(postService.getPost(requestPostId)).isEqualTo(savedPost);
+        assertThat(postService.getPost(postRequestId)).isEqualTo(savedPost);
     }
 }
