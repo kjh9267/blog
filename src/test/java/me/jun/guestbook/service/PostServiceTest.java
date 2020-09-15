@@ -3,6 +3,7 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
+import me.jun.guestbook.dto.PostCreateDto;
 import me.jun.guestbook.dto.PostRequestId;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,22 @@ public class PostServiceTest {
 
         final Post savedPost = postRepository.save(post);
 
-        assertThat(postService.getPost(postRequestId)).isEqualTo(savedPost);
+        assertThat(postService.readPost(postRequestId)).isEqualTo(savedPost);
+    }
+
+    @Test
+    public void createPostTest() {
+        PostRequestId postRequestId = new PostRequestId(1L);
+
+        final PostCreateDto postCreateDto = PostCreateDto.builder()
+                .account(account)
+                .content("test content")
+                .title("test title")
+                .build();
+
+        postService.createPost(postCreateDto);
+
+        assertThat(postService.readPost(postRequestId))
+                .isEqualToIgnoringGivenFields(postCreateDto,"id");
     }
 }
