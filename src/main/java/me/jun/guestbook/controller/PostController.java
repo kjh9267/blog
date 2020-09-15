@@ -1,6 +1,6 @@
 package me.jun.guestbook.controller;
 
-import me.jun.guestbook.dto.PostSaveDto;
+import me.jun.guestbook.dto.TempPostSaveDto;
 import me.jun.guestbook.service.TempPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +24,8 @@ public class PostController {
     }
 
     @PostMapping("/write")
-    public String write(@ModelAttribute @Valid PostSaveDto postSaveDto) {
-        tempPostService.savePost(postSaveDto);
+    public String write(@ModelAttribute @Valid TempPostSaveDto tempPostSaveDto) {
+        tempPostService.savePost(tempPostSaveDto);
         return "redirect:home";
     }
 

@@ -8,7 +8,7 @@ import java.util.Date;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class PostReadDto {
+public class TempPostReadDto {
 
     private Long id;
     private String title;
@@ -16,8 +16,8 @@ public class PostReadDto {
     private String content;
     private Date date;
 
-    public static PostReadDto from(TempPost tempPost) {
-        return PostReadDto.builder()
+    public static TempPostReadDto from(TempPost tempPost) {
+        return TempPostReadDto.builder()
                 .id(tempPost.getId())
                 .title(tempPost.getTitle())
                 .author(tempPost.getAuthor())
