@@ -4,8 +4,12 @@ import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountInfoDto;
 import me.jun.guestbook.dto.AccountLoginDto;
+import me.jun.guestbook.dto.AccountRegisterDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
 
 @Service
 public class AccountService {
@@ -27,5 +31,26 @@ public class AccountService {
                 .name(account.getName())
                 .email(account.getEmail())
                 .build();
+    }
+
+    public AccountInfoDto createAccount(AccountRegisterDto accountRegisterDto) {
+        final Account account = Account.builder()
+                .email(accountRegisterDto.getEmail())
+                .name(accountRegisterDto.getName())
+                .password(accountRegisterDto.getPassword())
+                .build();
+
+        try {
+            Account newAccount = accountRepository.save(account);
+
+            return AccountInfoDto.builder()
+                    .email(newAccount.getEmail())
+                    .name(newAccount.getName())
+                    .posts(newAccount.getPosts())
+                    .build();
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("invalid email");
+        }
     }
 }
