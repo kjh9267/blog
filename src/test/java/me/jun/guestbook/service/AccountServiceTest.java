@@ -3,8 +3,8 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountInfoDto;
-import me.jun.guestbook.dto.AccountLoginDto;
 import me.jun.guestbook.dto.AccountRegisterDto;
+import me.jun.guestbook.dto.AccountRequestDto;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,16 +44,16 @@ public class AccountServiceTest {
         // Given
         accountRepository.save(account);
 
-        final AccountLoginDto accountLoginDto = AccountLoginDto.builder()
+        final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
                 .email("user@email.com")
                 .password("pass")
                 .build();
 
         // When
-        final AccountInfoDto accountInfoDto = accountService.getAccount(accountLoginDto);
+        final AccountInfoDto accountInfoDto = accountService.getAccount(accountRequestDto);
 
         // Then
-        assertThat(accountInfoDto).isEqualToComparingOnlyGivenFields(accountLoginDto, "email");
+        assertThat(accountInfoDto).isEqualToComparingOnlyGivenFields(accountRequestDto, "email");
     }
 
     @Rule
@@ -68,13 +68,13 @@ public class AccountServiceTest {
         // Given
         accountRepository.save(account);
 
-        final AccountLoginDto accountLoginDto = AccountLoginDto.builder()
+        final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
                 .email("user@email.com")
                 .password("abc")
                 .build();
 
         // When
-        accountService.getAccount(accountLoginDto);
+        accountService.getAccount(accountRequestDto);
     }
 
     @Test
@@ -113,5 +113,21 @@ public class AccountServiceTest {
 
         // When
         accountService.createAccount(accountRegisterDto);
+    }
+
+    @Test
+    public void deleteAccountTest() {
+        // Expected
+        expectedException.expect(IllegalArgumentException.class);
+
+        // Given
+        final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
+                .email(account.getEmail())
+                .password(account.getPassword())
+                .build();
+
+        // When
+        accountService.deleteAccount(accountRequestDto);
+        accountService.getAccount(accountRequestDto);
     }
 }
