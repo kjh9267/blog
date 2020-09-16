@@ -6,6 +6,7 @@ import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.PostCreateDto;
 import me.jun.guestbook.dto.PostDeleteDto;
 import me.jun.guestbook.dto.PostReadDto;
+import me.jun.guestbook.dto.PostReadRequestId;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,12 +14,14 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PostServiceTest {
 
     @Autowired
@@ -54,17 +57,26 @@ public class PostServiceTest {
     }
 
     @Test
-    public void getPostTest() {
-        PostReadDto postReadDto = new PostReadDto(1L);
+    public void readPostTest() {
+        PostReadRequestId postReadRequestId = new PostReadRequestId(1L);
 
         final Post savedPost = postRepository.save(post);
+        final PostReadDto postReadDto = PostReadDto.builder()
+                .id(savedPost.getId())
+                .title(savedPost.getTitle())
+                .content(savedPost.getContent())
+                .account(savedPost.getAccount())
+                .build();
 
-        assertThat(postService.readPost(postReadDto)).isEqualTo(savedPost);
+        System.out.println(postService.readPost(postReadRequestId));
+
+        assertThat(postService.readPost(postReadRequestId))
+                .isEqualToComparingFieldByField(postReadDto);
     }
 
     @Test
     public void createPostTest() {
-        PostReadDto postReadDto = new PostReadDto(1L);
+        PostReadRequestId postReadRequestId = new PostReadRequestId(1L);
 
         final PostCreateDto postCreateDto = PostCreateDto.builder()
                 .account(account)
@@ -74,7 +86,7 @@ public class PostServiceTest {
 
         postService.createPost(postCreateDto);
 
-        assertThat(postService.readPost(postReadDto))
+        assertThat(postService.readPost(postReadRequestId))
                 .isEqualToIgnoringGivenFields(postCreateDto,"id");
     }
 
@@ -86,7 +98,7 @@ public class PostServiceTest {
         expectedException.expect(IllegalArgumentException.class);
 
         PostDeleteDto postDeleteDto = new PostDeleteDto(1L);
-        PostReadDto postReadDto = new PostReadDto(1L);
+        PostReadRequestId postReadRequestId = new PostReadRequestId(1L);
 
         final PostCreateDto postCreateDto = PostCreateDto.builder()
                 .account(account)
@@ -97,6 +109,6 @@ public class PostServiceTest {
         postService.createPost(postCreateDto);
         postService.deletePost(postDeleteDto);
 
-        assertThat(postService.readPost(postReadDto));
+        assertThat(postService.readPost(postReadRequestId));
     }
 }
