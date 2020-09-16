@@ -3,10 +3,7 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.dto.PostCreateDto;
-import me.jun.guestbook.dto.PostDeleteDto;
-import me.jun.guestbook.dto.PostReadDto;
-import me.jun.guestbook.dto.PostReadRequestId;
+import me.jun.guestbook.dto.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -110,5 +107,61 @@ public class PostServiceTest {
         postService.deletePost(postDeleteDto);
 
         assertThat(postService.readPost(postReadRequestId));
+    }
+
+    @Test
+    public void updatePostTest() {
+        final PostCreateDto postCreateDto = PostCreateDto.builder()
+                .account(account)
+                .content("test content")
+                .title("test title")
+                .build();
+
+        postService.createPost(postCreateDto);
+
+        final PostUpdateDto postUpdateDto = PostUpdateDto.builder()
+                .id(1L)
+                .title("new title")
+                .content("new content")
+                .account(account)
+                .build();
+
+        // When
+        final PostReadDto postReadDto = postService.updatePost(postUpdateDto);
+
+        assertThat(postService.readPost(new PostReadRequestId(1L)))
+                .isEqualToComparingFieldByField(postReadDto);
+    }
+
+    @Test
+    public void updatePostFailTest() {
+        // expected
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("wrong password");
+
+        // Given
+        final PostCreateDto postCreateDto = PostCreateDto.builder()
+                .account(account)
+                .content("test content")
+                .title("test title")
+                .build();
+
+        postService.createPost(postCreateDto);
+
+        Account wrongAccount = Account.builder()
+                .name("jun")
+                .email("user@email.com")
+                .password("abc")
+                .build();
+
+        final PostUpdateDto postUpdateDto = PostUpdateDto.builder()
+                .id(1L)
+                .title("new title")
+                .content("new content")
+                .account(wrongAccount)
+                .build();
+
+        // When
+        postService.updatePost(postUpdateDto);
     }
 }
