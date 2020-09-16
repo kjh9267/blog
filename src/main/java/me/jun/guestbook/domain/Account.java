@@ -3,8 +3,8 @@ package me.jun.guestbook.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -29,5 +29,5 @@ public class Account {
 
     @Builder.Default
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private final Set<Post> posts = new HashSet<>();
+    private final List<Post> posts = new ArrayList<>();
 }
