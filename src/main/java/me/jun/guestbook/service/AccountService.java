@@ -4,7 +4,6 @@ import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountInfoDto;
 import me.jun.guestbook.dto.AccountRequestDto;
-import me.jun.guestbook.dto.AccountRegisterDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,11 @@ public class AccountService {
         return account;
     }
 
-    public AccountInfoDto createAccount(AccountRegisterDto accountRegisterDto) {
+    public AccountInfoDto createAccount(AccountRequestDto accountRequestDto) {
         final Account account = Account.builder()
-                .email(accountRegisterDto.getEmail())
-                .name(accountRegisterDto.getName())
-                .password(accountRegisterDto.getPassword())
+                .email(accountRequestDto.getEmail())
+                .name(accountRequestDto.getName())
+                .password(accountRequestDto.getPassword())
                 .build();
 
         try {

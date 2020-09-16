@@ -16,13 +16,13 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public PostReadDto readPost(PostReadRequestId postReadRequestId) {
-        Long id = postReadRequestId.getId();
+    public PostInfoDto readPost(PostReadRequestDto postReadRequestDto) {
+        Long id = postReadRequestDto.getId();
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return PostReadDto.builder()
+        return PostInfoDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -30,35 +30,35 @@ public class PostService {
                 .build();
     }
 
-    public void createPost(PostCreateDto postCreateDto) {
-        final Post post = postCreateDto.toEntity();
+    public void createPost(PostCreateRequestDto postCreateRequestDto) {
+        final Post post = postCreateRequestDto.toEntity();
 
         postRepository.save(post);
     }
 
-    public void deletePost(PostDeleteDto postDeleteDto) {
-        final Long id = postDeleteDto.getId();
+    public void deletePost(PostDeleteRequestDto postDeleteRequestDto) {
+        final Long id = postDeleteRequestDto.getId();
 
         postRepository.deleteById(id);
     }
 
-    public PostReadDto updatePost(PostUpdateDto postUpdateDto) {
-        final Post post = postRepository.findById(postUpdateDto.getId())
+    public PostInfoDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
+        final Post post = postRepository.findById(postUpdateRequestDto.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
         final String password = post.getAccount().getPassword();
-        final String requestPassword = postUpdateDto.getAccount().getPassword();
+        final String requestPassword = postUpdateRequestDto.getAccount().getPassword();
 
         if (!requestPassword.equals(password)) {
             throw new IllegalArgumentException("wrong password");
         }
 
-        post.setTitle(postUpdateDto.getTitle());
-        post.setContent(postUpdateDto.getContent());
+        post.setTitle(postUpdateRequestDto.getTitle());
+        post.setContent(postUpdateRequestDto.getContent());
 
         final Post savedPost = postRepository.save(post);
 
-        return PostReadDto.builder()
+        return PostInfoDto.builder()
                 .id(savedPost.getId())
                 .title(savedPost.getTitle())
                 .content(savedPost.getContent())
