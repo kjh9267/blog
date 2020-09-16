@@ -4,9 +4,12 @@ import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.PostCreateDto;
-import me.jun.guestbook.dto.PostRequestId;
+import me.jun.guestbook.dto.PostDeleteDto;
+import me.jun.guestbook.dto.PostReadDto;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,16 +55,16 @@ public class PostServiceTest {
 
     @Test
     public void getPostTest() {
-        PostRequestId postRequestId = new PostRequestId(1L);
+        PostReadDto postReadDto = new PostReadDto(1L);
 
         final Post savedPost = postRepository.save(post);
 
-        assertThat(postService.readPost(postRequestId)).isEqualTo(savedPost);
+        assertThat(postService.readPost(postReadDto)).isEqualTo(savedPost);
     }
 
     @Test
     public void createPostTest() {
-        PostRequestId postRequestId = new PostRequestId(1L);
+        PostReadDto postReadDto = new PostReadDto(1L);
 
         final PostCreateDto postCreateDto = PostCreateDto.builder()
                 .account(account)
@@ -71,7 +74,29 @@ public class PostServiceTest {
 
         postService.createPost(postCreateDto);
 
-        assertThat(postService.readPost(postRequestId))
+        assertThat(postService.readPost(postReadDto))
                 .isEqualToIgnoringGivenFields(postCreateDto,"id");
+    }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void deletePostTest() {
+        expectedException.expect(IllegalArgumentException.class);
+
+        PostDeleteDto postDeleteDto = new PostDeleteDto(1L);
+        PostReadDto postReadDto = new PostReadDto(1L);
+
+        final PostCreateDto postCreateDto = PostCreateDto.builder()
+                .account(account)
+                .content("test content")
+                .title("test title")
+                .build();
+
+        postService.createPost(postCreateDto);
+        postService.deletePost(postDeleteDto);
+
+        assertThat(postService.readPost(postReadDto));
     }
 }

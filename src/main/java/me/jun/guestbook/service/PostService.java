@@ -3,7 +3,8 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.PostCreateDto;
-import me.jun.guestbook.dto.PostRequestId;
+import me.jun.guestbook.dto.PostDeleteDto;
+import me.jun.guestbook.dto.PostReadDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,22 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public Post readPost(PostRequestId postRequestId) {
-        Long id = postRequestId.getId();
+    public Post readPost(PostReadDto postReadDto) {
+        Long id = postReadDto.getId();
 
         return postRepository.findById(id)
-                .orElseThrow(IllegalAccessError::new);
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public void createPost(PostCreateDto postCreateDto) {
         final Post post = postCreateDto.toEntity();
 
         postRepository.save(post);
+    }
+
+    public void deletePost(PostDeleteDto postDeleteDto) {
+        final Long id = postDeleteDto.getId();
+
+        postRepository.deleteById(id);
     }
 }
