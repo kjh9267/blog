@@ -4,10 +4,10 @@ import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountInfoDto;
 import me.jun.guestbook.dto.AccountLoginDto;
+import me.jun.guestbook.dto.AccountRegisterDto;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +75,43 @@ public class AccountServiceTest {
 
         // When
         accountService.getAccount(accountLoginDto);
+    }
+
+    @Test
+    public void createAccountTest() {
+        // Given
+        accountRepository.save(account);
+
+        final AccountRegisterDto accountRegisterDto = AccountRegisterDto.builder()
+                .name(account.getName())
+                .password(account.getPassword())
+                .email("new_user@email.com")
+                .build();
+
+        // When
+        final AccountInfoDto accountInfoDto = accountService.createAccount(accountRegisterDto);
+
+        // Then
+        assertThat(accountInfoDto.getEmail()).isEqualTo(accountRegisterDto.getEmail());
+        assertThat(accountInfoDto.getName()).isEqualTo(accountRegisterDto.getName());
+    }
+
+    @Test
+    public void createAccountFailTest() {
+        // Expected
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("invalid email");
+
+        // Given
+        accountRepository.save(account);
+
+        final AccountRegisterDto accountRegisterDto = AccountRegisterDto.builder()
+                .name(account.getName())
+                .password(account.getPassword())
+                .email(account.getEmail())
+                .build();
+
+        // When
+        accountService.createAccount(accountRegisterDto);
     }
 }
