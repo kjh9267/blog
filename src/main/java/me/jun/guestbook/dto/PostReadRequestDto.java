@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Getter
-public class PostDeleteDto {
+public class PostReadRequestDto {
 
     private final Long id;
 }
