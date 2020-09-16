@@ -5,6 +5,7 @@ import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.PostCreateDto;
 import me.jun.guestbook.dto.PostDeleteDto;
 import me.jun.guestbook.dto.PostReadDto;
+import me.jun.guestbook.dto.PostReadRequestId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,18 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public Post readPost(PostReadDto postReadDto) {
-        Long id = postReadDto.getId();
+    public PostReadDto readPost(PostReadRequestId postReadRequestId) {
+        Long id = postReadRequestId.getId();
 
-        return postRepository.findById(id)
+        final Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
+
+        return PostReadDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .account(post.getAccount())
+                .build();
     }
 
     public void createPost(PostCreateDto postCreateDto) {
