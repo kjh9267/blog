@@ -2,10 +2,7 @@ package me.jun.guestbook.service;
 
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.dto.PostCreateDto;
-import me.jun.guestbook.dto.PostDeleteDto;
-import me.jun.guestbook.dto.PostReadDto;
-import me.jun.guestbook.dto.PostReadRequestId;
+import me.jun.guestbook.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +40,29 @@ public class PostService {
         final Long id = postDeleteDto.getId();
 
         postRepository.deleteById(id);
+    }
+
+    public PostReadDto updatePost(PostUpdateDto postUpdateDto) {
+        final Post post = postRepository.findById(postUpdateDto.getId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        final String password = post.getAccount().getPassword();
+        final String requestPassword = postUpdateDto.getAccount().getPassword();
+
+        if (!requestPassword.equals(password)) {
+            throw new IllegalArgumentException("wrong password");
+        }
+
+        post.setTitle(postUpdateDto.getTitle());
+        post.setContent(postUpdateDto.getContent());
+
+        final Post savedPost = postRepository.save(post);
+
+        return PostReadDto.builder()
+                .id(savedPost.getId())
+                .title(savedPost.getTitle())
+                .content(savedPost.getContent())
+                .account(savedPost.getAccount())
+                .build();
     }
 }
