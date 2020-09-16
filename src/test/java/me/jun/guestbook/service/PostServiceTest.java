@@ -55,36 +55,36 @@ public class PostServiceTest {
 
     @Test
     public void readPostTest() {
-        PostReadRequestId postReadRequestId = new PostReadRequestId(1L);
+        PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
         final Post savedPost = postRepository.save(post);
-        final PostReadDto postReadDto = PostReadDto.builder()
+        final PostInfoDto postInfoDto = PostInfoDto.builder()
                 .id(savedPost.getId())
                 .title(savedPost.getTitle())
                 .content(savedPost.getContent())
                 .account(savedPost.getAccount())
                 .build();
 
-        System.out.println(postService.readPost(postReadRequestId));
+        System.out.println(postService.readPost(postReadRequestDto));
 
-        assertThat(postService.readPost(postReadRequestId))
-                .isEqualToComparingFieldByField(postReadDto);
+        assertThat(postService.readPost(postReadRequestDto))
+                .isEqualToComparingFieldByField(postInfoDto);
     }
 
     @Test
     public void createPostTest() {
-        PostReadRequestId postReadRequestId = new PostReadRequestId(1L);
+        PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
-        final PostCreateDto postCreateDto = PostCreateDto.builder()
+        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
                 .account(account)
                 .content("test content")
                 .title("test title")
                 .build();
 
-        postService.createPost(postCreateDto);
+        postService.createPost(postCreateRequestDto);
 
-        assertThat(postService.readPost(postReadRequestId))
-                .isEqualToIgnoringGivenFields(postCreateDto,"id");
+        assertThat(postService.readPost(postReadRequestDto))
+                .isEqualToIgnoringGivenFields(postCreateRequestDto,"id");
     }
 
     @Rule
@@ -94,32 +94,32 @@ public class PostServiceTest {
     public void deletePostTest() {
         expectedException.expect(IllegalArgumentException.class);
 
-        PostDeleteDto postDeleteDto = new PostDeleteDto(1L);
-        PostReadRequestId postReadRequestId = new PostReadRequestId(1L);
+        PostDeleteRequestDto postDeleteRequestDto = new PostDeleteRequestDto(1L);
+        PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
-        final PostCreateDto postCreateDto = PostCreateDto.builder()
+        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
                 .account(account)
                 .content("test content")
                 .title("test title")
                 .build();
 
-        postService.createPost(postCreateDto);
-        postService.deletePost(postDeleteDto);
+        postService.createPost(postCreateRequestDto);
+        postService.deletePost(postDeleteRequestDto);
 
-        assertThat(postService.readPost(postReadRequestId));
+        assertThat(postService.readPost(postReadRequestDto));
     }
 
     @Test
     public void updatePostTest() {
-        final PostCreateDto postCreateDto = PostCreateDto.builder()
+        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
                 .account(account)
                 .content("test content")
                 .title("test title")
                 .build();
 
-        postService.createPost(postCreateDto);
+        postService.createPost(postCreateRequestDto);
 
-        final PostUpdateDto postUpdateDto = PostUpdateDto.builder()
+        final PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
                 .id(1L)
                 .title("new title")
                 .content("new content")
@@ -127,10 +127,10 @@ public class PostServiceTest {
                 .build();
 
         // When
-        final PostReadDto postReadDto = postService.updatePost(postUpdateDto);
+        final PostInfoDto postInfoDto = postService.updatePost(postUpdateRequestDto);
 
-        assertThat(postService.readPost(new PostReadRequestId(1L)))
-                .isEqualToComparingFieldByField(postReadDto);
+        assertThat(postService.readPost(new PostReadRequestDto(1L)))
+                .isEqualToComparingFieldByField(postInfoDto);
     }
 
     @Test
@@ -140,13 +140,13 @@ public class PostServiceTest {
         expectedException.expectMessage("wrong password");
 
         // Given
-        final PostCreateDto postCreateDto = PostCreateDto.builder()
+        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
                 .account(account)
                 .content("test content")
                 .title("test title")
                 .build();
 
-        postService.createPost(postCreateDto);
+        postService.createPost(postCreateRequestDto);
 
         Account wrongAccount = Account.builder()
                 .name("jun")
@@ -154,7 +154,7 @@ public class PostServiceTest {
                 .password("abc")
                 .build();
 
-        final PostUpdateDto postUpdateDto = PostUpdateDto.builder()
+        final PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
                 .id(1L)
                 .title("new title")
                 .content("new content")
@@ -162,6 +162,6 @@ public class PostServiceTest {
                 .build();
 
         // When
-        postService.updatePost(postUpdateDto);
+        postService.updatePost(postUpdateRequestDto);
     }
 }

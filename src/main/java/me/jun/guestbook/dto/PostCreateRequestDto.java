@@ -5,18 +5,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.domain.Account;
+import me.jun.guestbook.domain.Post;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Getter
 @Builder
-public class PostReadDto {
-
-    private final Long id;
+public class PostCreateRequestDto {
 
     private final String title;
-
     private final String content;
-
     private final Account account;
+
+    public Post toEntity() {
+        final Post post = Post.builder()
+                .title(this.title)
+                .content(this.content)
+                .build();
+
+        post.setAccount(account);
+
+        return post;
+    }
 }

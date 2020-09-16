@@ -3,7 +3,6 @@ package me.jun.guestbook.service;
 import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountInfoDto;
-import me.jun.guestbook.dto.AccountRegisterDto;
 import me.jun.guestbook.dto.AccountRequestDto;
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,18 +81,18 @@ public class AccountServiceTest {
         // Given
         accountRepository.save(account);
 
-        final AccountRegisterDto accountRegisterDto = AccountRegisterDto.builder()
+        final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
                 .name(account.getName())
                 .password(account.getPassword())
                 .email("new_user@email.com")
                 .build();
 
         // When
-        final AccountInfoDto accountInfoDto = accountService.createAccount(accountRegisterDto);
+        final AccountInfoDto accountInfoDto = accountService.createAccount(accountRequestDto);
 
         // Then
-        assertThat(accountInfoDto.getEmail()).isEqualTo(accountRegisterDto.getEmail());
-        assertThat(accountInfoDto.getName()).isEqualTo(accountRegisterDto.getName());
+        assertThat(accountInfoDto.getEmail()).isEqualTo(accountRequestDto.getEmail());
+        assertThat(accountInfoDto.getName()).isEqualTo(accountRequestDto.getName());
     }
 
     @Test
@@ -105,7 +104,7 @@ public class AccountServiceTest {
         // Given
         accountRepository.save(account);
 
-        final AccountRegisterDto accountRegisterDto = AccountRegisterDto.builder()
+        final AccountRequestDto accountRegisterDto = AccountRequestDto.builder()
                 .name(account.getName())
                 .password(account.getPassword())
                 .email(account.getEmail())

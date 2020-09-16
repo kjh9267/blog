@@ -10,7 +10,7 @@ import me.jun.guestbook.domain.Account;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostUpdateDto {
+public class PostUpdateRequestDto {
 
     private final Long id;
 
