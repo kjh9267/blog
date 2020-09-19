@@ -21,7 +21,7 @@ public class AccountInfoDto {
 
     private final List<Post> posts;
 
-    public final AccountInfoDto from(Account account) {
+    public static AccountInfoDto from(Account account) {
         return AccountInfoDto.builder()
                 .name(account.getName())
                 .email(account.getEmail())
