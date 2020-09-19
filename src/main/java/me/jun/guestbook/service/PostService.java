@@ -22,12 +22,7 @@ public class PostService {
         final Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return PostInfoDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .account(post.getAccount())
-                .build();
+        return PostInfoDto.from(post);
     }
 
     public void createPost(PostCreateRequestDto postCreateRequestDto) {
@@ -43,26 +38,25 @@ public class PostService {
     }
 
     public PostInfoDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
-        final Post post = postRepository.findById(postUpdateRequestDto.getId())
+        final Post requestPost = postUpdateRequestDto.toEntity();
+        final Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
+        checkPassword(requestPost, post);
+
+        post.setTitle(requestPost.getTitle());
+        post.setContent(requestPost.getContent());
+        final Post savedPost = postRepository.save(post);
+
+        return PostInfoDto.from(savedPost);
+    }
+
+    private void checkPassword(Post requestPost, Post post) {
         final String password = post.getAccount().getPassword();
-        final String requestPassword = postUpdateRequestDto.getAccount().getPassword();
+        final String requestPassword = requestPost.getAccount().getPassword();
 
         if (!requestPassword.equals(password)) {
             throw new IllegalArgumentException("wrong password");
         }
-
-        post.setTitle(postUpdateRequestDto.getTitle());
-        post.setContent(postUpdateRequestDto.getContent());
-
-        final Post savedPost = postRepository.save(post);
-
-        return PostInfoDto.builder()
-                .id(savedPost.getId())
-                .title(savedPost.getTitle())
-                .content(savedPost.getContent())
-                .account(savedPost.getAccount())
-                .build();
     }
 }
