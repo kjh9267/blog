@@ -58,12 +58,7 @@ public class PostServiceTest {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
         final Post savedPost = postRepository.save(post);
-        final PostInfoDto postInfoDto = PostInfoDto.builder()
-                .id(savedPost.getId())
-                .title(savedPost.getTitle())
-                .content(savedPost.getContent())
-                .account(savedPost.getAccount())
-                .build();
+        final PostInfoDto postInfoDto = PostInfoDto.from(savedPost);
 
         System.out.println(postService.readPost(postReadRequestDto));
 
@@ -75,12 +70,7 @@ public class PostServiceTest {
     public void createPostTest() {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
-        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
-                .account(account)
-                .content("test content")
-                .title("test title")
-                .build();
-
+        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
         assertThat(postService.readPost(postReadRequestDto))
@@ -97,13 +87,9 @@ public class PostServiceTest {
         PostDeleteRequestDto postDeleteRequestDto = new PostDeleteRequestDto(1L);
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
-        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
-                .account(account)
-                .content("test content")
-                .title("test title")
-                .build();
-
+        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
+
         postService.deletePost(postDeleteRequestDto);
 
         assertThat(postService.readPost(postReadRequestDto));
@@ -111,20 +97,11 @@ public class PostServiceTest {
 
     @Test
     public void updatePostTest() {
-        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
-                .account(account)
-                .content("test content")
-                .title("test title")
-                .build();
-
+        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
-        final PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
-                .id(1L)
-                .title("new title")
-                .content("new content")
-                .account(account)
-                .build();
+
+        final PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(account);
 
         // When
         final PostInfoDto postInfoDto = postService.updatePost(postUpdateRequestDto);
@@ -140,12 +117,7 @@ public class PostServiceTest {
         expectedException.expectMessage("wrong password");
 
         // Given
-        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
-                .account(account)
-                .content("test content")
-                .title("test title")
-                .build();
-
+        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
         Account wrongAccount = Account.builder()
@@ -154,14 +126,28 @@ public class PostServiceTest {
                 .password("abc")
                 .build();
 
-        final PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
-                .id(1L)
-                .title("new title")
-                .content("new content")
-                .account(wrongAccount)
-                .build();
+        final PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(wrongAccount);
 
         // When
         postService.updatePost(postUpdateRequestDto);
+    }
+
+    private PostCreateRequestDto createPostCreateRequestDto() {
+        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
+                .account(account)
+                .content("test content")
+                .title("test title")
+                .build();
+
+        return postCreateRequestDto;
+    }
+
+    private PostUpdateRequestDto createPostUpdateRequestDto(Account account) {
+        return PostUpdateRequestDto.builder()
+                .id(1L)
+                .title("new title")
+                .content("new content")
+                .account(account)
+                .build();
     }
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.domain.Account;
+import me.jun.guestbook.domain.Post;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
@@ -19,4 +20,16 @@ public class PostUpdateRequestDto {
     private final String content;
 
     private final Account account;
+
+    public Post toEntity() {
+        final Post post = Post.builder()
+                .id(this.id)
+                .title(this.title)
+                .content(this.content)
+                .build();
+
+        account.addPost(post);
+
+        return post;
+    }
 }
