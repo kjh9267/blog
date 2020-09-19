@@ -40,4 +40,12 @@ public class AccountTest {
     public void constructorTest() {
         assertThat(account).isInstanceOf(Account.class);
     }
+
+    @Test
+    public void addPostTest() {
+        account.addPost(post);
+
+        assertThat(account.getPosts().contains(post)).isTrue();
+        assertThat(post.getAccount()).isEqualTo(account);
+    }
 }
