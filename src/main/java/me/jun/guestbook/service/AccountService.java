@@ -15,25 +15,17 @@ public class AccountService {
     AccountRepository accountRepository;
 
     public AccountInfoDto getAccount(AccountRequestDto accountRequestDto) {
-        final Account account = getAccountFromRepository(accountRequestDto);
-
-        return AccountInfoDto.builder()
-                .name(account.getName())
-                .email(account.getEmail())
-                .posts(account.getPosts())
-                .build();
-    }
-
-    private Account getAccountFromRepository(AccountRequestDto accountRequestDto) {
-        final String requestEmail = accountRequestDto.getEmail();
+        final Account requestAccount = accountRequestDto.toEntity();
+        final String requestEmail = requestAccount.getEmail();
 
         final Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(IllegalArgumentException::new);
 
-        if (!accountRequestDto.getPassword().equals(account.getPassword())) {
+        if (!requestAccount.getPassword().equals(account.getPassword())) {
             throw new IllegalArgumentException("wrong password");
         }
-        return account;
+
+        return AccountInfoDto.from(account);
     }
 
     public AccountInfoDto createAccount(AccountRequestDto accountRequestDto) {
@@ -46,11 +38,7 @@ public class AccountService {
         try {
             Account newAccount = accountRepository.save(account);
 
-            return AccountInfoDto.builder()
-                    .email(newAccount.getEmail())
-                    .name(newAccount.getName())
-                    .posts(newAccount.getPosts())
-                    .build();
+            return AccountInfoDto.from(newAccount);
         }
         catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("invalid email");
@@ -58,7 +46,15 @@ public class AccountService {
     }
 
     public void deleteAccount(AccountRequestDto accountRequestDto) {
-        final Account account = getAccountFromRepository(accountRequestDto);
+        final Account requestAccount = accountRequestDto.toEntity();
+        final String requestEmail = requestAccount.getEmail();
+
+        final Account account = accountRepository.findByEmail(requestEmail)
+                .orElseThrow(IllegalArgumentException::new);
+
+        if (!requestAccount.getPassword().equals(account.getPassword())) {
+            throw new IllegalArgumentException("wrong password");
+        }
 
         accountRepository.deleteById(account.getId());
     }

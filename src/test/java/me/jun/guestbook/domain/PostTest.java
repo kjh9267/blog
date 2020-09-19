@@ -61,13 +61,4 @@ public class PostTest {
 
         assertThat(post2).isEqualToComparingFieldByField(post);
     }
-
-    @Test
-    public void setAccountTest() {
-        post.setAccount(account);
-
-        assertThat(post.getAccount()).isEqualTo(account);
-        assertThat(account.getPosts().contains(post)).isTrue();
-    }
-
 }

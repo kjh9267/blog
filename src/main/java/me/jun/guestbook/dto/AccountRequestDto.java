@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.jun.guestbook.domain.Account;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
@@ -16,4 +17,12 @@ public class AccountRequestDto {
     private String name;
 
     private String password;
+
+    public Account toEntity() {
+        return Account.builder()
+                .email(this.email)
+                .name(this.name)
+                .password(this.password)
+                .build();
+    }
 }
