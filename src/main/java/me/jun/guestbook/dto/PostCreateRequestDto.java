@@ -22,7 +22,7 @@ public class PostCreateRequestDto {
                 .content(this.content)
                 .build();
 
-        post.setAccount(account);
+        account.addPost(post);
 
         return post;
     }
