@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Post {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 30, nullable = false)
@@ -23,11 +23,6 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
     private Account account;
-
-    public void setAccount(Account account) {
-        this.account = account;
-        account.getPosts().add(this);
-    }
 }

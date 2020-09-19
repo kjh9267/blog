@@ -16,7 +16,7 @@ import java.util.List;
 public class Account {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 12, nullable = false)
@@ -29,6 +29,11 @@ public class Account {
     private String password;
 
     @Builder.Default
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private final List<Post> posts = new ArrayList<>();
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+        post.setAccount(this);
+    }
 }
