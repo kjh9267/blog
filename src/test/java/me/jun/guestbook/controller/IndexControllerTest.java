@@ -31,7 +31,7 @@ public class IndexControllerTest {
 
     @Test
     public void indexTest() throws Exception {
-        final MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/index");
+        final MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/index/1");
 
         mockMvc.perform(request)
                 .andDo(print())
