@@ -2,7 +2,7 @@ package me.jun.guestbook.service;
 
 import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.dto.AccountInfoDto;
+import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.dto.AccountRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,7 +14,7 @@ public class AccountService {
     @Autowired
     AccountRepository accountRepository;
 
-    public AccountInfoDto getAccount(AccountRequestDto accountRequestDto) {
+    public AccountResponseDto getAccount(AccountRequestDto accountRequestDto) {
         final Account requestAccount = accountRequestDto.toEntity();
         final String requestEmail = requestAccount.getEmail();
 
@@ -25,10 +25,10 @@ public class AccountService {
             throw new IllegalArgumentException("wrong password");
         }
 
-        return AccountInfoDto.from(account);
+        return AccountResponseDto.from(account);
     }
 
-    public AccountInfoDto createAccount(AccountRequestDto accountRequestDto) {
+    public AccountResponseDto createAccount(AccountRequestDto accountRequestDto) {
         final Account account = Account.builder()
                 .email(accountRequestDto.getEmail())
                 .name(accountRequestDto.getName())
@@ -38,7 +38,7 @@ public class AccountService {
         try {
             Account newAccount = accountRepository.save(account);
 
-            return AccountInfoDto.from(newAccount);
+            return AccountResponseDto.from(newAccount);
         }
         catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("invalid email");

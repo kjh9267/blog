@@ -1,6 +1,5 @@
 package me.jun.guestbook.controller;
 
-import me.jun.guestbook.dto.PostInfoDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
