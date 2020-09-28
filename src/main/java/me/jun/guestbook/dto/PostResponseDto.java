@@ -11,7 +11,7 @@ import me.jun.guestbook.domain.Post;
 @AllArgsConstructor
 @Getter
 @Builder
-public class PostInfoDto {
+public class PostResponseDto {
 
     private final Long id;
 
@@ -21,8 +21,8 @@ public class PostInfoDto {
 
     private final Account account;
 
-    public static PostInfoDto from(Post post) {
-        return PostInfoDto.builder()
+    public static PostResponseDto from(Post post) {
+        return PostResponseDto.builder()
                 .id(post.getId())
                 .account(post.getAccount())
                 .title(post.getTitle())

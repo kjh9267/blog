@@ -4,6 +4,8 @@ import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +18,13 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public PostInfoDto readPost(PostReadRequestDto postReadRequestDto) {
+    public PostResponseDto readPost(PostReadRequestDto postReadRequestDto) {
         Long id = postReadRequestDto.getId();
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return PostInfoDto.from(post);
+        return PostResponseDto.from(post);
     }
 
     public void createPost(PostCreateRequestDto postCreateRequestDto) {
@@ -37,7 +39,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    public PostInfoDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
+    public PostResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
         final Post requestPost = postUpdateRequestDto.toEntity();
         final Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(IllegalArgumentException::new);
@@ -48,7 +50,16 @@ public class PostService {
         post.setContent(requestPost.getContent());
         final Post savedPost = postRepository.save(post);
 
-        return PostInfoDto.from(savedPost);
+        return PostResponseDto.from(savedPost);
+    }
+
+    public PostsResponseDto readPostByPage(PostsRequestDto postsRequestDto) {
+        final int requestPage = postsRequestDto.getPage();
+        final int size = 10;
+
+        final Page<Post> posts = postRepository.findAll(PageRequest.of(requestPage, size));
+
+        return PostsResponseDto.from(posts);
     }
 
     private void checkPassword(Post requestPost, Post post) {
