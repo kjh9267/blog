@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Guest Book</title>
@@ -14,6 +14,10 @@
 <a href="/register">
     <h1>Register</h1>
 </a>
+
+<ul th:each="Post: ${list}">
+    <h4>title</h4> <p th:text="${Post.title}"></p>
+</ul>
 
 </body>
 </html>
