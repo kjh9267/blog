@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,9 +33,9 @@ public class IndexControllerTest {
     public void indexTest() throws Exception {
         final MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/index");
 
-//        mockMvc.perform(request)
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType());
+        mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.valueOf("text/html;charset=UTF-8")));
     }
 }

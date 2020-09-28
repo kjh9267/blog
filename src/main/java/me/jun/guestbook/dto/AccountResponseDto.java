@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
-public class AccountInfoDto {
+public class AccountResponseDto {
 
     private final String name;
 
@@ -21,8 +21,8 @@ public class AccountInfoDto {
 
     private final List<Post> posts;
 
-    public static AccountInfoDto from(Account account) {
-        return AccountInfoDto.builder()
+    public static AccountResponseDto from(Account account) {
+        return AccountResponseDto.builder()
                 .name(account.getName())
                 .email(account.getEmail())
                 .posts(account.getPosts())
