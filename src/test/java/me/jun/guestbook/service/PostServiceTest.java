@@ -11,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -58,12 +59,12 @@ public class PostServiceTest {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
         final Post savedPost = postRepository.save(post);
-        final PostInfoDto postInfoDto = PostInfoDto.from(savedPost);
+        final PostResponseDto postResponseDto = PostResponseDto.from(savedPost);
 
         System.out.println(postService.readPost(postReadRequestDto));
 
         assertThat(postService.readPost(postReadRequestDto))
-                .isEqualToComparingFieldByField(postInfoDto);
+                .isEqualToComparingFieldByField(postResponseDto);
     }
 
     @Test
@@ -104,10 +105,10 @@ public class PostServiceTest {
         final PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(account);
 
         // When
-        final PostInfoDto postInfoDto = postService.updatePost(postUpdateRequestDto);
+        final PostResponseDto postResponseDto = postService.updatePost(postUpdateRequestDto);
 
         assertThat(postService.readPost(new PostReadRequestDto(1L)))
-                .isEqualToComparingFieldByField(postInfoDto);
+                .isEqualToComparingFieldByField(postResponseDto);
     }
 
     @Test
@@ -130,6 +131,22 @@ public class PostServiceTest {
 
         // When
         postService.updatePost(postUpdateRequestDto);
+    }
+
+    @Test
+    public void readPostByPageTest() {
+        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
+        postService.createPost(postCreateRequestDto);
+
+        final PostsRequestDto postsRequestDto = PostsRequestDto.builder()
+                .page(1)
+                .build();
+
+        final PostsResponseDto postsResponseDto = postService.readPostByPage(postsRequestDto);
+        final Page<PostResponseDto> postInfoDtoPage = postsResponseDto.getPostInfoDtoPage();
+
+        assertThat(postInfoDtoPage.getTotalPages()).isEqualTo(1);
+        assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(1);
     }
 
     private PostCreateRequestDto createPostCreateRequestDto() {

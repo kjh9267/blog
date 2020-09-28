@@ -2,7 +2,7 @@ package me.jun.guestbook.service;
 
 import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.dto.AccountInfoDto;
+import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.dto.AccountRequestDto;
 import org.junit.Before;
 import org.junit.Rule;
@@ -49,10 +49,10 @@ public class AccountServiceTest {
                 .build();
 
         // When
-        final AccountInfoDto accountInfoDto = accountService.getAccount(accountRequestDto);
+        final AccountResponseDto accountResponseDto = accountService.getAccount(accountRequestDto);
 
         // Then
-        assertThat(accountInfoDto).isEqualToComparingOnlyGivenFields(accountRequestDto, "email");
+        assertThat(accountResponseDto).isEqualToComparingOnlyGivenFields(accountRequestDto, "email");
     }
 
     @Rule
@@ -88,11 +88,11 @@ public class AccountServiceTest {
                 .build();
 
         // When
-        final AccountInfoDto accountInfoDto = accountService.createAccount(accountRequestDto);
+        final AccountResponseDto accountResponseDto = accountService.createAccount(accountRequestDto);
 
         // Then
-        assertThat(accountInfoDto.getEmail()).isEqualTo(accountRequestDto.getEmail());
-        assertThat(accountInfoDto.getName()).isEqualTo(accountRequestDto.getName());
+        assertThat(accountResponseDto.getEmail()).isEqualTo(accountRequestDto.getEmail());
+        assertThat(accountResponseDto.getName()).isEqualTo(accountRequestDto.getName());
     }
 
     @Test
