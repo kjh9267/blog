@@ -149,7 +149,7 @@ public class PostServiceTest {
         final Page<PostResponseDto> postInfoDtoPage = postsResponseDto.getPostInfoDtoPage();
 
         assertThat(postInfoDtoPage.getTotalPages()).isEqualTo(1);
-        assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(1);
+        assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(2);
     }
 
     private PostCreateRequestDto createPostCreateRequestDto() {
@@ -169,7 +169,7 @@ public class PostServiceTest {
                 .id(1L)
                 .title("new title")
                 .content("new content")
-                .account(account)
+                .password(account.getPassword())
                 .build();
     }
 }
