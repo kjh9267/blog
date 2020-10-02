@@ -23,6 +23,11 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE})
     private Account account;
+
+    public void setAccount(Account account) {
+        this.account = account;
+        account.addPost(this);
+    }
 }

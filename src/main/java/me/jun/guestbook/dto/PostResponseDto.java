@@ -19,12 +19,9 @@ public class PostResponseDto {
 
     private final String content;
 
-    private final Account account;
-
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
-                .account(post.getAccount())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
