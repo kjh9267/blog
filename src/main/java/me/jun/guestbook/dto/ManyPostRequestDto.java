@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostsRequestDto {
+public class ManyPostRequestDto {
 
     private final int page;
 }

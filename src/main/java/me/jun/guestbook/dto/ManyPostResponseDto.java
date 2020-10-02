@@ -11,12 +11,12 @@ import org.springframework.data.domain.Page;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostsResponseDto {
+public class ManyPostResponseDto {
 
     private final Page<PostResponseDto> postInfoDtoPage;
 
-    public static PostsResponseDto from(Page<Post> posts) {
-        return PostsResponseDto.builder()
+    public static ManyPostResponseDto from(Page<Post> posts) {
+        return ManyPostResponseDto.builder()
                 .postInfoDtoPage(posts.map(PostResponseDto::from))
                 .build();
 
