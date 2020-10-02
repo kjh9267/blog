@@ -1,11 +1,8 @@
 package me.jun.guestbook.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dto.PostResponseDto;
-import me.jun.guestbook.dto.PostsRequestDto;
-import me.jun.guestbook.dto.PostsResponseDto;
+import me.jun.guestbook.dto.ManyPostRequestDto;
 import me.jun.guestbook.service.PostService;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +16,7 @@ public class IndexController {
     @GetMapping("/index/{page}")
     public String index(
             Model model,
-            PostsRequestDto page) {
+            ManyPostRequestDto page) {
 
         postService.readPostByPage(page)
                 .getPostInfoDtoPage()
