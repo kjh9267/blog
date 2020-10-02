@@ -51,7 +51,10 @@ public class PostService {
         final Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        checkPassword(requestPost, post);
+        final String requestPassword = postUpdateRequestDto.getPassword();
+        final String password = post.getAccount().getPassword();
+
+        checkPassword(requestPassword, password);
 
         post.setTitle(requestPost.getTitle());
         post.setContent(requestPost.getContent());
@@ -69,10 +72,7 @@ public class PostService {
         return PostsResponseDto.from(posts);
     }
 
-    private void checkPassword(Post requestPost, Post post) {
-        final String password = post.getAccount().getPassword();
-        final String requestPassword = requestPost.getAccount().getPassword();
-
+    private void checkPassword(String requestPassword, String password) {
         if (!requestPassword.equals(password)) {
             throw new IllegalArgumentException("wrong password");
         }
