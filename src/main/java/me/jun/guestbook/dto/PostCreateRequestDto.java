@@ -4,26 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Builder
+@Getter
 public class PostCreateRequestDto {
 
     private final String title;
+
     private final String content;
-    private final Account account;
+
+    private final String accountEmail;
 
     public Post toEntity() {
-        final Post post = Post.builder()
+        return Post.builder()
                 .title(this.title)
                 .content(this.content)
                 .build();
-
-        account.addPost(post);
-
-        return post;
     }
 }

@@ -1,5 +1,6 @@
 package me.jun.guestbook.service;
 
+import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,10 +25,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PostServiceTest {
 
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
 
     @Autowired
-    PostService postService;
+    private PostService postService;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     private Post post;
 
@@ -61,8 +66,6 @@ public class PostServiceTest {
         final Post savedPost = postRepository.save(post);
         final PostResponseDto postResponseDto = PostResponseDto.from(savedPost);
 
-        System.out.println(postService.readPost(postReadRequestDto));
-
         assertThat(postService.readPost(postReadRequestDto))
                 .isEqualToComparingFieldByField(postResponseDto);
     }
@@ -75,7 +78,7 @@ public class PostServiceTest {
         postService.createPost(postCreateRequestDto);
 
         assertThat(postService.readPost(postReadRequestDto))
-                .isEqualToIgnoringGivenFields(postCreateRequestDto,"id");
+                .isEqualToIgnoringGivenFields(postCreateRequestDto,"id", "accountEmail");
     }
 
     @Rule
@@ -151,10 +154,12 @@ public class PostServiceTest {
 
     private PostCreateRequestDto createPostCreateRequestDto() {
         final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
-                .account(account)
+                .accountEmail("user@email.com")
                 .content("test content")
                 .title("test title")
                 .build();
+
+        accountRepository.save(account);
 
         return postCreateRequestDto;
     }
