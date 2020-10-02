@@ -1,22 +1,23 @@
 package me.jun.guestbook.service;
 
+import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.dao.PostRepository;
+import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
 
-    @Autowired
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private final AccountRepository accountRepository;
 
     public PostResponseDto readPost(PostReadRequestDto postReadRequestDto) {
         Long id = postReadRequestDto.getId();
@@ -27,8 +28,14 @@ public class PostService {
         return PostResponseDto.from(post);
     }
 
+    @Transactional
     public void createPost(PostCreateRequestDto postCreateRequestDto) {
         final Post post = postCreateRequestDto.toEntity();
+        final String accountEmail = postCreateRequestDto.getAccountEmail();
+        final Account account = accountRepository.findByEmail(accountEmail)
+                .orElseThrow(IllegalArgumentException::new);
+
+        post.setAccount(account);
 
         postRepository.save(post);
     }

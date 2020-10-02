@@ -2,8 +2,8 @@ package me.jun.guestbook.service;
 
 import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.dto.AccountResponseDto;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void getAccountTest() {
+    public void readAccountTest() {
         // Given
         accountRepository.save(account);
 
@@ -49,7 +49,7 @@ public class AccountServiceTest {
                 .build();
 
         // When
-        final AccountResponseDto accountResponseDto = accountService.getAccount(accountRequestDto);
+        final AccountResponseDto accountResponseDto = accountService.readAccount(accountRequestDto);
 
         // Then
         assertThat(accountResponseDto).isEqualToComparingOnlyGivenFields(accountRequestDto, "email");
@@ -73,7 +73,7 @@ public class AccountServiceTest {
                 .build();
 
         // When
-        accountService.getAccount(accountRequestDto);
+        accountService.readAccount(accountRequestDto);
     }
 
     @Test
@@ -127,6 +127,6 @@ public class AccountServiceTest {
 
         // When
         accountService.deleteAccount(accountRequestDto);
-        accountService.getAccount(accountRequestDto);
+        accountService.readAccount(accountRequestDto);
     }
 }

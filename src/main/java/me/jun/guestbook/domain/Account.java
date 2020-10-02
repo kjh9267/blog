@@ -34,6 +34,5 @@ public class Account {
 
     public void addPost(Post post) {
         this.posts.add(post);
-        post.setAccount(this);
     }
 }
