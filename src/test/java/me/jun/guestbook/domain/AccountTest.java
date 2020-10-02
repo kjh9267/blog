@@ -46,6 +46,5 @@ public class AccountTest {
         account.addPost(post);
 
         assertThat(account.getPosts().contains(post)).isTrue();
-        assertThat(post.getAccount()).isEqualTo(account);
     }
 }
