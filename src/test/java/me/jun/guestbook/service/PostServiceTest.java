@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -141,12 +140,12 @@ public class PostServiceTest {
         final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
-        final PostsRequestDto postsRequestDto = PostsRequestDto.builder()
+        final ManyPostRequestDto manyPostRequestDto = ManyPostRequestDto.builder()
                 .page(1)
                 .build();
 
-        final PostsResponseDto postsResponseDto = postService.readPostByPage(postsRequestDto);
-        final Page<PostResponseDto> postInfoDtoPage = postsResponseDto.getPostInfoDtoPage();
+        final ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(manyPostRequestDto);
+        final Page<PostResponseDto> postInfoDtoPage = manyPostResponseDto.getPostInfoDtoPage();
 
         assertThat(postInfoDtoPage.getTotalPages()).isEqualTo(1);
         assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(2);

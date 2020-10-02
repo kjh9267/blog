@@ -63,13 +63,13 @@ public class PostService {
         return PostResponseDto.from(savedPost);
     }
 
-    public PostsResponseDto readPostByPage(PostsRequestDto postsRequestDto) {
-        final int requestPage = postsRequestDto.getPage();
+    public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
+        final int requestPage = manyPostRequestDto.getPage();
         final int size = 10;
 
         final Page<Post> posts = postRepository.findAll(PageRequest.of(requestPage, size));
 
-        return PostsResponseDto.from(posts);
+        return ManyPostResponseDto.from(posts);
     }
 
     private void checkPassword(String requestPassword, String password) {
