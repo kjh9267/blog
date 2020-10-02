@@ -19,7 +19,7 @@ public class PostUpdateRequestDto {
 
     private final String content;
 
-    private final Account account;
+    private final String password;
 
     public Post toEntity() {
         final Post post = Post.builder()
@@ -27,8 +27,6 @@ public class PostUpdateRequestDto {
                 .title(this.title)
                 .content(this.content)
                 .build();
-
-        account.addPost(post);
 
         return post;
     }
