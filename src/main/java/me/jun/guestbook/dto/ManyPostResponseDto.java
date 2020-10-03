@@ -1,9 +1,6 @@
 package me.jun.guestbook.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.jun.guestbook.domain.Post;
 import org.springframework.data.domain.Page;
 
@@ -13,12 +10,33 @@ import org.springframework.data.domain.Page;
 @Getter
 public class ManyPostResponseDto {
 
-    private final Page<PostResponseDto> postInfoDtoPage;
+    private final Page<PostResponse> postInfoDtoPage;
 
     public static ManyPostResponseDto from(Page<Post> posts) {
         return ManyPostResponseDto.builder()
-                .postInfoDtoPage(posts.map(PostResponseDto::from))
+                .postInfoDtoPage(posts.map(PostResponse::from))
                 .build();
 
+    }
+
+    @NoArgsConstructor(force = true)
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    public static class PostResponse {
+
+        private final Long id;
+
+        private final String title;
+
+        private final String content;
+
+        public static PostResponse from(Post post) {
+            return PostResponse.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .build();
+        }
     }
 }
