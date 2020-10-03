@@ -63,7 +63,7 @@ public class PostServiceTest {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
         final Post savedPost = postRepository.save(post);
-        final PostResponseDto postResponseDto = PostResponseDto.from(savedPost);
+        final PostResponseDto postResponseDto = PostResponseDto.of(savedPost, account);
 
         assertThat(postService.readPost(postReadRequestDto))
                 .isEqualToComparingFieldByField(postResponseDto);
@@ -77,7 +77,7 @@ public class PostServiceTest {
         postService.createPost(postCreateRequestDto);
 
         assertThat(postService.readPost(postReadRequestDto))
-                .isEqualToIgnoringGivenFields(postCreateRequestDto,"id", "accountEmail");
+                .isEqualToIgnoringGivenFields(postCreateRequestDto,"id", "accountEmail", "accountName");
     }
 
     @Rule
@@ -145,7 +145,7 @@ public class PostServiceTest {
                 .build();
 
         final ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(manyPostRequestDto);
-        final Page<PostResponseDto> postInfoDtoPage = manyPostResponseDto.getPostInfoDtoPage();
+        final Page<ManyPostResponseDto.PostResponse> postInfoDtoPage = manyPostResponseDto.getPostInfoDtoPage();
 
         assertThat(postInfoDtoPage.getTotalPages()).isEqualTo(1);
         assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(2);
@@ -168,6 +168,7 @@ public class PostServiceTest {
                 .id(1L)
                 .title("new title")
                 .content("new content")
+                .accountEmail("testuser@email.com")
                 .password(account.getPassword())
                 .build();
     }
