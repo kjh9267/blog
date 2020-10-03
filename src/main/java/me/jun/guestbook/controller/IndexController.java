@@ -2,10 +2,14 @@ package me.jun.guestbook.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.dto.ManyPostRequestDto;
+import me.jun.guestbook.dto.ManyPostResponseDto;
 import me.jun.guestbook.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,10 +27,22 @@ public class IndexController {
     public String index(Model model,
             ManyPostRequestDto page) {
 
-        postService.readPostByPage(page)
+        final List<ManyPostResponseDto.PostResponse> content = postService.readPostByPage(page)
                 .getPostInfoDtoPage()
-                .map(postResponseDto ->
-                        model.addAttribute("list", postResponseDto));
+                .getContent();
+
+        for(ManyPostResponseDto.PostResponse data:content) {
+            System.out.println(data);
+        }
+
+
+        model.addAttribute("list",
+                postService.readPostByPage(page)
+                        .getPostInfoDtoPage()
+                        .getContent()
+                );
+
+        System.out.println(model.getAttribute("list"));
 
         return "/index";
     }
