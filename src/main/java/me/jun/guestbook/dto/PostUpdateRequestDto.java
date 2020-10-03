@@ -19,6 +19,8 @@ public class PostUpdateRequestDto {
 
     private final String content;
 
+    private final String accountEmail;
+
     private final String password;
 
     public Post toEntity() {

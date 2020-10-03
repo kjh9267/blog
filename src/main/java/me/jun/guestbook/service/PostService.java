@@ -19,13 +19,16 @@ public class PostService {
 
     private final AccountRepository accountRepository;
 
+    @Transactional
     public PostResponseDto readPost(PostReadRequestDto postReadRequestDto) {
         Long id = postReadRequestDto.getId();
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return PostResponseDto.from(post);
+        final Account account = post.getAccount();
+
+        return PostResponseDto.of(post, account);
     }
 
     @Transactional
@@ -46,9 +49,14 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    @Transactional
     public PostResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
         final Post requestPost = postUpdateRequestDto.toEntity();
         final Post post = postRepository.findById(requestPost.getId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        final String requestEmail = postUpdateRequestDto.getAccountEmail();
+        final Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(IllegalArgumentException::new);
 
         final String requestPassword = postUpdateRequestDto.getPassword();
@@ -60,7 +68,7 @@ public class PostService {
         post.setContent(requestPost.getContent());
         final Post savedPost = postRepository.save(post);
 
-        return PostResponseDto.from(savedPost);
+        return PostResponseDto.of(savedPost, account);
     }
 
     public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {

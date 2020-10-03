@@ -24,8 +24,10 @@
     <input type="submit" value="submit"/>
 </form>
 
-<ul th:each="Post: ${list}">
-    <h4>title</h4> <p th:text="${Post.title}"></p>
+<ul th:each="post: ${list}">
+    <h4>title</h4> <p th:text="${post}">
+<!--    <a href="/post/${ManyPostResponseDto.PostResponse.id}}"></a>-->
+</p>
 </ul>
 
 </body>
