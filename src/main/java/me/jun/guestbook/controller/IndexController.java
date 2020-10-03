@@ -13,9 +13,14 @@ public class IndexController {
 
     private final PostService postService;
 
+    @GetMapping({"/", "/index"})
+    public String index() {
+
+        return "redirect:/index/1";
+    }
+
     @GetMapping("/index/{page}")
-    public String index(
-            Model model,
+    public String index(Model model,
             ManyPostRequestDto page) {
 
         postService.readPostByPage(page)

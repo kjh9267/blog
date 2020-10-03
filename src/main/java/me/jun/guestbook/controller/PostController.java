@@ -1,37 +1,22 @@
 package me.jun.guestbook.controller;
 
-import me.jun.guestbook.dto.TempPostSaveDto;
-import me.jun.guestbook.service.TempPostService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.dto.PostCreateRequestDto;
+import me.jun.guestbook.service.PostService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
+@RequiredArgsConstructor
 public class PostController {
 
-    @Autowired
-    TempPostService tempPostService;
+    private final PostService postService;
 
-    @GetMapping("/home")
-    public String getList(Model model) {
-        model.addAttribute("list", tempPostService.getPost());
-        return "home";
-    }
+    @PostMapping("/post")
+    public String createPost(@RequestBody PostCreateRequestDto request) {
+        postService.createPost(request);
 
-    @PostMapping("/write")
-    public String write(@ModelAttribute @Valid TempPostSaveDto tempPostSaveDto) {
-        tempPostService.savePost(tempPostSaveDto);
-        return "redirect:home";
-    }
-
-    @PostMapping("/delete")
-    public String delete(Long id, String password) {
-        tempPostService.deletePost(id, password);
-        return "redirect:home";
+        return "redirect:/index";
     }
 }

@@ -26,16 +26,12 @@ public class IndexControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
     @Test
     public void indexTest() throws Exception {
-        final MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/index/1");
+        final MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/index");
 
         mockMvc.perform(request)
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.valueOf("text/html;charset=UTF-8")));
+                .andExpect(status().is3xxRedirection());
     }
 }
