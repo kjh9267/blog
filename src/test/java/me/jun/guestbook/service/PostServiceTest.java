@@ -41,7 +41,7 @@ public class PostServiceTest {
         final String name = "jun";
         final String title = "test title";
         final String content = "test content";
-        final String email = "user@email.com";
+        final String email = "testuser@email.com";
         final String password = "pass";
 
         account = Account.builder()
@@ -125,7 +125,7 @@ public class PostServiceTest {
 
         Account wrongAccount = Account.builder()
                 .name("jun")
-                .email("user@email.com")
+                .email("testuser@email.com")
                 .password("abc")
                 .build();
 
@@ -153,7 +153,7 @@ public class PostServiceTest {
 
     private PostCreateRequestDto createPostCreateRequestDto() {
         final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
-                .accountEmail("user@email.com")
+                .accountEmail("testuser@email.com")
                 .content("test content")
                 .title("test title")
                 .build();

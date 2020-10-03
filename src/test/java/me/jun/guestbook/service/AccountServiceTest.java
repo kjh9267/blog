@@ -33,7 +33,7 @@ public class AccountServiceTest {
     public void setUp() {
         account = Account.builder()
                 .name("jun")
-                .email("user@email.com")
+                .email("testuser@email.com")
                 .password("pass")
                 .build();
     }
@@ -44,7 +44,7 @@ public class AccountServiceTest {
         accountRepository.save(account);
 
         final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
-                .email("user@email.com")
+                .email("testuser@email.com")
                 .password("pass")
                 .build();
 
@@ -68,7 +68,7 @@ public class AccountServiceTest {
         accountRepository.save(account);
 
         final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
-                .email("user@email.com")
+                .email("testuser@email.com")
                 .password("abc")
                 .build();
 
