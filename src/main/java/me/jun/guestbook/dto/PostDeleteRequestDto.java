@@ -1,13 +1,13 @@
 package me.jun.guestbook.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Getter
+@Setter
+@Builder
 public class PostDeleteRequestDto {
 
-    private final Long id;
+    private Long id;
 }
