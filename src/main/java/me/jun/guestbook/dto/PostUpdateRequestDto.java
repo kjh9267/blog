@@ -1,9 +1,6 @@
 package me.jun.guestbook.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 
@@ -11,17 +8,19 @@ import me.jun.guestbook.domain.Post;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
+@ToString
 public class PostUpdateRequestDto {
 
-    private final Long id;
+    private Long id;
 
-    private final String title;
+    private String title;
 
-    private final String content;
+    private String content;
 
-    private final String accountEmail;
+    private String accountEmail;
 
-    private final String password;
+    private String password;
 
     public Post toEntity() {
         final Post post = Post.builder()
