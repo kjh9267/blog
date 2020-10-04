@@ -1,11 +1,13 @@
 package me.jun.guestbook.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.PostCreateRequestDto;
+import me.jun.guestbook.dto.PostDeleteRequestDto;
 import me.jun.guestbook.dto.PostReadRequestDto;
 import me.jun.guestbook.service.PostService;
 import org.junit.After;
@@ -20,8 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@RequiredArgsConstructor
 public class PostControllerTest {
 
     @Autowired
@@ -39,9 +41,6 @@ public class PostControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
-
-    @Autowired
-    PostRepository postRepository;
 
     @Autowired
     PostService postService;
@@ -89,5 +88,24 @@ public class PostControllerTest {
         mockMvc.perform(get("/post/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deletePostTest() throws Exception {
+        final Account account = accountRepository.save(Account.builder()
+                .email("testuser@email.com")
+                .name("jun")
+                .password("pass")
+                .build());
+
+        postService.createPost(PostCreateRequestDto.builder()
+                .accountEmail(account.getEmail())
+                .title("my title")
+                .content("my content")
+                .build());
+
+        mockMvc.perform(delete("/post/1"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
     }
 }
