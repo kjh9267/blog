@@ -2,6 +2,7 @@ package me.jun.guestbook.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.dto.PostCreateRequestDto;
+import me.jun.guestbook.dto.PostDeleteRequestDto;
 import me.jun.guestbook.dto.PostReadRequestDto;
 import me.jun.guestbook.dto.PostResponseDto;
 import me.jun.guestbook.service.PostService;
@@ -30,5 +31,14 @@ public class PostController {
         model.addAttribute("post", postResponseDto);
 
         return "/post";
+    }
+
+    @DeleteMapping("/post/{id}")
+    public String deletePost(@ModelAttribute PostDeleteRequestDto id) {
+        System.out.println(id);
+        System.out.println(id.getId());
+        postService.deletePost(id);
+
+        return "redirect:/index";
     }
 }
