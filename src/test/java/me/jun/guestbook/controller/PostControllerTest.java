@@ -9,6 +9,7 @@ import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.PostCreateRequestDto;
 import me.jun.guestbook.dto.PostDeleteRequestDto;
 import me.jun.guestbook.dto.PostReadRequestDto;
+import me.jun.guestbook.dto.PostUpdateRequestDto;
 import me.jun.guestbook.service.PostService;
 import org.junit.After;
 import org.junit.Before;
@@ -107,5 +108,33 @@ public class PostControllerTest {
         mockMvc.perform(delete("/post/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void updatePostTest() throws Exception {
+        final Account account = accountRepository.save(Account.builder()
+                .email("testuser@email.com")
+                .name("jun")
+                .password("pass")
+                .build());
+
+        postService.createPost(PostCreateRequestDto.builder()
+                .accountEmail(account.getEmail())
+                .title("my title")
+                .content("my content")
+                .build());
+
+        final String content = objectMapper.writeValueAsString(PostUpdateRequestDto.builder()
+                .accountEmail("testuser@email.com")
+                .title("new title")
+                .content("new content")
+                .password("pass")
+                .build());
+
+        mockMvc.perform(put("/post/1")
+                    .content(content)
+                    .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
