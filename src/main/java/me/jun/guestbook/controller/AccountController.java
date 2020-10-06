@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.service.AccountService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,5 +34,10 @@ public class AccountController {
         httpSession.setMaxInactiveInterval(60 * 10);
 
         return "redirect:/index";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "/login";
     }
 }
