@@ -2,6 +2,7 @@ package me.jun.guestbook.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.service.AccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class AccountControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    AccountService accountService;
+
     @Test
     public void registerTest() throws Exception {
         final AccountRequestDto requestDto = AccountRequestDto.builder()
@@ -40,6 +44,25 @@ public class AccountControllerTest {
         mockMvc.perform(post("/register")
                     .contentType("application/json")
                     .content(content))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void loginTest() throws Exception {
+        final AccountRequestDto requestDto = AccountRequestDto.builder()
+                .name("jun")
+                .email("testuser@email.com")
+                .password("pass")
+                .build();
+
+        accountService.createAccount(requestDto);
+
+        final String content = objectMapper.writeValueAsString(requestDto);
+
+        mockMvc.perform(post("/login")
+                    .content(content)
+                    .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
     }
