@@ -49,7 +49,7 @@ public class AccountServiceTest {
                 .build();
 
         // When
-        final AccountResponseDto accountResponseDto = accountService.readAccount(accountRequestDto);
+        final AccountResponseDto accountResponseDto = accountService.login(accountRequestDto);
 
         // Then
         assertThat(accountResponseDto).isEqualToComparingOnlyGivenFields(accountRequestDto, "email");
@@ -73,7 +73,7 @@ public class AccountServiceTest {
                 .build();
 
         // When
-        accountService.readAccount(accountRequestDto);
+        accountService.login(accountRequestDto);
     }
 
     @Test
@@ -127,6 +127,6 @@ public class AccountServiceTest {
 
         // When
         accountService.deleteAccount(accountRequestDto);
-        accountService.readAccount(accountRequestDto);
+        accountService.login(accountRequestDto);
     }
 }
