@@ -1,9 +1,6 @@
 package me.jun.guestbook.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.jun.guestbook.domain.Account;
 
 @NoArgsConstructor(force = true)

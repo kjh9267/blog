@@ -14,7 +14,7 @@ public class AccountService {
     @Autowired
     AccountRepository accountRepository;
 
-    public AccountResponseDto readAccount(AccountRequestDto accountRequestDto) {
+    public AccountResponseDto login(AccountRequestDto accountRequestDto) {
         final Account requestAccount = accountRequestDto.toEntity();
         final String requestEmail = requestAccount.getEmail();
 
