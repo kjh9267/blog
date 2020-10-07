@@ -6,6 +6,9 @@ import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
+import me.jun.guestbook.exception.EmailNotFoundException;
+import me.jun.guestbook.exception.PostNotFoundException;
+import me.jun.guestbook.exception.WrongPasswordException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -36,7 +39,7 @@ public class PostService {
         final Post post = postCreateRequestDto.toEntity();
         final String accountEmail = postCreateRequestDto.getAccountEmail();
         final Account account = accountRepository.findByEmail(accountEmail)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(EmailNotFoundException::new);
 
         post.setAccount(account);
 
@@ -53,11 +56,11 @@ public class PostService {
     public PostResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
         final Post requestPost = postUpdateRequestDto.toEntity();
         final Post post = postRepository.findById(requestPost.getId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(PostNotFoundException::new);
 
         final String requestEmail = postUpdateRequestDto.getAccountEmail();
         final Account account = accountRepository.findByEmail(requestEmail)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(EmailNotFoundException::new);
 
         final String requestPassword = postUpdateRequestDto.getPassword();
         final String password = post.getAccount().getPassword();
@@ -82,7 +85,7 @@ public class PostService {
 
     private void checkPassword(String requestPassword, String password) {
         if (!requestPassword.equals(password)) {
-            throw new IllegalArgumentException("wrong password");
+            throw new WrongPasswordException();
         }
     }
 }
