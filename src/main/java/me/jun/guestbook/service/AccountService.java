@@ -4,6 +4,9 @@ import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.exception.DuplicatedEmailException;
+import me.jun.guestbook.exception.EmailNotFoundException;
+import me.jun.guestbook.exception.WrongPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,10 @@ public class AccountService {
         final String requestEmail = requestAccount.getEmail();
 
         final Account account = accountRepository.findByEmail(requestEmail)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(EmailNotFoundException::new);
 
         if (!requestAccount.getPassword().equals(account.getPassword())) {
-            throw new IllegalArgumentException("wrong password");
+            throw new WrongPasswordException();
         }
 
         return AccountResponseDto.from(account);
@@ -41,7 +44,7 @@ public class AccountService {
             return AccountResponseDto.from(newAccount);
         }
         catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("invalid email");
+            throw new DuplicatedEmailException();
         }
     }
 
