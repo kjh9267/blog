@@ -5,6 +5,7 @@ import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
+import me.jun.guestbook.exception.WrongPasswordException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -116,7 +117,7 @@ public class PostServiceTest {
     @Test
     public void updatePostFailTest() {
         // expected
-        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expect(WrongPasswordException.class);
         expectedException.expectMessage("wrong password");
 
         // Given

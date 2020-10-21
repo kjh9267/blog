@@ -4,6 +4,8 @@ import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
+import me.jun.guestbook.exception.DuplicatedEmailException;
+import me.jun.guestbook.exception.WrongPasswordException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,7 +63,7 @@ public class AccountServiceTest {
     @Test
     public void getAccountFailTest() {
         // Expected
-        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expect(WrongPasswordException.class);
         expectedException.expectMessage("wrong password");
 
         // Given
@@ -98,8 +100,8 @@ public class AccountServiceTest {
     @Test
     public void createAccountFailTest() {
         // Expected
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("invalid email");
+        expectedException.expect(DuplicatedEmailException.class);
+        expectedException.expectMessage("Email already exists");
 
         // Given
         accountRepository.save(account);
