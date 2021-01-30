@@ -35,4 +35,8 @@ public class Account {
     public void addPost(Post post) {
         this.posts.add(post);
     }
+
+    public boolean isCorrect(String password) {
+        return !password.equals(this.password);
+    }
 }
