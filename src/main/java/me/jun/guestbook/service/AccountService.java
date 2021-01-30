@@ -20,11 +20,12 @@ public class AccountService {
     public AccountResponseDto login(AccountRequestDto accountRequestDto) {
         final Account requestAccount = accountRequestDto.toEntity();
         final String requestEmail = requestAccount.getEmail();
+        final String requestPassword = requestAccount.getPassword();
 
         final Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(EmailNotFoundException::new);
 
-        if (!requestAccount.getPassword().equals(account.getPassword())) {
+        if (account.isCorrect(requestPassword)) {
             throw new WrongPasswordException();
         }
 
@@ -51,12 +52,13 @@ public class AccountService {
     public void deleteAccount(AccountRequestDto accountRequestDto) {
         final Account requestAccount = accountRequestDto.toEntity();
         final String requestEmail = requestAccount.getEmail();
+        final String requestPassword = requestAccount.getPassword();
 
         final Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(IllegalArgumentException::new);
 
-        if (!requestAccount.getPassword().equals(account.getPassword())) {
-            throw new IllegalArgumentException("wrong password");
+        if (account.isCorrect(requestPassword)) {
+            throw new WrongPasswordException();
         }
 
         accountRepository.deleteById(account.getId());
