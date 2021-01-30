@@ -6,10 +6,7 @@ import me.jun.guestbook.dao.AccountRepository;
 import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.dto.PostCreateRequestDto;
-import me.jun.guestbook.dto.PostDeleteRequestDto;
-import me.jun.guestbook.dto.PostReadRequestDto;
-import me.jun.guestbook.dto.PostUpdateRequestDto;
+import me.jun.guestbook.dto.*;
 import me.jun.guestbook.service.PostService;
 import org.junit.After;
 import org.junit.Before;
@@ -19,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,6 +44,23 @@ public class PostControllerTest {
     @Autowired
     PostService postService;
 
+    AccountRequestDto requestDto;
+
+    MockHttpSession mockHttpSession;
+
+    @Before
+    public void setUp() {
+        requestDto = AccountRequestDto.builder()
+                .name("jun")
+                .email("testuser@email.com")
+                .password("pass")
+                .build();
+
+        mockHttpSession = new MockHttpSession();
+
+        mockHttpSession.setAttribute("login", requestDto);
+    }
+
     @Test
     public void createPostTest() throws Exception {
         accountRepository.save(Account.builder()
@@ -63,12 +78,14 @@ public class PostControllerTest {
         final String content = objectMapper.writeValueAsString(requestDto);
 
         mockMvc.perform(post("/post")
+                    .session(mockHttpSession)
                     .content(content)
                     .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
 
-        mockMvc.perform(get("/index"))
+        mockMvc.perform(get("/index")
+                    .session(mockHttpSession))
                 .andDo(print());
     }
 
@@ -86,7 +103,8 @@ public class PostControllerTest {
                 .content("my content")
                 .build());
 
-        mockMvc.perform(get("/post/1"))
+        mockMvc.perform(get("/post/1")
+                    .session(mockHttpSession))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -105,12 +123,8 @@ public class PostControllerTest {
                 .content("my content")
                 .build());
 
-        mockMvc.perform(post("/login")
-                    .content(objectMapper.writeValueAsString(account))
-                    .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
-
-        mockMvc.perform(delete("/post/1"))
+        mockMvc.perform(delete("/post/1")
+                    .session(mockHttpSession))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
     }
@@ -137,6 +151,7 @@ public class PostControllerTest {
                 .build());
 
         mockMvc.perform(put("/post/1")
+                    .session(mockHttpSession)
                     .content(content)
                     .contentType("application/json"))
                 .andDo(print())
