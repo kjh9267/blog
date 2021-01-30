@@ -8,7 +8,6 @@ import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
 import me.jun.guestbook.exception.EmailNotFoundException;
 import me.jun.guestbook.exception.PostNotFoundException;
-import me.jun.guestbook.exception.WrongPasswordException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -58,18 +57,11 @@ public class PostService {
         final Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
-        final String requestEmail = postUpdateRequestDto.getAccountEmail();
-        final Account account = accountRepository.findByEmail(requestEmail)
-                .orElseThrow(EmailNotFoundException::new);
-
-        final String requestPassword = postUpdateRequestDto.getPassword();
-        final String password = post.getAccount().getPassword();
-
-        checkPassword(requestPassword, password);
-
         post.setTitle(requestPost.getTitle());
         post.setContent(requestPost.getContent());
         final Post savedPost = postRepository.save(post);
+
+        final Account account = savedPost.getAccount();
 
         return PostResponseDto.of(savedPost, account);
     }
@@ -81,11 +73,5 @@ public class PostService {
         final Page<Post> posts = postRepository.findAll(PageRequest.of(requestPage, size));
 
         return ManyPostResponseDto.from(posts);
-    }
-
-    private void checkPassword(String requestPassword, String password) {
-        if (!requestPassword.equals(password)) {
-            throw new WrongPasswordException();
-        }
     }
 }
