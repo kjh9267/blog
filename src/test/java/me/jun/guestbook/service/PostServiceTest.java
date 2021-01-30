@@ -5,6 +5,7 @@ import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
+import me.jun.guestbook.exception.PostNotFoundException;
 import me.jun.guestbook.exception.WrongPasswordException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -117,20 +118,14 @@ public class PostServiceTest {
     @Test
     public void updatePostFailTest() {
         // expected
-        expectedException.expect(WrongPasswordException.class);
-        expectedException.expectMessage("wrong password");
+        expectedException.expect(PostNotFoundException.class);
 
         // Given
         final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
-        Account wrongAccount = Account.builder()
-                .name("jun")
-                .email("testuser@email.com")
-                .password("abc")
-                .build();
-
-        final PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(wrongAccount);
+        PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(account);
+        postUpdateRequestDto.setId(100L);
 
         // When
         postService.updatePost(postUpdateRequestDto);
