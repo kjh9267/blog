@@ -23,7 +23,8 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne
+    @JoinColumn(name = "account_id")
     private Account account;
 
     public void setAccount(Account account) {
