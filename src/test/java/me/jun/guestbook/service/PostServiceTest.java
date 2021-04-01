@@ -40,11 +40,11 @@ public class PostServiceTest {
 
     @Before
     public void setUp() {
-        final String name = "jun";
-        final String title = "test title";
-        final String content = "test content";
-        final String email = "testuser@email.com";
-        final String password = "pass";
+        String name = "jun";
+        String title = "test title";
+        String content = "test content";
+        String email = "testuser@email.com";
+        String password = "pass";
 
         account = Account.builder()
                 .name(name)
@@ -63,9 +63,10 @@ public class PostServiceTest {
     @Test
     public void readPostTest() {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
+        accountRepository.save(account);
 
-        final Post savedPost = postRepository.save(post);
-        final PostResponseDto postResponseDto = PostResponseDto.of(savedPost, account);
+        Post savedPost = postRepository.save(post);
+        PostResponseDto postResponseDto = PostResponseDto.of(savedPost, account);
 
         assertThat(postService.readPost(postReadRequestDto))
                 .isEqualToComparingFieldByField(postResponseDto);
@@ -75,7 +76,7 @@ public class PostServiceTest {
     public void createPostTest() {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
-        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
+        PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
         assertThat(postService.readPost(postReadRequestDto))
@@ -92,7 +93,7 @@ public class PostServiceTest {
         PostDeleteRequestDto postDeleteRequestDto = new PostDeleteRequestDto(1L);
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
 
-        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
+        PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
         postService.deletePost(postDeleteRequestDto);
@@ -102,14 +103,14 @@ public class PostServiceTest {
 
     @Test
     public void updatePostTest() {
-        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
+        PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
 
-        final PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(account);
+        PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(account);
 
         // When
-        final PostResponseDto postResponseDto = postService.updatePost(postUpdateRequestDto);
+        PostResponseDto postResponseDto = postService.updatePost(postUpdateRequestDto);
 
         assertThat(postService.readPost(new PostReadRequestDto(1L)))
                 .isEqualToComparingFieldByField(postResponseDto);
@@ -121,7 +122,7 @@ public class PostServiceTest {
         expectedException.expect(PostNotFoundException.class);
 
         // Given
-        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
+        PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
         PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequestDto(account);
@@ -133,22 +134,22 @@ public class PostServiceTest {
 
     @Test
     public void readPostByPageTest() {
-        final PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
+        PostCreateRequestDto postCreateRequestDto = createPostCreateRequestDto();
         postService.createPost(postCreateRequestDto);
 
-        final ManyPostRequestDto manyPostRequestDto = ManyPostRequestDto.builder()
+        ManyPostRequestDto manyPostRequestDto = ManyPostRequestDto.builder()
                 .page(1)
                 .build();
 
-        final ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(manyPostRequestDto);
-        final Page<ManyPostResponseDto.PostResponse> postInfoDtoPage = manyPostResponseDto.getPostInfoDtoPage();
+        ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(manyPostRequestDto);
+        Page<ManyPostResponseDto.PostResponse> postInfoDtoPage = manyPostResponseDto.getPostInfoDtoPage();
 
         assertThat(postInfoDtoPage.getTotalPages()).isEqualTo(1);
         assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(2);
     }
 
     private PostCreateRequestDto createPostCreateRequestDto() {
-        final PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
+        PostCreateRequestDto postCreateRequestDto = PostCreateRequestDto.builder()
                 .accountEmail("testuser@email.com")
                 .content("test content")
                 .title("test title")
