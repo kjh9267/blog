@@ -69,13 +69,13 @@ public class PostControllerTest {
                 .password("pass")
                 .build());
 
-        final PostCreateRequestDto requestDto = PostCreateRequestDto.builder()
+        PostCreateRequestDto requestDto = PostCreateRequestDto.builder()
                 .title("my title")
                 .content("my content")
                 .accountEmail("testuser@email.com")
                 .build();
 
-        final String content = objectMapper.writeValueAsString(requestDto);
+        String content = objectMapper.writeValueAsString(requestDto);
 
         mockMvc.perform(post("/post")
                     .session(mockHttpSession)
@@ -91,7 +91,7 @@ public class PostControllerTest {
 
     @Test
     public void readPostTest() throws Exception {
-        final Account account = accountRepository.save(Account.builder()
+        Account account = accountRepository.save(Account.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
@@ -111,7 +111,7 @@ public class PostControllerTest {
 
     @Test
     public void deletePostTest() throws Exception {
-        final Account account = accountRepository.save(Account.builder()
+        Account account = accountRepository.save(Account.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
@@ -131,7 +131,7 @@ public class PostControllerTest {
 
     @Test
     public void updatePostTest() throws Exception {
-        final Account account = accountRepository.save(Account.builder()
+        Account account = accountRepository.save(Account.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
@@ -143,7 +143,7 @@ public class PostControllerTest {
                 .content("my content")
                 .build());
 
-        final String content = objectMapper.writeValueAsString(PostUpdateRequestDto.builder()
+        String content = objectMapper.writeValueAsString(PostUpdateRequestDto.builder()
                 .accountEmail("testuser@email.com")
                 .title("new title")
                 .content("new content")
