@@ -18,11 +18,11 @@ public class AccountTest {
 
     @Before
     public void setUp() {
-        final String name = "jun";
-        final String title = "test title";
-        final String content = "test content";
-        final String email = "user@email.com";
-        final String password = "pass";
+        String name = "jun";
+        String title = "test title";
+        String content = "test content";
+        String email = "user@email.com";
+        String password = "pass";
 
         account = Account.builder()
                 .name(name)
@@ -43,7 +43,7 @@ public class AccountTest {
 
     @Test
     public void addPostTest() {
-        account.addPost(post);
+        post.setAccount(account);
 
         assertThat(account.getPosts().contains(post)).isTrue();
     }
