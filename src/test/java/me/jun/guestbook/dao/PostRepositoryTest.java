@@ -22,11 +22,11 @@ public class PostRepositoryTest {
 
     @Before
     public void setUp() {
-        final String name = "jun";
-        final String title = "test title";
-        final String content = "test content";
-        final String email = "user@email.com";
-        final String password = "pass";
+        String name = "jun";
+        String title = "test title";
+        String content = "test content";
+        String email = "user@email.com";
+        String password = "pass";
 
         post = Post.builder()
                 .title(title)
