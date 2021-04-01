@@ -63,8 +63,8 @@ public class PostServiceTest {
     @Test
     public void readPostTest() {
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
-        accountRepository.save(account);
 
+        accountRepository.save(account);
         Post savedPost = postRepository.save(post);
         PostResponseDto postResponseDto = PostResponseDto.of(savedPost, account);
 
