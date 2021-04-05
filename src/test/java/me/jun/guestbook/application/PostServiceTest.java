@@ -1,9 +1,9 @@
-package me.jun.guestbook.service;
+package me.jun.guestbook.application;
 
-import me.jun.guestbook.domain.AccountRepository;
-import me.jun.guestbook.domain.PostRepository;
 import me.jun.guestbook.domain.Account;
+import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.domain.Post;
+import me.jun.guestbook.domain.PostRepository;
 import me.jun.guestbook.dto.*;
 import me.jun.guestbook.exception.PostNotFoundException;
 import org.junit.Before;
