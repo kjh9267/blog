@@ -1,6 +1,5 @@
-package me.jun.guestbook.dao;
+package me.jun.guestbook.domain;
 
-import me.jun.guestbook.domain.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
