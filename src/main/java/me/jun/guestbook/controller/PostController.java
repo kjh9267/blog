@@ -1,8 +1,8 @@
 package me.jun.guestbook.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.dto.*;
-import me.jun.guestbook.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
