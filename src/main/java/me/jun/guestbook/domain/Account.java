@@ -1,6 +1,7 @@
 package me.jun.guestbook.domain;
 
 import lombok.*;
+import me.jun.guestbook.exception.WrongPasswordException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -35,7 +36,9 @@ public class Account {
         this.posts.add(post);
     }
 
-    public boolean isCorrect(String password) {
-        return !password.equals(this.password);
+    public void validate(String password) {
+        if (!password.equals(this.password)) {
+            throw new WrongPasswordException();
+        }
     }
 }
