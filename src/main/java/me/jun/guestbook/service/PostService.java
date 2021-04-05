@@ -1,8 +1,8 @@
 package me.jun.guestbook.service;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dao.AccountRepository;
-import me.jun.guestbook.dao.PostRepository;
+import me.jun.guestbook.domain.AccountRepository;
+import me.jun.guestbook.domain.PostRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
