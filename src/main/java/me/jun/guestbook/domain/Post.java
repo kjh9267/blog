@@ -6,8 +6,8 @@ import javax.persistence.*;
 
 @Entity
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -24,7 +24,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     public void setAccount(Account account) {

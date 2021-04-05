@@ -1,9 +1,8 @@
 package me.jun.guestbook.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.guestbook.application.AccountService;
 import me.jun.guestbook.dto.AccountRequestDto;
-import me.jun.guestbook.service.AccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
