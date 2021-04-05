@@ -8,8 +8,8 @@ import java.util.List;
 
 @Entity
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -28,7 +28,6 @@ public class Account {
     @Column(length = 12, nullable = false)
     private String password;
 
-    @Builder.Default
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Post> posts = new ArrayList<>();
 
