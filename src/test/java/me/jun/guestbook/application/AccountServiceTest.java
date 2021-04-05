@@ -1,4 +1,4 @@
-package me.jun.guestbook.service;
+package me.jun.guestbook.application;
 
 import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.domain.Account;

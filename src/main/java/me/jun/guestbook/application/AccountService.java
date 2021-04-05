@@ -1,28 +1,28 @@
-package me.jun.guestbook.service;
+package me.jun.guestbook.application;
 
-import me.jun.guestbook.domain.AccountRepository;
+import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.dto.AccountResponseDto;
+import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.exception.DuplicatedEmailException;
 import me.jun.guestbook.exception.EmailNotFoundException;
 import me.jun.guestbook.exception.WrongPasswordException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
-    @Autowired
-    AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     public AccountResponseDto login(AccountRequestDto accountRequestDto) {
-        final Account requestAccount = accountRequestDto.toEntity();
-        final String requestEmail = requestAccount.getEmail();
-        final String requestPassword = requestAccount.getPassword();
+        Account requestAccount = accountRequestDto.toEntity();
+        String requestEmail = requestAccount.getEmail();
+        String requestPassword = requestAccount.getPassword();
 
-        final Account account = accountRepository.findByEmail(requestEmail)
+        Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(EmailNotFoundException::new);
 
         if (account.isCorrect(requestPassword)) {
@@ -33,7 +33,7 @@ public class AccountService {
     }
 
     public AccountResponseDto createAccount(AccountRequestDto accountRequestDto) {
-        final Account account = Account.builder()
+        Account account = Account.builder()
                 .email(accountRequestDto.getEmail())
                 .name(accountRequestDto.getName())
                 .password(accountRequestDto.getPassword())
@@ -50,11 +50,11 @@ public class AccountService {
     }
 
     public void deleteAccount(AccountRequestDto accountRequestDto) {
-        final Account requestAccount = accountRequestDto.toEntity();
-        final String requestEmail = requestAccount.getEmail();
-        final String requestPassword = requestAccount.getPassword();
+        Account requestAccount = accountRequestDto.toEntity();
+        String requestEmail = requestAccount.getEmail();
+        String requestPassword = requestAccount.getPassword();
 
-        final Account account = accountRepository.findByEmail(requestEmail)
+        Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(IllegalArgumentException::new);
 
         if (account.isCorrect(requestPassword)) {

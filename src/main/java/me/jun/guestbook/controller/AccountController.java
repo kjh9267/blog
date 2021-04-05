@@ -1,10 +1,9 @@
 package me.jun.guestbook.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.application.AccountService;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
-import me.jun.guestbook.service.AccountService;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
