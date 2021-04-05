@@ -87,7 +87,7 @@ public class PostServiceTest {
 
     @Test
     public void deletePostTest() {
-        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expect(PostNotFoundException.class);
 
         PostDeleteRequestDto postDeleteRequestDto = new PostDeleteRequestDto(1L);
         PostReadRequestDto postReadRequestDto = new PostReadRequestDto(1L);
