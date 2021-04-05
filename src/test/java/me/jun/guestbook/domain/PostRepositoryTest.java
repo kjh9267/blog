@@ -1,7 +1,5 @@
-package me.jun.guestbook.dao;
+package me.jun.guestbook.domain;
 
-import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.domain.Post;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +20,8 @@ public class PostRepositoryTest {
 
     @Before
     public void setUp() {
-        String name = "jun";
         String title = "test title";
         String content = "test content";
-        String email = "user@email.com";
-        String password = "pass";
 
         post = Post.builder()
                 .title(title)
