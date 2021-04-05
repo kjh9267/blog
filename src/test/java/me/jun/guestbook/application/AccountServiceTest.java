@@ -5,6 +5,7 @@ import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.exception.DuplicatedEmailException;
+import me.jun.guestbook.exception.EmailNotFoundException;
 import me.jun.guestbook.exception.WrongPasswordException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.validation.constraints.Email;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -31,12 +34,14 @@ public class AccountServiceTest {
 
     private Account account;
 
+    String password = "pass";
+
     @Before
     public void setUp() {
         account = Account.builder()
                 .name("jun")
                 .email("testuser@email.com")
-                .password("pass")
+                .password(password)
                 .build();
     }
 
@@ -47,7 +52,7 @@ public class AccountServiceTest {
 
         final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
                 .email("testuser@email.com")
-                .password("pass")
+                .password(password)
                 .build();
 
         // When
@@ -85,7 +90,7 @@ public class AccountServiceTest {
 
         final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
                 .name(account.getName())
-                .password(account.getPassword())
+                .password(password)
                 .email("new_user@email.com")
                 .build();
 
@@ -108,7 +113,7 @@ public class AccountServiceTest {
 
         final AccountRequestDto accountRegisterDto = AccountRequestDto.builder()
                 .name(account.getName())
-                .password(account.getPassword())
+                .password("pass")
                 .email(account.getEmail())
                 .build();
 
@@ -119,12 +124,12 @@ public class AccountServiceTest {
     @Test
     public void deleteAccountTest() {
         // Expected
-        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expect(EmailNotFoundException.class);
 
         // Given
         final AccountRequestDto accountRequestDto = AccountRequestDto.builder()
                 .email(account.getEmail())
-                .password(account.getPassword())
+                .password(password)
                 .build();
 
         // When
