@@ -25,9 +25,7 @@ public class AccountService {
         Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(EmailNotFoundException::new);
 
-        if (account.isCorrect(requestPassword)) {
-            throw new WrongPasswordException();
-        }
+        account.validate(requestPassword);
 
         return AccountResponseDto.from(account);
     }
@@ -45,7 +43,7 @@ public class AccountService {
             return AccountResponseDto.from(newAccount);
         }
         catch (DataIntegrityViolationException e) {
-            throw new DuplicatedEmailException();
+            throw new DuplicatedEmailException(e);
         }
     }
 
@@ -57,9 +55,7 @@ public class AccountService {
         Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(IllegalArgumentException::new);
 
-        if (account.isCorrect(requestPassword)) {
-            throw new WrongPasswordException();
-        }
+        account.validate(requestPassword);
 
         accountRepository.deleteById(account.getId());
     }
