@@ -1,6 +1,6 @@
 package me.jun.guestbook.service;
 
-import me.jun.guestbook.dao.AccountRepository;
+import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.domain.Account;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
