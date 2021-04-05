@@ -1,6 +1,5 @@
-package me.jun.guestbook.dao;
+package me.jun.guestbook.domain;
 
-import me.jun.guestbook.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
