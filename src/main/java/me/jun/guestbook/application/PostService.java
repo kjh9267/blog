@@ -1,4 +1,4 @@
-package me.jun.guestbook.service;
+package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.domain.AccountRepository;
@@ -24,20 +24,19 @@ public class PostService {
     @Transactional
     public PostResponseDto readPost(PostReadRequestDto postReadRequestDto) {
         Long id = postReadRequestDto.getId();
-
-        final Post post = postRepository.findById(id)
+        Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        final Account account = post.getAccount();
+        Account account = post.getAccount();
 
         return PostResponseDto.of(post, account);
     }
 
     @Transactional
     public void createPost(PostCreateRequestDto postCreateRequestDto) {
-        final Post post = postCreateRequestDto.toEntity();
-        final String accountEmail = postCreateRequestDto.getAccountEmail();
-        final Account account = accountRepository.findByEmail(accountEmail)
+        Post post = postCreateRequestDto.toEntity();
+        String accountEmail = postCreateRequestDto.getAccountEmail();
+        Account account = accountRepository.findByEmail(accountEmail)
                 .orElseThrow(EmailNotFoundException::new);
 
         post.setAccount(account);
@@ -53,24 +52,24 @@ public class PostService {
 
     @Transactional
     public PostResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
-        final Post requestPost = postUpdateRequestDto.toEntity();
-        final Post post = postRepository.findById(requestPost.getId())
+        Post requestPost = postUpdateRequestDto.toEntity();
+        Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
         post.setTitle(requestPost.getTitle());
         post.setContent(requestPost.getContent());
-        final Post savedPost = postRepository.save(post);
+        Post savedPost = postRepository.save(post);
 
-        final Account account = savedPost.getAccount();
+        Account account = savedPost.getAccount();
 
         return PostResponseDto.of(savedPost, account);
     }
 
     public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
-        final int requestPage = manyPostRequestDto.getPage();
-        final int size = 10;
+        int requestPage = manyPostRequestDto.getPage();
+        int size = 10;
 
-        final Page<Post> posts = postRepository.findAll(PageRequest.of(requestPage, size));
+        Page<Post> posts = postRepository.findAll(PageRequest.of(requestPage, size));
 
         return ManyPostResponseDto.from(posts);
     }
