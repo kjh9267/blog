@@ -7,7 +7,6 @@ import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.exception.DuplicatedEmailException;
 import me.jun.guestbook.exception.EmailNotFoundException;
-import me.jun.guestbook.exception.WrongPasswordException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class AccountService {
     public AccountResponseDto login(AccountRequestDto accountRequestDto) {
         Account requestAccount = accountRequestDto.toEntity();
         String requestEmail = requestAccount.getEmail();
-        String requestPassword = requestAccount.getPassword();
+        String requestPassword = accountRequestDto.getPassword();
 
         Account account = accountRepository.findByEmail(requestEmail)
                 .orElseThrow(EmailNotFoundException::new);
@@ -50,10 +49,10 @@ public class AccountService {
     public void deleteAccount(AccountRequestDto accountRequestDto) {
         Account requestAccount = accountRequestDto.toEntity();
         String requestEmail = requestAccount.getEmail();
-        String requestPassword = requestAccount.getPassword();
+        String requestPassword = accountRequestDto.getPassword();
 
         Account account = accountRepository.findByEmail(requestEmail)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(EmailNotFoundException::new);
 
         account.validate(requestPassword);
 

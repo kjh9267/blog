@@ -165,7 +165,7 @@ public class PostServiceTest {
                 .title("new title")
                 .content("new content")
                 .accountEmail("testuser@email.com")
-                .password(account.getPassword())
+                .password("pass")
                 .build();
     }
 }
