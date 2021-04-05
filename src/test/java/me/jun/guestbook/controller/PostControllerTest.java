@@ -1,26 +1,22 @@
 package me.jun.guestbook.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dao.AccountRepository;
-import me.jun.guestbook.dao.PostRepository;
 import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.dto.*;
+import me.jun.guestbook.domain.AccountRepository;
+import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.dto.PostCreateRequestDto;
+import me.jun.guestbook.dto.PostUpdateRequestDto;
 import me.jun.guestbook.service.PostService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
