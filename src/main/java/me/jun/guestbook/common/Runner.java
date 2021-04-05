@@ -1,7 +1,7 @@
 package me.jun.guestbook.common;
 
+import me.jun.guestbook.application.AccountService;
 import me.jun.guestbook.dto.AccountRequestDto;
-import me.jun.guestbook.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
