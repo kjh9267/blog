@@ -25,7 +25,7 @@ public class PostService {
     public PostResponseDto readPost(PostReadRequestDto postReadRequestDto) {
         Long id = postReadRequestDto.getId();
         Post post = postRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(PostNotFoundException::new);
 
         Account account = post.getAccount();
 
