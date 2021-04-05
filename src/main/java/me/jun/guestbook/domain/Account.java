@@ -8,13 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
 public class Account {
+
+    @Builder
+    protected Account(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = new Password(password);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +33,9 @@ public class Account {
     @Column(unique = true, length = 20, nullable = false)
     private String email;
 
+    @Embedded
     @Column(length = 12, nullable = false)
-    private String password;
+    private Password password;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Post> posts = new ArrayList<>();
@@ -37,7 +45,7 @@ public class Account {
     }
 
     public void validate(String password) {
-        if (!password.equals(this.password)) {
+        if (!this.password.match(password)) {
             throw new WrongPasswordException();
         }
     }
