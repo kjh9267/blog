@@ -1,7 +1,7 @@
 package me.jun.guestbook.application;
 
-import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.domain.Account;
+import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
 import me.jun.guestbook.exception.DuplicatedEmailException;
@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.validation.constraints.Email;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
