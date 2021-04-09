@@ -16,45 +16,34 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public AccountResponseDto login(AccountRequestDto accountRequestDto) {
-        Account requestAccount = accountRequestDto.toEntity();
-        String requestEmail = requestAccount.getEmail();
-        String requestPassword = accountRequestDto.getPassword();
-
-        Account account = accountRepository.findByEmail(requestEmail)
+    public AccountResponseDto login(AccountRequestDto dto) {
+        Account account = dto.toEntity();
+        account = accountRepository.findByEmail(account.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
 
-        account.validate(requestPassword);
+        account.validate(dto.getPassword());
 
         return AccountResponseDto.from(account);
     }
 
-    public AccountResponseDto createAccount(AccountRequestDto accountRequestDto) {
-        Account account = Account.builder()
-                .email(accountRequestDto.getEmail())
-                .name(accountRequestDto.getName())
-                .password(accountRequestDto.getPassword())
-                .build();
+    public AccountResponseDto createAccount(AccountRequestDto dto) {
+        Account account = dto.toEntity();
 
         try {
-            Account newAccount = accountRepository.save(account);
+            account = accountRepository.save(account);
 
-            return AccountResponseDto.from(newAccount);
+            return AccountResponseDto.from(account);
         }
         catch (DataIntegrityViolationException e) {
             throw new DuplicatedEmailException(e);
         }
     }
 
-    public void deleteAccount(AccountRequestDto accountRequestDto) {
-        Account requestAccount = accountRequestDto.toEntity();
-        String requestEmail = requestAccount.getEmail();
-        String requestPassword = accountRequestDto.getPassword();
-
-        Account account = accountRepository.findByEmail(requestEmail)
+    public void deleteAccount(AccountRequestDto dto) {
+        Account account = accountRepository.findByEmail(dto.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
 
-        account.validate(requestPassword);
+        account.validate(dto.getPassword());
 
         accountRepository.deleteById(account.getId());
     }
