@@ -27,7 +27,7 @@ public class IndexController {
             ManyPostRequestDto page) {
 
         final List<ManyPostResponseDto.PostResponse> content = postService.readPostByPage(page)
-                .getPostInfoDtoPage()
+                .getPostResponses()
                 .getContent();
 
         for(ManyPostResponseDto.PostResponse data:content) {
@@ -37,7 +37,7 @@ public class IndexController {
 
         model.addAttribute("list",
                 postService.readPostByPage(page)
-                        .getPostInfoDtoPage()
+                        .getPostResponses()
                         .getContent()
                 );
 
