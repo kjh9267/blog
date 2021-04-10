@@ -15,9 +15,7 @@ public class PostResponse {
 
     private final Long id;
 
-    private final String accountEmail;
-
-    private final String accountName;
+    private final String writer;
 
     private final String title;
 
@@ -26,8 +24,7 @@ public class PostResponse {
     public static PostResponse of(Post post, Account account) {
         return PostResponse.builder()
                 .id(post.getId())
-                .accountEmail(account.getEmail())
-                .accountName(account.getName())
+                .writer(account.getName())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();

@@ -15,15 +15,15 @@ public class PostController {
 
     @PostMapping("/post")
     public String createPost(@RequestBody PostRequest request) {
-        postService.createPost(request);
+        postService.createPost(request, 1L);
 
         return "redirect:/index";
     }
 
     @GetMapping("/post/{id}")
-    public String readPost(@ModelAttribute PostRequest id,
+    public String readPost(@ModelAttribute PostIdRequest id,
                            Model model) {
-        final PostResponse postResponse = postService.readPost(id);
+        PostResponse postResponse = postService.readPost(id);
         model.addAttribute("post", postResponse);
 
         return "/post";
