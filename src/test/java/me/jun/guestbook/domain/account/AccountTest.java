@@ -1,6 +1,6 @@
-package me.jun.guestbook.domain;
+package me.jun.guestbook.domain.account;
 
-import me.jun.guestbook.exception.WrongPasswordException;
+import me.jun.guestbook.domain.post.Post;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

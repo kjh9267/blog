@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain;
+package me.jun.guestbook.domain.post;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

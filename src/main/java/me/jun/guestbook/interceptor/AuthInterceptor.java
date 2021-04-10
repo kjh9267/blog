@@ -1,6 +1,5 @@
 package me.jun.guestbook.interceptor;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
