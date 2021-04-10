@@ -14,14 +14,14 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public String createPost(@RequestBody PostCreateRequestDto request) {
+    public String createPost(@RequestBody PostRequestDto request) {
         postService.createPost(request);
 
         return "redirect:/index";
     }
 
     @GetMapping("/post/{id}")
-    public String readPost(@ModelAttribute PostReadRequestDto id,
+    public String readPost(@ModelAttribute PostRequestDto id,
                            Model model) {
         final PostResponseDto postResponseDto = postService.readPost(id);
         model.addAttribute("post", postResponseDto);
@@ -30,17 +30,15 @@ public class PostController {
     }
 
     @DeleteMapping("/post/{id}")
-    public String deletePost(@ModelAttribute PostDeleteRequestDto id) {
+    public String deletePost(@ModelAttribute PostRequestDto id) {
         postService.deletePost(id);
 
         return "redirect:/index";
     }
 
-    @PutMapping("/post/{id}")
-    public String updatePost(@PathVariable Long id,
-                             @RequestBody PostUpdateRequestDto requestDto,
+    @PutMapping("/post")
+    public String updatePost(@RequestBody PostRequestDto requestDto,
                              Model model) {
-        requestDto.setId(id);
 
         final PostResponseDto postResponseDto = postService.updatePost(requestDto);
 
