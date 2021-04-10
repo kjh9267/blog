@@ -1,13 +1,13 @@
 package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.domain.AccountRepository;
-import me.jun.guestbook.domain.PostRepository;
-import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.dto.*;
-import me.jun.guestbook.exception.EmailNotFoundException;
-import me.jun.guestbook.exception.PostNotFoundException;
+import me.jun.guestbook.application.exception.EmailNotFoundException;
+import me.jun.guestbook.application.exception.PostNotFoundException;
+import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.account.AccountRepository;
+import me.jun.guestbook.domain.post.Post;
+import me.jun.guestbook.domain.post.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
