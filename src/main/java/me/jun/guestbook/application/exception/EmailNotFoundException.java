@@ -1,4 +1,4 @@
-package me.jun.guestbook.exception;
+package me.jun.guestbook.application.exception;
 
 public class EmailNotFoundException extends RuntimeException {
 

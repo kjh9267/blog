@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.domain.Post;
+import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.post.Post;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
