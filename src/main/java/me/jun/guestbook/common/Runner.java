@@ -1,7 +1,7 @@
 package me.jun.guestbook.common;
 
 import me.jun.guestbook.application.AccountService;
-import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.dto.AccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -15,8 +15,8 @@ public class Runner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        accountService.createAccount(
-                AccountRequestDto.builder()
+        accountService.register(
+                AccountRequest.builder()
                         .email("user@email.com")
                         .password("pass")
                         .name("jun")

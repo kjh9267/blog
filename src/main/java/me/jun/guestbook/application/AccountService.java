@@ -1,8 +1,8 @@
 package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dto.AccountRequestDto;
-import me.jun.guestbook.dto.AccountResponseDto;
+import me.jun.guestbook.dto.AccountRequest;
+import me.jun.guestbook.dto.AccountResponse;
 import me.jun.guestbook.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.application.exception.EmailNotFoundException;
 import me.jun.guestbook.domain.account.Account;
@@ -16,30 +16,30 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public AccountResponseDto login(AccountRequestDto dto) {
+    public AccountResponse login(AccountRequest dto) {
         Account account = dto.toEntity();
         account = accountRepository.findByEmail(account.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
 
         account.validate(dto.getPassword());
 
-        return AccountResponseDto.from(account);
+        return AccountResponse.from(account);
     }
 
-    public AccountResponseDto createAccount(AccountRequestDto dto) {
+    public AccountResponse register(AccountRequest dto) {
         Account account = dto.toEntity();
 
         try {
             account = accountRepository.save(account);
 
-            return AccountResponseDto.from(account);
+            return AccountResponse.from(account);
         }
         catch (DataIntegrityViolationException e) {
             throw new DuplicatedEmailException(e);
         }
     }
 
-    public void deleteAccount(AccountRequestDto dto) {
+    public void deleteAccount(AccountRequest dto) {
         Account account = accountRepository.findByEmail(dto.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
 

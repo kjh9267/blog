@@ -8,14 +8,14 @@ import me.jun.guestbook.domain.account.Account;
 @Getter
 @Builder
 @ToString
-public class AccountResponseDto {
+public class AccountResponse {
 
     private final String name;
 
     private final String email;
 
-    public static AccountResponseDto from(Account account) {
-        return AccountResponseDto.builder()
+    public static AccountResponse from(Account account) {
+        return AccountResponse.builder()
                 .name(account.getName())
                 .email(account.getEmail())
                 .build();

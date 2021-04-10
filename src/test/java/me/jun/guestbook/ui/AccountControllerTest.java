@@ -2,7 +2,7 @@ package me.jun.guestbook.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.AccountService;
-import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.dto.AccountRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class AccountControllerTest {
 
     @Test
     public void registerTest() throws Exception {
-        final AccountRequestDto requestDto = AccountRequestDto.builder()
+        final AccountRequest requestDto = AccountRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
@@ -54,13 +54,13 @@ public class AccountControllerTest {
 
     @Test
     public void loginTest() throws Exception {
-        final AccountRequestDto requestDto = AccountRequestDto.builder()
+        final AccountRequest requestDto = AccountRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
                 .build();
 
-        accountService.createAccount(requestDto);
+        accountService.register(requestDto);
 
         final String content = objectMapper.writeValueAsString(requestDto);
 
@@ -73,13 +73,13 @@ public class AccountControllerTest {
 
     @Test
     public void loginSessionTest() throws Exception {
-        final AccountRequestDto requestDto = AccountRequestDto.builder()
+        final AccountRequest requestDto = AccountRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
                 .build();
 
-        accountService.createAccount(requestDto);
+        accountService.register(requestDto);
 
         mockHttpSession = new MockHttpSession();
 
