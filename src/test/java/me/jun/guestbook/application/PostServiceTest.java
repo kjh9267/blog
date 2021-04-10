@@ -1,178 +1,157 @@
 package me.jun.guestbook.application;
 
-import me.jun.guestbook.dto.*;
+import me.jun.guestbook.application.exception.AccountNotFoundException;
 import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.account.Account;
 import me.jun.guestbook.domain.account.AccountRepository;
 import me.jun.guestbook.domain.post.Post;
 import me.jun.guestbook.domain.post.PostRepository;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import me.jun.guestbook.dto.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
 
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
     private PostService postService;
 
-    @Autowired
+    @Mock
+    private PostRepository postRepository;
+
+    @Mock
     private AccountRepository accountRepository;
 
     private Post post;
 
     private Account account;
 
-    @Before
-    public void setUp() {
-        String name = "jun";
-        String title = "test title";
-        String content = "test content";
-        String email = "testuser@email.com";
-        String password = "pass";
+    private PostRequest postRequest;
 
-        account = Account.builder()
-                .name(name)
-                .email(email)
-                .password(password)
-                .build();
+    private PostIdRequest postIdRequest;
+
+    private final Long postId = 1L;
+
+    private final Long accountId = 1L;
+
+    private final String accountName = "test user";
+
+    private final String title = "test title";
+
+    private final String content = "test content";
+
+    @BeforeEach
+    void setUp() {
+        postService = new PostService(postRepository, accountRepository);
 
         post = Post.builder()
+                .id(1L)
+                .title(title)
+                .content(content)
+                .account(Account.builder().name(accountName).build())
+                .build();
+
+        account = Account.builder()
+                .name(accountName)
+                .build();
+
+        postRequest = PostRequest.builder()
+                .id(postId)
                 .title(title)
                 .content(content)
                 .build();
 
-        post.setAccount(account);
-    }
-
-    @Test
-    public void readPostTest() {
-        PostRequest dto = PostRequest.builder()
-                .id(1L)
+        postIdRequest = PostIdRequest.builder()
+                .id(postId)
                 .build();
-
-        accountRepository.save(account);
-        Post savedPost = postRepository.save(post);
-        PostResponse postResponse = PostResponse.of(savedPost, account);
-
-        assertThat(postService.readPost(dto))
-                .isEqualToComparingFieldByField(postResponse);
     }
 
     @Test
-    public void createPostTest() {
-        PostRequest postReadRequestDto = PostRequest.builder()
-                .id(1L)
-                .build();
+    void readPostTest() {
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
-        PostRequest postRequest = createPostCreateRequestDto();
-        postService.createPost(postRequest);
+        PostResponse postResponse = postService.readPost(postIdRequest);
 
-        assertThat(postService.readPost(postReadRequestDto))
-                .isEqualToIgnoringGivenFields(postRequest,"id", "accountEmail", "accountName");
-    }
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @Test
-    public void deletePostTest() {
-        expectedException.expect(PostNotFoundException.class);
-
-        PostRequest deleteDto = PostRequest.builder()
-                .id(1L)
-                .build();
-        PostRequest readDto = PostRequest.builder()
-                .id(1L)
-                .build();
-
-        PostRequest postRequest = createPostCreateRequestDto();
-        postService.createPost(postRequest);
-
-        postService.deletePost(deleteDto);
-
-        assertThat(postService.readPost(readDto));
+        assertAll(
+                () -> assertThat(postResponse.getWriter()).isEqualTo(accountName),
+                () -> assertThat(postResponse.getTitle()).isEqualTo(title),
+                () -> assertThat(postResponse.getContent()).isEqualTo(content)
+        );
     }
 
     @Test
-    public void updatePostTest() {
-        PostRequest postRequest = createPostCreateRequestDto();
-        postService.createPost(postRequest);
+    void readPostFailTest() {
+        given(postRepository.findById(postId)).willReturn(Optional.empty());
 
-        PostRequest postUpdateRequestDto = createPostUpdateRequestDto();
-
-        // When
-        PostResponse postResponse = postService.updatePost(postUpdateRequestDto);
-
-        assertThat(postService.readPost(PostRequest.builder().id(1L).build()))
-                .isEqualToComparingFieldByField(postResponse);
+        assertThrows(PostNotFoundException.class,
+                () -> postService.readPost(postIdRequest)
+        );
     }
 
     @Test
-    public void updatePostFailTest() {
-        // expected
-        expectedException.expect(PostNotFoundException.class);
+    void createPostFailTest() {
+        given(accountRepository.findById(accountId)).willReturn(Optional.empty());
+
+        assertThrows(AccountNotFoundException.class,
+                () -> postService.createPost(postRequest, accountId)
+        );
+    }
+
+    @Test
+    void updatePostTest() {
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.save(post)).willReturn(post);
+
+        lenient().when(postService.updatePost(postRequest))
+                .thenReturn(PostResponse.builder()
+                        .writer(accountName)
+                        .title(title)
+                        .content(content)
+                        .build());
+    }
+
+    @Test
+    void updatePostFailTest() {
+        given(postRepository.findById(postId)).willReturn(Optional.empty());
+
+        assertThrows(PostNotFoundException.class,
+                () -> postService.updatePost(postRequest)
+        );
+    }
+
+    @Test
+    void readPostByPageTest() {
 
         // Given
-        PostRequest createDto = createPostCreateRequestDto();
-        postService.createPost(createDto);
-
-        PostRequest updateDto = PostRequest.builder()
-                .id(100L)
-                .title("new title")
-                .content("new content")
+        ManyPostRequestDto request = ManyPostRequestDto.builder()
+                .page(0)
                 .build();
+
+        Page<Post> posts = new PageImpl<Post>(Arrays.asList(post, post, post));
+
+        given(postRepository.findAll(PageRequest.of(0, 10)))
+                .willReturn(posts);
 
         // When
-        postService.updatePost(updateDto);
-    }
+        ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(request);
 
-    @Test
-    public void readPostByPageTest() {
-        PostRequest postRequest = createPostCreateRequestDto();
-        postService.createPost(postRequest);
-
-        ManyPostRequestDto manyPostRequestDto = ManyPostRequestDto.builder()
-                .page(1)
-                .build();
-
-        ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(manyPostRequestDto);
-        Page<ManyPostResponseDto.PostResponse> postInfoDtoPage = manyPostResponseDto.getPostInfoDtoPage();
-
-        assertThat(postInfoDtoPage.getTotalPages()).isEqualTo(1);
-        assertThat(postInfoDtoPage.getTotalElements()).isEqualTo(2);
-    }
-
-    private PostRequest createPostCreateRequestDto() {
-        PostRequest postRequest = PostRequest.builder()
-                .content("test content")
-                .title("test title")
-                .build();
-
-        accountRepository.save(account);
-
-        return postRequest;
-    }
-
-    private PostRequest createPostUpdateRequestDto() {
-        return PostRequest.builder()
-                .id(1L)
-                .title("new title")
-                .content("new content")
-                .build();
+        assertAll(
+                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalPages()).isEqualTo(1),
+                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalElements()).isEqualTo(3)
+        );
     }
 }

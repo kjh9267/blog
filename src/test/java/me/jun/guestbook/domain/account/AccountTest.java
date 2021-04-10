@@ -1,31 +1,26 @@
 package me.jun.guestbook.domain.account;
 
 import me.jun.guestbook.domain.post.Post;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
 public class AccountTest {
 
     private Account account;
 
     private Post post;
 
-    String name = "jun";
-    String title = "test title";
-    String content = "test content";
-    String email = "user@email.com";
-    String password = "pass";
+    private final String name = "jun";
+    private final String title = "test title";
+    private final String content = "test content";
+    private final String email = "user@email.com";
+    private final String password = "pass";
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         account = Account.builder()
@@ -41,12 +36,12 @@ public class AccountTest {
     }
 
     @Test
-    public void constructorTest() {
+    void constructorTest() {
         assertThat(account).isInstanceOf(Account.class);
     }
 
     @Test
-    public void constructorTest2() {
+    void constructorTest2() {
         Account newAccount = Account.builder()
                 .name(name)
                 .email(email)
@@ -62,14 +57,14 @@ public class AccountTest {
     }
 
     @Test
-    public void addPostTest() {
+    void addPostTest() {
         post.setAccount(account);
 
         assertThat(account.getPosts().contains(post)).isTrue();
     }
 
     @Test
-    public void validateTest() {
+    void validateTest() {
         assertThrows(WrongPasswordException.class,
                 () -> account.validate("123")
         );

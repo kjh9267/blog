@@ -10,13 +10,12 @@ import org.springframework.data.domain.Page;
 @Getter
 public class ManyPostResponseDto {
 
-    private final Page<PostResponse> postInfoDtoPage;
+    private final Page<PostResponse> postResponses;
 
     public static ManyPostResponseDto from(Page<Post> posts) {
         return ManyPostResponseDto.builder()
-                .postInfoDtoPage(posts.map(PostResponse::from))
+                .postResponses(posts.map(PostResponse::from))
                 .build();
-
     }
 
     @NoArgsConstructor(force = true)
@@ -25,15 +24,12 @@ public class ManyPostResponseDto {
     @ToString
     public static class PostResponse {
 
-        private final Long id;
-
         private final String title;
 
         private final String content;
 
         public static PostResponse from(Post post) {
             return PostResponse.builder()
-                    .id(post.getId())
                     .title(post.getTitle())
                     .content(post.getContent())
                     .build();
