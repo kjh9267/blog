@@ -1,7 +1,7 @@
-package me.jun.guestbook.controller;
+package me.jun.guestbook.ui;
 
-import me.jun.guestbook.error.ErrorCode;
-import me.jun.guestbook.error.ErrorResponse;
+import me.jun.guestbook.ui.error.ErrorCode;
+import me.jun.guestbook.ui.error.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

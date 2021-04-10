@@ -1,4 +1,4 @@
-package me.jun.guestbook.error;
+package me.jun.guestbook.ui.error;
 
 import lombok.Getter;
 
