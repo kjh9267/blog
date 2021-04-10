@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.domain.account.Account;
 import me.jun.guestbook.domain.account.AccountRepository;
-import me.jun.guestbook.dto.AccountRequestDto;
-import me.jun.guestbook.dto.PostRequestDto;
+import me.jun.guestbook.dto.AccountRequest;
+import me.jun.guestbook.dto.PostRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -40,13 +40,13 @@ public class PostControllerTest {
     @Autowired
     PostService postService;
 
-    AccountRequestDto requestDto;
+    AccountRequest requestDto;
 
     MockHttpSession mockHttpSession;
 
     @BeforeEach
     public void setUp() {
-        requestDto = AccountRequestDto.builder()
+        requestDto = AccountRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
@@ -65,7 +65,7 @@ public class PostControllerTest {
                 .password("pass")
                 .build());
 
-        PostRequestDto requestDto = PostRequestDto.builder()
+        PostRequest requestDto = PostRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build();
@@ -93,7 +93,7 @@ public class PostControllerTest {
                 .password("pass")
                 .build());
 
-        postService.createPost(PostRequestDto.builder()
+        postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build());
@@ -112,7 +112,7 @@ public class PostControllerTest {
                 .password("pass")
                 .build());
 
-        postService.createPost(PostRequestDto.builder()
+        postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build());
@@ -132,12 +132,12 @@ public class PostControllerTest {
                 .password("pass")
                 .build());
 
-        postService.createPost(PostRequestDto.builder()
+        postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build());
 
-        String content = objectMapper.writeValueAsString(PostRequestDto.builder()
+        String content = objectMapper.writeValueAsString(PostRequest.builder()
                 .id(1L)
                 .title("new title")
                 .content("new content")
