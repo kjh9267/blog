@@ -10,16 +10,17 @@ import me.jun.guestbook.domain.post.Post;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostCreateRequestDto {
+public class PostRequestDto {
+
+    private final Long id;
 
     private final String title;
 
     private final String content;
 
-    private final String accountEmail;
-
     public Post toEntity() {
         return Post.builder()
+                .id(id)
                 .title(this.title)
                 .content(this.content)
                 .build();
