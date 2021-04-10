@@ -1,6 +1,7 @@
-package me.jun.guestbook.domain;
+package me.jun.guestbook.domain.post;
 
 import lombok.*;
+import me.jun.guestbook.domain.account.Account;
 
 import javax.persistence.*;
 

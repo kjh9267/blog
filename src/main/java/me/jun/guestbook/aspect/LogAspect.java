@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAspect {
 
-    @Around("execution(* me.jun.guestbook.domain.PostRepository.*(..))")
+    @Around("execution(* me.jun.guestbook.domain.post.PostRepository.*(..))")
     public Object executionTimeLogAdvice(ProceedingJoinPoint proceedingJoinPoint) {
         Logger logger = LoggerFactory.getLogger("Data access time Logger");
         Object value = null;
