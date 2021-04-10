@@ -22,8 +22,8 @@ public class PostService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public PostResponseDto readPost(PostReadRequestDto postReadRequestDto) {
-        Long id = postReadRequestDto.getId();
+    public PostResponseDto readPost(PostRequestDto dto) {
+        Long id = dto.getId();
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -33,26 +33,26 @@ public class PostService {
     }
 
     @Transactional
-    public void createPost(PostCreateRequestDto postCreateRequestDto) {
-        Post post = postCreateRequestDto.toEntity();
-        String accountEmail = postCreateRequestDto.getAccountEmail();
-        Account account = accountRepository.findByEmail(accountEmail)
-                .orElseThrow(EmailNotFoundException::new);
-
-        post.setAccount(account);
+    public void createPost(PostRequestDto postRequestDto) {
+        Post post = postRequestDto.toEntity();
+//        String accountEmail = postRequestDto.getAccountEmail();
+//        Account account = accountRepository.findByEmail(accountEmail)
+//                .orElseThrow(EmailNotFoundException::new);
+//
+//        post.setAccount(account);
 
         postRepository.save(post);
     }
 
-    public void deletePost(PostDeleteRequestDto postDeleteRequestDto) {
-        final Long id = postDeleteRequestDto.getId();
+    public void deletePost(PostRequestDto dto) {
+        Long id = dto.getId();
 
         postRepository.deleteById(id);
     }
 
     @Transactional
-    public PostResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
-        Post requestPost = postUpdateRequestDto.toEntity();
+    public PostResponseDto updatePost(PostRequestDto dto) {
+        Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
