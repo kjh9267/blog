@@ -1,4 +1,4 @@
-package me.jun.guestbook.controller;
+package me.jun.guestbook.ui;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.application.PostService;

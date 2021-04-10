@@ -1,12 +1,12 @@
 package me.jun.guestbook.application;
 
-import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.AccountResponseDto;
-import me.jun.guestbook.exception.DuplicatedEmailException;
-import me.jun.guestbook.exception.EmailNotFoundException;
-import me.jun.guestbook.exception.WrongPasswordException;
+import me.jun.guestbook.application.exception.DuplicatedEmailException;
+import me.jun.guestbook.application.exception.EmailNotFoundException;
+import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.account.AccountRepository;
+import me.jun.guestbook.domain.account.WrongPasswordException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
