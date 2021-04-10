@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class ManyPostRequestDto {
+public class PostIdRequest {
 
     @NotBlank
-    private final int page;
+    private Long id;
 }
