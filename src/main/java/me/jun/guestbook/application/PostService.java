@@ -2,7 +2,6 @@ package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.dto.*;
-import me.jun.guestbook.application.exception.EmailNotFoundException;
 import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.account.Account;
 import me.jun.guestbook.domain.account.AccountRepository;
@@ -22,19 +21,19 @@ public class PostService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public PostResponseDto readPost(PostRequestDto dto) {
+    public PostResponse readPost(PostRequest dto) {
         Long id = dto.getId();
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
 
         Account account = post.getAccount();
 
-        return PostResponseDto.of(post, account);
+        return PostResponse.of(post, account);
     }
 
     @Transactional
-    public void createPost(PostRequestDto postRequestDto) {
-        Post post = postRequestDto.toEntity();
+    public void createPost(PostRequest postRequest) {
+        Post post = postRequest.toEntity();
 //        String accountEmail = postRequestDto.getAccountEmail();
 //        Account account = accountRepository.findByEmail(accountEmail)
 //                .orElseThrow(EmailNotFoundException::new);
@@ -44,14 +43,14 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void deletePost(PostRequestDto dto) {
+    public void deletePost(PostRequest dto) {
         Long id = dto.getId();
 
         postRepository.deleteById(id);
     }
 
     @Transactional
-    public PostResponseDto updatePost(PostRequestDto dto) {
+    public PostResponse updatePost(PostRequest dto) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
@@ -62,7 +61,7 @@ public class PostService {
 
         Account account = savedPost.getAccount();
 
-        return PostResponseDto.of(savedPost, account);
+        return PostResponse.of(savedPost, account);
     }
 
     public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
