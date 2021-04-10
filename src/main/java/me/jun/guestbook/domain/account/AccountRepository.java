@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain;
+package me.jun.guestbook.domain.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package me.jun.guestbook.controller;
+package me.jun.guestbook.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.AccountService;
