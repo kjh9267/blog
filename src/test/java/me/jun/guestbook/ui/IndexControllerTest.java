@@ -1,6 +1,6 @@
 package me.jun.guestbook.ui;
 
-import me.jun.guestbook.dto.AccountRequestDto;
+import me.jun.guestbook.dto.AccountRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class IndexControllerTest {
 
     @Test
     public void indexTest() throws Exception {
-        AccountRequestDto accountRequestDto = AccountRequestDto.builder()
+        AccountRequest accountRequest = AccountRequest.builder()
                 .name("testuser")
                 .password("pass")
                 .email("testuser@email.com")
@@ -36,7 +36,7 @@ public class IndexControllerTest {
 
         mockHttpSession = new MockHttpSession();
 
-        mockHttpSession.setAttribute("login", accountRequestDto);
+        mockHttpSession.setAttribute("login", accountRequest);
 
         mockMvc.perform(get("/index")
                     .session(mockHttpSession))

@@ -10,7 +10,7 @@ import me.jun.guestbook.domain.post.Post;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostRequestDto {
+public class PostRequest {
 
     private final Long id;
 
