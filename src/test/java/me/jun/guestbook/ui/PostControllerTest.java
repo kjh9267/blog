@@ -1,12 +1,12 @@
-package me.jun.guestbook.controller;
+package me.jun.guestbook.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.PostService;
-import me.jun.guestbook.domain.Account;
-import me.jun.guestbook.domain.AccountRepository;
 import me.jun.guestbook.dto.AccountRequestDto;
 import me.jun.guestbook.dto.PostCreateRequestDto;
 import me.jun.guestbook.dto.PostUpdateRequestDto;
+import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.account.AccountRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

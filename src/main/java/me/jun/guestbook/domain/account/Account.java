@@ -1,7 +1,7 @@
-package me.jun.guestbook.domain;
+package me.jun.guestbook.domain.account;
 
 import lombok.*;
-import me.jun.guestbook.exception.WrongPasswordException;
+import me.jun.guestbook.domain.post.Post;
 
 import javax.persistence.*;
 import java.util.ArrayList;
