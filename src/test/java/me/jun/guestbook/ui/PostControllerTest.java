@@ -96,7 +96,7 @@ public class PostControllerTest {
         postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
-                .build());
+                .build(), 1L);
 
         mockMvc.perform(get("/post/1")
                     .session(mockHttpSession))
@@ -115,7 +115,7 @@ public class PostControllerTest {
         postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
-                .build());
+                .build(), 1L);
 
         mockMvc.perform(delete("/post/1")
                     .session(mockHttpSession))
@@ -135,7 +135,7 @@ public class PostControllerTest {
         postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
-                .build());
+                .build(), 1L);
 
         String content = objectMapper.writeValueAsString(PostRequest.builder()
                 .id(1L)
