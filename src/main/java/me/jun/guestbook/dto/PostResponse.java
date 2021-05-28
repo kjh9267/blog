@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.guest.Guest;
 import me.jun.guestbook.domain.post.Post;
 
 @NoArgsConstructor(force = true)
@@ -21,10 +21,10 @@ public class PostResponse {
 
     private final String content;
 
-    public static PostResponse of(Post post, Account account) {
+    public static PostResponse of(Post post, Guest guest) {
         return PostResponse.builder()
                 .id(post.getId())
-                .writer(account.getName())
+                .writer(guest.getName())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();

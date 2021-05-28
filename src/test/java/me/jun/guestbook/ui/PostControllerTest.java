@@ -2,9 +2,9 @@ package me.jun.guestbook.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.PostService;
-import me.jun.guestbook.domain.account.Account;
-import me.jun.guestbook.domain.account.AccountRepository;
-import me.jun.guestbook.dto.AccountRequest;
+import me.jun.guestbook.domain.guest.Guest;
+import me.jun.guestbook.domain.guest.GuestRepository;
+import me.jun.guestbook.dto.GuestRequest;
 import me.jun.guestbook.dto.PostRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -35,18 +35,18 @@ public class PostControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    AccountRepository accountRepository;
+    GuestRepository guestRepository;
 
     @Autowired
     PostService postService;
 
-    AccountRequest requestDto;
+    GuestRequest requestDto;
 
     MockHttpSession mockHttpSession;
 
     @BeforeEach
     public void setUp() {
-        requestDto = AccountRequest.builder()
+        requestDto = GuestRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
@@ -59,7 +59,7 @@ public class PostControllerTest {
 
     @Test
     public void createPostTest() throws Exception {
-        accountRepository.save(Account.builder()
+        guestRepository.save(Guest.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
@@ -87,7 +87,7 @@ public class PostControllerTest {
     @Disabled
     @Test
     public void readPostTest() throws Exception {
-        Account account = accountRepository.save(Account.builder()
+        Guest guest = guestRepository.save(Guest.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
@@ -106,7 +106,7 @@ public class PostControllerTest {
 
     @Test
     public void deletePostTest() throws Exception {
-        Account account = accountRepository.save(Account.builder()
+        Guest guest = guestRepository.save(Guest.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
@@ -126,7 +126,7 @@ public class PostControllerTest {
     @Disabled
     @Test
     public void updatePostTest() throws Exception {
-        Account account = accountRepository.save(Account.builder()
+        Guest guest = guestRepository.save(Guest.builder()
                 .email("testuser@email.com")
                 .name("jun")
                 .password("pass")
