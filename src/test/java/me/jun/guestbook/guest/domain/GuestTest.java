@@ -1,9 +1,6 @@
 package me.jun.guestbook.guest.domain;
 
-import me.jun.guestbook.domain.post.Post;
-import me.jun.guestbook.guest.domain.Guest;
-import me.jun.guestbook.guest.domain.Password;
-import me.jun.guestbook.guest.domain.WrongPasswordException;
+import me.jun.guestbook.post.domain.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
-package me.jun.guestbook.ui;
+package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.application.PostService;
+import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.dto.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
