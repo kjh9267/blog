@@ -1,8 +1,8 @@
 package me.jun.guestbook.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.application.AccountService;
-import me.jun.guestbook.dto.AccountRequest;
+import me.jun.guestbook.application.GuestService;
+import me.jun.guestbook.dto.GuestRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class AccountControllerTest {
+public class GuestControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -31,13 +31,13 @@ public class AccountControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    AccountService accountService;
+    GuestService guestService;
 
     MockHttpSession mockHttpSession;
 
     @Test
     public void registerTest() throws Exception {
-        final AccountRequest requestDto = AccountRequest.builder()
+        final GuestRequest requestDto = GuestRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
@@ -54,13 +54,13 @@ public class AccountControllerTest {
 
     @Test
     public void loginTest() throws Exception {
-        final AccountRequest requestDto = AccountRequest.builder()
+        final GuestRequest requestDto = GuestRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
                 .build();
 
-        accountService.register(requestDto);
+        guestService.register(requestDto);
 
         final String content = objectMapper.writeValueAsString(requestDto);
 
@@ -73,13 +73,13 @@ public class AccountControllerTest {
 
     @Test
     public void loginSessionTest() throws Exception {
-        final AccountRequest requestDto = AccountRequest.builder()
+        final GuestRequest requestDto = GuestRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
                 .build();
 
-        accountService.register(requestDto);
+        guestService.register(requestDto);
 
         mockHttpSession = new MockHttpSession();
 
