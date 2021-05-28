@@ -3,6 +3,8 @@ package me.jun.guestbook.post.presentation;
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.dto.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +22,11 @@ public class PostController {
         return "redirect:/index";
     }
 
-    @GetMapping("/post/{id}")
-    public String readPost(@ModelAttribute PostIdRequest id,
-                           Model model) {
-        PostResponse postResponse = postService.readPost(id);
-        model.addAttribute("post", postResponse);
-
-        return "/post";
+    @GetMapping("/post/{postId}")
+    @ResponseBody
+    public ResponseEntity<PostResponse> readPost(@PathVariable Long postId) {
+        PostResponse postResponse = postService.readPost(postId);
+        return ResponseEntity.ok(postResponse);
     }
 
     @DeleteMapping("/post/{id}")

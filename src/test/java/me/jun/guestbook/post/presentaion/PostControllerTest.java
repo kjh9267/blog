@@ -1,11 +1,11 @@
 package me.jun.guestbook.post.presentaion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.post.application.PostService;
-import me.jun.guestbook.guest.domain.Guest;
-import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.dto.GuestRequest;
 import me.jun.guestbook.dto.PostRequest;
+import me.jun.guestbook.guest.domain.Guest;
+import me.jun.guestbook.guest.domain.GuestRepository;
+import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -29,20 +29,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PostControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    GuestRepository guestRepository;
+    private GuestRepository guestRepository;
 
     @Autowired
-    PostService postService;
+    private PostService postService;
 
-    GuestRequest requestDto;
+    private GuestRequest requestDto;
 
-    MockHttpSession mockHttpSession;
+    private MockHttpSession mockHttpSession;
 
     @BeforeEach
     public void setUp() {
@@ -84,15 +84,8 @@ public class PostControllerTest {
                 .andDo(print());
     }
 
-    @Disabled
     @Test
     public void readPostTest() throws Exception {
-        Guest guest = guestRepository.save(Guest.builder()
-                .email("testuser@email.com")
-                .name("jun")
-                .password("pass")
-                .build());
-
         postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
