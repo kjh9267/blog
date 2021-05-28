@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain.guest;
+package me.jun.guestbook.guest.domain;
 
 import javax.persistence.Embeddable;
 
