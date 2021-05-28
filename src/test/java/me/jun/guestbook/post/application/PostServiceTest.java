@@ -1,12 +1,13 @@
-package me.jun.guestbook.application;
+package me.jun.guestbook.post.application;
 
 import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
-import me.jun.guestbook.application.exception.PostNotFoundException;
+import me.jun.guestbook.post.application.PostNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.domain.post.Post;
-import me.jun.guestbook.domain.post.PostRepository;
+import me.jun.guestbook.post.domain.Post;
+import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.dto.*;
+import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

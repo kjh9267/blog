@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.post.Post;
+import me.jun.guestbook.post.domain.Post;
 
 import javax.validation.constraints.NotBlank;
 
