@@ -1,7 +1,7 @@
 package me.jun.guestbook.dto;
 
 import lombok.*;
-import me.jun.guestbook.domain.post.Post;
+import me.jun.guestbook.post.domain.Post;
 import org.springframework.data.domain.Page;
 
 @NoArgsConstructor(force = true)

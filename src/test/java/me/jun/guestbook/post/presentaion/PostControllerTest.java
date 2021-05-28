@@ -1,7 +1,7 @@
-package me.jun.guestbook.ui;
+package me.jun.guestbook.post.presentaion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.application.PostService;
+import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.dto.GuestRequest;
