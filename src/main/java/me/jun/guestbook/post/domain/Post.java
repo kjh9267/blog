@@ -24,7 +24,7 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GUEST_ID")
     private Guest guest;
 
