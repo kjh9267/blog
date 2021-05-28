@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain.account;
+package me.jun.guestbook.domain.guest;
 
 public class WrongPasswordException extends RuntimeException {
 

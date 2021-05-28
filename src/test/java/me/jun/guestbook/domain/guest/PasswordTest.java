@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain.account;
+package me.jun.guestbook.domain.guest;
 
 import org.junit.jupiter.api.Test;
 

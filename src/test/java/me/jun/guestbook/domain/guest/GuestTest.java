@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain.account;
+package me.jun.guestbook.domain.guest;
 
 import me.jun.guestbook.domain.post.Post;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,9 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AccountTest {
+public class GuestTest {
 
-    private Account account;
+    private Guest guest;
 
     private Post post;
 
@@ -23,7 +23,7 @@ public class AccountTest {
     @BeforeEach
     public void setUp() {
 
-        account = Account.builder()
+        guest = Guest.builder()
                 .name(name)
                 .email(email)
                 .password(password)
@@ -37,36 +37,36 @@ public class AccountTest {
 
     @Test
     void constructorTest() {
-        assertThat(account).isInstanceOf(Account.class);
+        assertThat(guest).isInstanceOf(Guest.class);
     }
 
     @Test
     void constructorTest2() {
-        Account newAccount = Account.builder()
+        Guest newGuest = Guest.builder()
                 .name(name)
                 .email(email)
                 .password(password)
                 .build();
 
         assertAll(
-                () -> assertThat(newAccount).isEqualToIgnoringGivenFields(account, "password", "id"),
-                () -> assertThat(newAccount.getPassword()).isInstanceOf(Password.class),
-                () -> assertThat(newAccount).isNotSameAs(account)
+                () -> assertThat(newGuest).isEqualToIgnoringGivenFields(guest, "password", "id"),
+                () -> assertThat(newGuest.getPassword()).isInstanceOf(Password.class),
+                () -> assertThat(newGuest).isNotSameAs(guest)
         );
 
     }
 
     @Test
     void addPostTest() {
-        post.setAccount(account);
+        post.setGuest(guest);
 
-        assertThat(account.getPosts().contains(post)).isTrue();
+        assertThat(guest.getPosts().contains(post)).isTrue();
     }
 
     @Test
     void validateTest() {
         assertThrows(WrongPasswordException.class,
-                () -> account.validate("123")
+                () -> guest.validate("123")
         );
     }
 }
