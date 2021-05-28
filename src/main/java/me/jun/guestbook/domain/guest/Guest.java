@@ -1,4 +1,4 @@
-package me.jun.guestbook.domain.account;
+package me.jun.guestbook.domain.guest;
 
 import lombok.*;
 import me.jun.guestbook.domain.post.Post;
@@ -13,10 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class Account {
+public class Guest {
 
     @Builder
-    protected Account(Long id, String name, String email, String password) {
+    protected Guest(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -37,7 +37,7 @@ public class Account {
     @Column(length = 12, nullable = false)
     private Password password;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Post> posts = new ArrayList<>();
 
     public void addPost(Post post) {

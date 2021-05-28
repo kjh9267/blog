@@ -1,7 +1,7 @@
 package me.jun.guestbook.domain.post;
 
 import lombok.*;
-import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.guest.Guest;
 
 import javax.persistence.*;
 
@@ -25,11 +25,11 @@ public class Post {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "ACCOUNT_ID")
-    private Account account;
+    @JoinColumn(name = "GUEST_ID")
+    private Guest guest;
 
-    public void setAccount(Account account) {
-        this.account = account;
-        account.addPost(this);
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+        guest.addPost(this);
     }
 }

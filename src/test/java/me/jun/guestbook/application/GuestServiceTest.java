@@ -2,10 +2,10 @@ package me.jun.guestbook.application;
 
 import me.jun.guestbook.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.application.exception.EmailNotFoundException;
-import me.jun.guestbook.domain.account.Account;
-import me.jun.guestbook.domain.account.AccountRepository;
-import me.jun.guestbook.dto.AccountRequest;
-import me.jun.guestbook.dto.AccountResponse;
+import me.jun.guestbook.domain.guest.Guest;
+import me.jun.guestbook.domain.guest.GuestRepository;
+import me.jun.guestbook.dto.GuestRequest;
+import me.jun.guestbook.dto.GuestResponse;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,16 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest {
+public class GuestServiceTest {
 
-    private AccountService accountService;
+    private GuestService guestService;
 
     @Mock
-    private AccountRepository accountRepository;
+    private GuestRepository guestRepository;
 
-    private Account account;
+    private Guest guest;
 
-    private AccountRequest accountRequest;
+    private GuestRequest guestRequest;
 
     private final String name = "testuser";
 
@@ -42,15 +42,15 @@ public class AccountServiceTest {
 
     @BeforeEach
     public void setUp() {
-        accountService = new AccountService(accountRepository);
+        guestService = new GuestService(guestRepository);
 
-        account = Account.builder()
+        guest = Guest.builder()
                 .name(name)
                 .email(email)
                 .password(password)
                 .build();
 
-        accountRequest = AccountRequest.builder()
+        guestRequest = GuestRequest.builder()
                 .name(name)
                 .email(email)
                 .password(password)
@@ -59,16 +59,16 @@ public class AccountServiceTest {
 
     @Test
     void loginTest() {
-        given(accountRepository.findByEmail(email)).willReturn(Optional.of(account));
+        given(guestRepository.findByEmail(email)).willReturn(Optional.of(guest));
 
         // When
-        AccountResponse accountResponse = accountService.login(accountRequest);
+        GuestResponse guestResponse = guestService.login(guestRequest);
 
         // Then
         assertAll(
-                () -> assertThat(accountResponse).isInstanceOf(AccountResponse.class),
-                () -> assertThat(accountResponse.getName()).isEqualTo(name),
-                () -> assertThat(accountResponse.getEmail()).isEqualTo(email)
+                () -> assertThat(guestResponse).isInstanceOf(GuestResponse.class),
+                () -> assertThat(guestResponse.getName()).isEqualTo(name),
+                () -> assertThat(guestResponse.getEmail()).isEqualTo(email)
         );
 
     }
@@ -77,33 +77,33 @@ public class AccountServiceTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    void NoAccount_loginFailTest() {
-        given(accountRepository.findByEmail(email)).willReturn(Optional.empty());
+    void NoGuest_loginFailTest() {
+        given(guestRepository.findByEmail(email)).willReturn(Optional.empty());
 
         assertThrows(EmailNotFoundException.class,
-                () -> accountService.login(accountRequest)
+                () -> guestService.login(guestRequest)
         );
     }
 
     @Test
     void registerTest() {
-        given(accountRepository.save(account)).willReturn(account);
+        given(guestRepository.save(guest)).willReturn(guest);
 
-        AccountResponse accountResponse = accountService.register(accountRequest);
+        GuestResponse guestResponse = guestService.register(guestRequest);
 
         assertAll(
-                () -> assertThat(accountResponse).isInstanceOf(AccountResponse.class),
-                () -> assertThat(accountResponse.getName()).isEqualTo(name),
-                () -> assertThat(accountResponse.getEmail()).isEqualTo(email)
+                () -> assertThat(guestResponse).isInstanceOf(GuestResponse.class),
+                () -> assertThat(guestResponse.getName()).isEqualTo(name),
+                () -> assertThat(guestResponse.getEmail()).isEqualTo(email)
         );
     }
 
     @Test
     void registerFailTest() {
-        given(accountRepository.save(account)).willThrow(new DataIntegrityViolationException(""));
+        given(guestRepository.save(guest)).willThrow(new DataIntegrityViolationException(""));
 
         assertThrows(DuplicatedEmailException.class,
-                () -> accountService.register(accountRequest)
+                () -> guestService.register(guestRequest)
         );
     }
 }

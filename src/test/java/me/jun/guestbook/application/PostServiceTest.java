@@ -1,9 +1,9 @@
 package me.jun.guestbook.application;
 
-import me.jun.guestbook.application.exception.AccountNotFoundException;
+import me.jun.guestbook.application.exception.GuestNotFoundException;
 import me.jun.guestbook.application.exception.PostNotFoundException;
-import me.jun.guestbook.domain.account.Account;
-import me.jun.guestbook.domain.account.AccountRepository;
+import me.jun.guestbook.domain.guest.Guest;
+import me.jun.guestbook.domain.guest.GuestRepository;
 import me.jun.guestbook.domain.post.Post;
 import me.jun.guestbook.domain.post.PostRepository;
 import me.jun.guestbook.dto.*;
@@ -34,11 +34,11 @@ public class PostServiceTest {
     private PostRepository postRepository;
 
     @Mock
-    private AccountRepository accountRepository;
+    private GuestRepository guestRepository;
 
     private Post post;
 
-    private Account account;
+    private Guest guest;
 
     private PostRequest postRequest;
 
@@ -46,9 +46,9 @@ public class PostServiceTest {
 
     private final Long postId = 1L;
 
-    private final Long accountId = 1L;
+    private final Long guestId = 1L;
 
-    private final String accountName = "test user";
+    private final String guestName = "test user";
 
     private final String title = "test title";
 
@@ -56,17 +56,17 @@ public class PostServiceTest {
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, accountRepository);
+        postService = new PostService(postRepository, guestRepository);
 
         post = Post.builder()
                 .id(1L)
                 .title(title)
                 .content(content)
-                .account(Account.builder().name(accountName).build())
+                .guest(Guest.builder().name(guestName).build())
                 .build();
 
-        account = Account.builder()
-                .name(accountName)
+        guest = Guest.builder()
+                .name(guestName)
                 .build();
 
         postRequest = PostRequest.builder()
@@ -87,7 +87,7 @@ public class PostServiceTest {
         PostResponse postResponse = postService.readPost(postIdRequest);
 
         assertAll(
-                () -> assertThat(postResponse.getWriter()).isEqualTo(accountName),
+                () -> assertThat(postResponse.getWriter()).isEqualTo(guestName),
                 () -> assertThat(postResponse.getTitle()).isEqualTo(title),
                 () -> assertThat(postResponse.getContent()).isEqualTo(content)
         );
@@ -104,10 +104,10 @@ public class PostServiceTest {
 
     @Test
     void createPostFailTest() {
-        given(accountRepository.findById(accountId)).willReturn(Optional.empty());
+        given(guestRepository.findById(guestId)).willReturn(Optional.empty());
 
-        assertThrows(AccountNotFoundException.class,
-                () -> postService.createPost(postRequest, accountId)
+        assertThrows(GuestNotFoundException.class,
+                () -> postService.createPost(postRequest, guestId)
         );
     }
 
@@ -118,7 +118,7 @@ public class PostServiceTest {
 
         lenient().when(postService.updatePost(postRequest))
                 .thenReturn(PostResponse.builder()
-                        .writer(accountName)
+                        .writer(guestName)
                         .title(title)
                         .content(content)
                         .build());
