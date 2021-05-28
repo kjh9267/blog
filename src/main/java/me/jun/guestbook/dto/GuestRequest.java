@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.guest.Guest;
+import me.jun.guestbook.guest.domain.Guest;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

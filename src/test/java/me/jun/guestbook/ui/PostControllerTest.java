@@ -2,8 +2,8 @@ package me.jun.guestbook.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.PostService;
-import me.jun.guestbook.domain.guest.Guest;
-import me.jun.guestbook.domain.guest.GuestRepository;
+import me.jun.guestbook.guest.domain.Guest;
+import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.dto.GuestRequest;
 import me.jun.guestbook.dto.PostRequest;
 import org.junit.jupiter.api.BeforeEach;
