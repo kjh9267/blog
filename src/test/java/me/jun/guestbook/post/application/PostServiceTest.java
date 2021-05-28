@@ -43,8 +43,6 @@ public class PostServiceTest {
 
     private PostRequest postRequest;
 
-    private PostIdRequest postIdRequest;
-
     private final Long postId = 1L;
 
     private final Long guestId = 1L;
@@ -75,17 +73,13 @@ public class PostServiceTest {
                 .title(title)
                 .content(content)
                 .build();
-
-        postIdRequest = PostIdRequest.builder()
-                .id(postId)
-                .build();
     }
 
     @Test
     void readPostTest() {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
-        PostResponse postResponse = postService.readPost(postIdRequest);
+        PostResponse postResponse = postService.readPost(postId);
 
         assertAll(
                 () -> assertThat(postResponse.getWriter()).isEqualTo(guestName),
@@ -99,7 +93,7 @@ public class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.readPost(postIdRequest)
+                () -> postService.readPost(postId)
         );
     }
 

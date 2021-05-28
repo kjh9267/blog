@@ -21,10 +21,9 @@ public class PostService {
     private final GuestRepository guestRepository;
 
     @Transactional
-    public PostResponse readPost(PostIdRequest dto) {
-        Long id = dto.getId();
+    public PostResponse readPost(Long postId) {
 
-        Post post = postRepository.findById(id)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
         Guest guest = post.getGuest();
