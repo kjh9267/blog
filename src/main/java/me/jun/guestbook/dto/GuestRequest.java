@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.guest.Guest;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Getter
 @Builder
-public class AccountRequest {
+public class GuestRequest {
 
     @NotBlank
     @Email
@@ -25,8 +25,8 @@ public class AccountRequest {
     @NotBlank
     private String password;
 
-    public Account toEntity() {
-        return Account.builder()
+    public Guest toEntity() {
+        return Guest.builder()
                 .email(this.email)
                 .name(this.name)
                 .password(this.password)
