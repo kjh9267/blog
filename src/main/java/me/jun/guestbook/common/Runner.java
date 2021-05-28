@@ -1,6 +1,6 @@
 package me.jun.guestbook.common;
 
-import me.jun.guestbook.application.GuestService;
+import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.dto.GuestRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
