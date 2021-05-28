@@ -1,4 +1,4 @@
-package me.jun.guestbook.application.exception;
+package me.jun.guestbook.post.application;
 
 
 public class PostNotFoundException extends RuntimeException {
