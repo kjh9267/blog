@@ -1,7 +1,7 @@
 package me.jun.guestbook.dto;
 
 import lombok.*;
-import me.jun.guestbook.domain.guest.Guest;
+import me.jun.guestbook.guest.domain.Guest;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
