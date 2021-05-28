@@ -1,7 +1,7 @@
-package me.jun.guestbook.ui;
+package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.application.GuestService;
+import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.dto.GuestRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;

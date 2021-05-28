@@ -1,10 +1,10 @@
 package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.application.exception.GuestNotFoundException;
+import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
 import me.jun.guestbook.application.exception.PostNotFoundException;
-import me.jun.guestbook.domain.guest.Guest;
-import me.jun.guestbook.domain.guest.GuestRepository;
+import me.jun.guestbook.guest.domain.Guest;
+import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.domain.post.Post;
 import me.jun.guestbook.domain.post.PostRepository;
 import me.jun.guestbook.dto.*;

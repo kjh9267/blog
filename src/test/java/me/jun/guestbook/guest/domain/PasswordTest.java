@@ -1,5 +1,6 @@
-package me.jun.guestbook.domain.guest;
+package me.jun.guestbook.guest.domain;
 
+import me.jun.guestbook.guest.domain.Password;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
