@@ -1,6 +1,7 @@
-package me.jun.guestbook.domain.post;
+package me.jun.guestbook.post.domain;
 
 import me.jun.guestbook.guest.domain.Guest;
+import me.jun.guestbook.post.domain.Post;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
