@@ -1,6 +1,6 @@
 package me.jun.guestbook.domain.post;
 
-import me.jun.guestbook.domain.account.Account;
+import me.jun.guestbook.domain.guest.Guest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ public class PostTest {
 
     private Post post;
 
-    private Account account;
+    private Guest guest;
 
     @Before
     public void setUp() {
@@ -24,7 +24,7 @@ public class PostTest {
         final String email = "user@email.com";
         final String password = "pass";
 
-        account = Account.builder()
+        guest = Guest.builder()
                 .name(name)
                 .email(email)
                 .password(password)
