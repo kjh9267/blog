@@ -1,7 +1,7 @@
 package me.jun.guestbook.guest.domain;
 
 import lombok.*;
-import me.jun.guestbook.domain.post.Post;
+import me.jun.guestbook.post.domain.Post;
 
 import javax.persistence.*;
 import java.util.ArrayList;
