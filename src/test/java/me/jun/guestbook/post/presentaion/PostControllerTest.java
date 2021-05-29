@@ -1,7 +1,7 @@
 package me.jun.guestbook.post.presentaion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.dto.PostRequest;
+import me.jun.guestbook.dto.PostCreateRequest;
 import me.jun.guestbook.dto.PostResponse;
 import me.jun.guestbook.post.application.PostNotFoundException;
 import me.jun.guestbook.post.application.PostService;
@@ -44,21 +44,18 @@ public class PostControllerTest {
 
     @Test
     public void createPostTest() throws Exception {
-        PostRequest requestDto = PostRequest.builder()
-                .title("my title")
-                .content("my content")
+        PostCreateRequest request = PostCreateRequest.builder()
+                .title("test title")
+                .content("test content")
                 .build();
 
-        String content = objectMapper.writeValueAsString(requestDto);
+        String content = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(post("/post")
                     .content(content)
                     .contentType("application/json"))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
-
-        mockMvc.perform(get("/index"))
-                .andDo(print());
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -81,9 +78,10 @@ public class PostControllerTest {
                 .andDo(print());
     }
 
+    @Disabled
     @Test
     public void deletePostTest() throws Exception {
-        postService.createPost(PostRequest.builder()
+        postService.createPost(PostCreateRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build(), 1L);
@@ -96,12 +94,12 @@ public class PostControllerTest {
     @Disabled
     @Test
     public void updatePostTest() throws Exception {
-        postService.createPost(PostRequest.builder()
+        postService.createPost(PostCreateRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build(), 1L);
 
-        String content = objectMapper.writeValueAsString(PostRequest.builder()
+        String content = objectMapper.writeValueAsString(PostCreateRequest.builder()
                 .id(1L)
                 .title("new title")
                 .content("new content")
