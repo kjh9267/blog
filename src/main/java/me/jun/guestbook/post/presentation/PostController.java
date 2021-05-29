@@ -32,9 +32,9 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/post/")
-    public ResponseEntity<Void> deletePost(@RequestBody Long postId) {
-        postService.deletePost(postId);
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId, 1L);
         return ResponseEntity.ok().build();
     }
 }
