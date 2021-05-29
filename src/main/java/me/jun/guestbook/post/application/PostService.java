@@ -14,27 +14,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
 
     private final GuestRepository guestRepository;
 
-    @Transactional
     public PostResponse readPost(Long postId) {
-
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
         Guest guest = post.getGuest();
-
         return PostResponse.of(post, guest);
     }
 
-    @Transactional
-    public void createPost(PostRequest postRequest, Long accountId) {
-        Post post = postRequest.toEntity();
-
+    public void createPost(PostCreateRequest postCreateRequest, Long accountId) {
+        Post post = postCreateRequest.toEntity();
         Guest guest = guestRepository.findById(accountId)
                 .orElseThrow(GuestNotFoundException::new);
         post.setGuest(guest);
@@ -42,14 +38,13 @@ public class PostService {
         guestRepository.save(guest);
     }
 
-    public void deletePost(PostRequest dto) {
+    public void deletePost(PostCreateRequest dto) {
         Long id = dto.getId();
 
         postRepository.deleteById(id);
     }
 
-    @Transactional
-    public PostResponse updatePost(PostRequest dto) {
+    public PostResponse updatePost(PostCreateRequest dto) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);

@@ -1,13 +1,11 @@
 package me.jun.guestbook.post.application;
 
 import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
-import me.jun.guestbook.post.application.PostNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.dto.*;
-import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +39,7 @@ public class PostServiceTest {
 
     private Guest guest;
 
-    private PostRequest postRequest;
+    private PostCreateRequest postCreateRequest;
 
     private final Long postId = 1L;
 
@@ -68,7 +66,7 @@ public class PostServiceTest {
                 .name(guestName)
                 .build();
 
-        postRequest = PostRequest.builder()
+        postCreateRequest = PostCreateRequest.builder()
                 .id(postId)
                 .title(title)
                 .content(content)
@@ -102,7 +100,7 @@ public class PostServiceTest {
         given(guestRepository.findById(guestId)).willReturn(Optional.empty());
 
         assertThrows(GuestNotFoundException.class,
-                () -> postService.createPost(postRequest, guestId)
+                () -> postService.createPost(postCreateRequest, guestId)
         );
     }
 
@@ -111,7 +109,7 @@ public class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
         given(postRepository.save(post)).willReturn(post);
 
-        lenient().when(postService.updatePost(postRequest))
+        lenient().when(postService.updatePost(postCreateRequest))
                 .thenReturn(PostResponse.builder()
                         .writer(guestName)
                         .title(title)
@@ -124,7 +122,7 @@ public class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.updatePost(postRequest)
+                () -> postService.updatePost(postCreateRequest)
         );
     }
 
