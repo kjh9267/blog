@@ -9,7 +9,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostCreateRequest {
+public class PostUpdateRequest {
+
+    @NotBlank
+    private final Long id;
 
     @NotBlank
     private final String title;
@@ -19,6 +22,7 @@ public class PostCreateRequest {
 
     public Post toEntity() {
         return Post.builder()
+                .id(this.id)
                 .title(this.title)
                 .content(this.content)
                 .build();

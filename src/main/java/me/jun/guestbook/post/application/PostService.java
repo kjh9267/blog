@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
+import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.dto.*;
@@ -21,6 +23,15 @@ public class PostService {
 
     private final GuestRepository guestRepository;
 
+    public void createPost(PostCreateRequest postCreateRequest, Long guestId) {
+        Post post = postCreateRequest.toEntity();
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(GuestNotFoundException::new);
+        post.setGuest(guest);
+
+        guestRepository.save(guest);
+    }
+
     public PostResponse readPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -29,33 +40,25 @@ public class PostService {
         return PostResponse.of(post, guest);
     }
 
-    public void createPost(PostCreateRequest postCreateRequest, Long accountId) {
-        Post post = postCreateRequest.toEntity();
-        Guest guest = guestRepository.findById(accountId)
-                .orElseThrow(GuestNotFoundException::new);
-        post.setGuest(guest);
-
-        guestRepository.save(guest);
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
     }
 
-    public void deletePost(PostCreateRequest dto) {
-        Long id = dto.getId();
-
-        postRepository.deleteById(id);
-    }
-
-    public PostResponse updatePost(PostCreateRequest dto) {
+    public void updatePost(PostUpdateRequest dto, Long guestId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
+
+        Long id = post.getGuest().getId();
+        if (!id.equals(guestId)) {
+            throw new GuestMisMatchException("guest mismatch");
+        }
 
         post.setTitle(requestPost.getTitle());
         post.setContent(requestPost.getContent());
         Post newPost = postRepository.save(post);
 
         Guest guest = newPost.getGuest();
-
-        return PostResponse.of(newPost, guest);
     }
 
     public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
