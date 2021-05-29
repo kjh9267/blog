@@ -32,4 +32,9 @@ public class Post {
         this.guest = guest;
         guest.addPost(this);
     }
+
+    public void updatePost(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
