@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     EMPTY_VALUE(400, "Empty input"),
-    POST_NOT_FOUND(404, "No post");
+    POST_NOT_FOUND(404, "No post"),
+    GUEST_MISMATCH(403, "Guest Mismatch");
 
     private final int statusCode;
     private final String message;
