@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostRequest {
+public class PostCreateRequest {
 
     @NotBlank
     private final Long id;
