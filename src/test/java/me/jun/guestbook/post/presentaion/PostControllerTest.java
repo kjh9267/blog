@@ -1,10 +1,9 @@
 package me.jun.guestbook.post.presentaion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.dto.GuestRequest;
 import me.jun.guestbook.dto.PostRequest;
-import me.jun.guestbook.guest.domain.Guest;
-import me.jun.guestbook.guest.domain.GuestRepository;
+import me.jun.guestbook.dto.PostResponse;
+import me.jun.guestbook.post.application.PostNotFoundException;
 import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -13,11 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PostControllerTest {
 
     @Autowired
@@ -34,37 +34,16 @@ public class PostControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private GuestRepository guestRepository;
-
-    @Autowired
+    @MockBean
     private PostService postService;
-
-    private GuestRequest requestDto;
-
-    private MockHttpSession mockHttpSession;
 
     @BeforeEach
     public void setUp() {
-        requestDto = GuestRequest.builder()
-                .name("jun")
-                .email("testuser@email.com")
-                .password("pass")
-                .build();
 
-        mockHttpSession = new MockHttpSession();
-
-        mockHttpSession.setAttribute("login", requestDto);
     }
 
     @Test
     public void createPostTest() throws Exception {
-        guestRepository.save(Guest.builder()
-                .email("testuser@email.com")
-                .name("jun")
-                .password("pass")
-                .build());
-
         PostRequest requestDto = PostRequest.builder()
                 .title("my title")
                 .content("my content")
@@ -73,45 +52,43 @@ public class PostControllerTest {
         String content = objectMapper.writeValueAsString(requestDto);
 
         mockMvc.perform(post("/post")
-                    .session(mockHttpSession)
                     .content(content)
                     .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
 
-        mockMvc.perform(get("/index")
-                    .session(mockHttpSession))
+        mockMvc.perform(get("/index"))
                 .andDo(print());
     }
 
     @Test
     public void readPostTest() throws Exception {
-        postService.createPost(PostRequest.builder()
-                .title("my title")
-                .content("my content")
-                .build(), 1L);
+        given(postService.readPost(any()))
+                .willReturn(PostResponse.builder().build());
 
-        mockMvc.perform(get("/post/1")
-                    .session(mockHttpSession))
+        mockMvc.perform(get("/post/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void deletePostTest() throws Exception {
-        Guest guest = guestRepository.save(Guest.builder()
-                .email("testuser@email.com")
-                .name("jun")
-                .password("pass")
-                .build());
+    void readNoPostFailTest() throws Exception {
+        given(postService.readPost(any()))
+                .willThrow(new PostNotFoundException());
 
+        mockMvc.perform(get("/post/1"))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+    @Test
+    public void deletePostTest() throws Exception {
         postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
                 .build(), 1L);
 
-        mockMvc.perform(delete("/post/1")
-                    .session(mockHttpSession))
+        mockMvc.perform(delete("/post/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
     }
@@ -119,12 +96,6 @@ public class PostControllerTest {
     @Disabled
     @Test
     public void updatePostTest() throws Exception {
-        Guest guest = guestRepository.save(Guest.builder()
-                .email("testuser@email.com")
-                .name("jun")
-                .password("pass")
-                .build());
-
         postService.createPost(PostRequest.builder()
                 .title("my title")
                 .content("my content")
@@ -137,7 +108,6 @@ public class PostControllerTest {
                 .build());
 
         mockMvc.perform(put("/post/1")
-                    .session(mockHttpSession)
                     .content(content)
                     .contentType("application/json"))
                 .andDo(print())
