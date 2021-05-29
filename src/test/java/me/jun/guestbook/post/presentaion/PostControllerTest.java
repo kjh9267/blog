@@ -1,9 +1,12 @@
 package me.jun.guestbook.post.presentaion;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.dto.PostCreateRequest;
 import me.jun.guestbook.dto.PostResponse;
-import me.jun.guestbook.post.application.PostNotFoundException;
+import me.jun.guestbook.dto.PostUpdateRequest;
+import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -13,11 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,6 +57,8 @@ public class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
+        doNothing().when(postService);
+
         mockMvc.perform(post("/post")
                     .content(content)
                     .contentType("application/json"))
@@ -80,6 +88,69 @@ public class PostControllerTest {
 
     @Disabled
     @Test
+    public void updatePostTest() throws Exception {
+        PostUpdateRequest request = PostUpdateRequest.builder()
+                .id(1L)
+                .title("new title")
+                .content("new content")
+                .build();
+
+        String content = objectMapper.writeValueAsString(request);
+
+        doNothing().when(postService)
+                .updatePost(any(), anyLong());
+
+        mockMvc.perform(put("/post")
+                .content(content)
+                .contentType("application/json"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void noPost_updatePostFailTest() throws Exception {
+        PostUpdateRequest request = PostUpdateRequest.builder()
+                .id(2L)
+                .title("new title")
+                .content("new content")
+                .build();
+
+        String content = objectMapper.writeValueAsString(request);
+
+        doThrow(PostNotFoundException.class)
+                .when(postService)
+                .updatePost(any(), anyLong());
+
+        mockMvc.perform(put("/post")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void guestMisMatch_updatePostFailTest() throws Exception {
+        PostUpdateRequest request = PostUpdateRequest.builder()
+                .id(1L)
+                .title("new title")
+                .content("new content")
+                .build();
+
+        String content = objectMapper.writeValueAsString(request);
+
+        doThrow(GuestMisMatchException.class)
+                .when(postService)
+                .updatePost(any(), anyLong());
+
+        mockMvc.perform(put("/post")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Disabled
+    @Test
     public void deletePostTest() throws Exception {
         postService.createPost(PostCreateRequest.builder()
                 .title("my title")
@@ -89,26 +160,5 @@ public class PostControllerTest {
         mockMvc.perform(delete("/post/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
-    }
-
-    @Disabled
-    @Test
-    public void updatePostTest() throws Exception {
-        postService.createPost(PostCreateRequest.builder()
-                .title("my title")
-                .content("my content")
-                .build(), 1L);
-
-        String content = objectMapper.writeValueAsString(PostCreateRequest.builder()
-                .id(1L)
-                .title("new title")
-                .content("new content")
-                .build());
-
-        mockMvc.perform(put("/post/1")
-                    .content(content)
-                    .contentType("application/json"))
-                .andDo(print())
-                .andExpect(status().isOk());
     }
 }
