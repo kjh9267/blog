@@ -40,10 +40,6 @@ public class PostService {
         return PostResponse.of(post, guest);
     }
 
-    public void deletePost(Long postId) {
-        postRepository.deleteById(postId);
-    }
-
     public void updatePost(PostUpdateRequest dto, Long guestId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
@@ -54,11 +50,20 @@ public class PostService {
             throw new GuestMisMatchException("guest mismatch");
         }
 
-        post.setTitle(requestPost.getTitle());
-        post.setContent(requestPost.getContent());
-        Post newPost = postRepository.save(post);
+        post.updatePost(requestPost.getTitle(), requestPost.getContent());
+        postRepository.save(post);
+    }
 
-        Guest guest = newPost.getGuest();
+    public void deletePost(Long postId, Long guestId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+
+        Long id = post.getGuest().getId();
+        if (!id.equals(guestId)) {
+            throw new GuestMisMatchException("guest mismatch");
+        }
+
+        postRepository.deleteById(postId);
     }
 
     public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
