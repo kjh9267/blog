@@ -1,13 +1,12 @@
 package me.jun.guestbook.post.presentaion;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.dto.PostCreateRequest;
 import me.jun.guestbook.dto.PostResponse;
 import me.jun.guestbook.dto.PostUpdateRequest;
+import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.post.application.exception.GuestMisMatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
-import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -149,16 +149,34 @@ public class PostControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Disabled
     @Test
     public void deletePostTest() throws Exception {
-        postService.createPost(PostCreateRequest.builder()
-                .title("my title")
-                .content("my content")
-                .build(), 1L);
+        doNothing().when(postService).deletePost(any(), anyLong());
 
         mockMvc.perform(delete("/post/1"))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void noPost_deletePostFailTest() throws Exception {
+        doThrow(PostNotFoundException.class)
+                .when(postService)
+                .deletePost(any(), anyLong());
+
+        mockMvc.perform(delete("/post/2"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void guestMisMatch_deletePostFailTest() throws Exception {
+        doThrow(GuestMisMatchException.class)
+                .when(postService)
+                .deletePost(any(), anyLong());
+
+        mockMvc.perform(delete("/post/1"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 }
