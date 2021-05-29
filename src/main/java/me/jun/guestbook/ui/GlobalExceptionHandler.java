@@ -1,6 +1,7 @@
 package me.jun.guestbook.ui;
 
-import me.jun.guestbook.post.application.PostNotFoundException;
+import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.ui.error.ErrorCode;
 import me.jun.guestbook.ui.error.ErrorResponse;
 import org.slf4j.Logger;
@@ -23,9 +24,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ErrorResponse> postNotFoundExceptionHandler(Exception e) {
+    public ResponseEntity<ErrorResponse> postNotFoundExceptionHandler(PostNotFoundException e) {
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.POST_NOT_FOUND);
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
 
+    @ExceptionHandler(GuestMisMatchException.class)
+    public ResponseEntity<ErrorResponse> postNotFoundExceptionHandler(GuestMisMatchException e) {
+        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_MISMATCH);
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
+    }
 }

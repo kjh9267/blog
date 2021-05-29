@@ -26,18 +26,15 @@ public class PostController {
         return ResponseEntity.ok(postResponse);
     }
 
-    @DeleteMapping("/post/{id}")
-    public ResponseEntity<Void> deletePost(@ModelAttribute PostCreateRequest id) {
-        postService.deletePost(id);
+    @PutMapping("/post")
+    public ResponseEntity<Void> updatePost(@RequestBody PostUpdateRequest requestDto) {
+        postService.updatePost(requestDto, 1L);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/post")
-    public ResponseEntity<Void> updatePost(@RequestBody PostCreateRequest requestDto,
-                             Model model) {
-        PostResponse postResponse = postService.updatePost(requestDto);
-        model.addAttribute("post", postResponse);
-
+    @DeleteMapping("/post/")
+    public ResponseEntity<Void> deletePost(@RequestBody Long postId) {
+        postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }
 }
