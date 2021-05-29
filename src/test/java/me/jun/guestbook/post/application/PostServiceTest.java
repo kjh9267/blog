@@ -3,6 +3,8 @@ package me.jun.guestbook.post.application;
 import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
+import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.dto.*;
@@ -21,8 +23,10 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
@@ -40,6 +44,8 @@ public class PostServiceTest {
     private Guest guest;
 
     private PostCreateRequest postCreateRequest;
+
+    private PostUpdateRequest postUpdateRequest;
 
     private final Long postId = 1L;
 
@@ -59,7 +65,7 @@ public class PostServiceTest {
                 .id(1L)
                 .title(title)
                 .content(content)
-                .guest(Guest.builder().name(guestName).build())
+                .guest(Guest.builder().id(guestId).name(guestName).build())
                 .build();
 
         guest = Guest.builder()
@@ -67,6 +73,11 @@ public class PostServiceTest {
                 .build();
 
         postCreateRequest = PostCreateRequest.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        postUpdateRequest = PostUpdateRequest.builder()
                 .id(postId)
                 .title(title)
                 .content(content)
@@ -109,20 +120,24 @@ public class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
         given(postRepository.save(post)).willReturn(post);
 
-        lenient().when(postService.updatePost(postCreateRequest))
-                .thenReturn(PostResponse.builder()
-                        .writer(guestName)
-                        .title(title)
-                        .content(content)
-                        .build());
+        postService.updatePost(postUpdateRequest, guestId);
     }
 
     @Test
-    void updatePostFailTest() {
+    void noPost_updatePostFailTest() {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.updatePost(postCreateRequest)
+                () -> postService.updatePost(postUpdateRequest, guestId)
+        );
+    }
+
+    @Test
+    void guestMismatch_updatePostFailTest() {
+        given(postRepository.findById(any())).willReturn(Optional.of(post));
+
+        assertThrows(GuestMisMatchException.class,
+                () -> postService.updatePost(postUpdateRequest, 2L)
         );
     }
 
