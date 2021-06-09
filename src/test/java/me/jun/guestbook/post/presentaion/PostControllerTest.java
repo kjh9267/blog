@@ -86,7 +86,6 @@ public class PostControllerTest {
                 .andDo(print());
     }
 
-    @Disabled
     @Test
     public void updatePostTest() throws Exception {
         PostUpdateRequest request = PostUpdateRequest.builder()

@@ -24,14 +24,16 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GUEST_ID")
-    private Guest guest;
+    private Long guestId;
 
-    public void setGuest(Guest guest) {
-        this.guest = guest;
-        guest.addPost(this);
-    }
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "GUEST_ID")
+//    private Guest guest;
+//
+//    public void setGuest(Guest guest) {
+//        this.guest = guest;
+//        guest.addPost(this);
+//    }
 
     public void updatePost(String title, String content) {
         this.title = title;
