@@ -24,7 +24,7 @@ public class PostResponse {
     public static PostResponse of(Post post, Guest guest) {
         return PostResponse.builder()
                 .id(post.getId())
-                .writer(guest.getName())
+//                .writer(guest.getName())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();

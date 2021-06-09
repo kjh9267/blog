@@ -27,7 +27,8 @@ public class PostService {
         Post post = postCreateRequest.toEntity();
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(GuestNotFoundException::new);
-        post.setGuest(guest);
+//        post.setGuest(guest);
+        post.setGuestId(guestId);
 
         guestRepository.save(guest);
     }
@@ -36,8 +37,10 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        Guest guest = post.getGuest();
-        return PostResponse.of(post, guest);
+//        Guest guest = guestRepository.findById(guestId)
+//                .orElseThrow(GuestNotFoundException::new);
+
+        return PostResponse.of(post, null);
     }
 
     public void updatePost(PostUpdateRequest dto, Long guestId) {
@@ -45,7 +48,7 @@ public class PostService {
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
-        Long id = post.getGuest().getId();
+        Long id = post.getGuestId();
         if (!id.equals(guestId)) {
             throw new GuestMisMatchException("guest mismatch");
         }
@@ -58,7 +61,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        Long id = post.getGuest().getId();
+        Long id = post.getGuestId();
         if (!id.equals(guestId)) {
             throw new GuestMisMatchException("guest mismatch");
         }
