@@ -56,12 +56,12 @@ public class GuestTest {
 
     }
 
-    @Test
-    void addPostTest() {
-        post.setGuest(guest);
-
-        assertThat(guest.getPosts().contains(post)).isTrue();
-    }
+//    @Test
+//    void addPostTest() {
+//        post.setGuest(guest);
+//
+//        assertThat(guest.getPosts().contains(post)).isTrue();
+//    }
 
     @Test
     void validateTest() {
