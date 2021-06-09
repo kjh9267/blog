@@ -37,12 +37,12 @@ public class Guest {
     @Column(length = 12, nullable = false)
     private Password password;
 
-    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Post> posts = new ArrayList<>();
-
-    public void addPost(Post post) {
-        this.posts.add(post);
-    }
+//    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private final List<Post> posts = new ArrayList<>();
+//
+//    public void addPost(Post post) {
+//        this.posts.add(post);
+//    }
 
     public void validate(String password) {
         if (!this.password.match(password)) {
