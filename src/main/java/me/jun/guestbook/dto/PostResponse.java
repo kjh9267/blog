@@ -21,10 +21,9 @@ public class PostResponse {
 
     private final String content;
 
-    public static PostResponse of(Post post, Guest guest) {
+    public static PostResponse of(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
-//                .writer(guest.getName())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
