@@ -59,7 +59,7 @@ public class PostServiceTest {
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, guestRepository);
+        postService = new PostService(postRepository);
 
         post = Post.builder()
                 .id(1L)
@@ -103,15 +103,6 @@ public class PostServiceTest {
 
         assertThrows(PostNotFoundException.class,
                 () -> postService.readPost(postId)
-        );
-    }
-
-    @Test
-    void createPostFailTest() {
-        given(guestRepository.findById(guestId)).willReturn(Optional.empty());
-
-        assertThrows(GuestNotFoundException.class,
-                () -> postService.createPost(postCreateRequest, guestId)
         );
     }
 
