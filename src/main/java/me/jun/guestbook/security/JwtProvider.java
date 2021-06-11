@@ -1,6 +1,7 @@
 package me.jun.guestbook.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -27,5 +28,16 @@ public class JwtProvider {
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
+    }
+
+    public String extractSubject(String jwt) {
+        JwtParser parser = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build();
+
+        return parser
+                .parseClaimsJws(jwt)
+                .getBody()
+                .getSubject();
     }
 }
