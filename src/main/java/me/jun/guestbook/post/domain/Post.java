@@ -26,15 +26,6 @@ public class Post {
 
     private Long guestId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "GUEST_ID")
-//    private Guest guest;
-//
-//    public void setGuest(Guest guest) {
-//        this.guest = guest;
-//        guest.addPost(this);
-//    }
-
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
