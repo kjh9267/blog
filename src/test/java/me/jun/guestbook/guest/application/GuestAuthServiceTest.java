@@ -2,7 +2,6 @@ package me.jun.guestbook.guest.application;
 
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.guest.application.exception.EmailNotFoundException;
-import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.dto.GuestRequest;
@@ -24,9 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class GuestServiceTest {
+public class GuestAuthServiceTest {
 
-    private GuestService guestService;
+    private GuestAuthService guestAuthService;
 
     @Mock
     private GuestRepository guestRepository;
@@ -43,7 +42,7 @@ public class GuestServiceTest {
 
     @BeforeEach
     public void setUp() {
-        guestService = new GuestService(guestRepository);
+        guestAuthService = new GuestAuthService(guestRepository);
 
         guest = Guest.builder()
                 .name(name)
@@ -63,7 +62,7 @@ public class GuestServiceTest {
         given(guestRepository.findByEmail(email)).willReturn(Optional.of(guest));
 
         // When
-        GuestResponse guestResponse = guestService.login(guestRequest);
+        GuestResponse guestResponse = guestAuthService.login(guestRequest);
 
         // Then
         assertAll(
@@ -82,7 +81,7 @@ public class GuestServiceTest {
         given(guestRepository.findByEmail(email)).willReturn(Optional.empty());
 
         assertThrows(EmailNotFoundException.class,
-                () -> guestService.login(guestRequest)
+                () -> guestAuthService.login(guestRequest)
         );
     }
 
@@ -90,7 +89,7 @@ public class GuestServiceTest {
     void registerTest() {
         given(guestRepository.save(guest)).willReturn(guest);
 
-        GuestResponse guestResponse = guestService.register(guestRequest);
+        GuestResponse guestResponse = guestAuthService.register(guestRequest);
 
         assertAll(
                 () -> assertThat(guestResponse).isInstanceOf(GuestResponse.class),
@@ -104,7 +103,7 @@ public class GuestServiceTest {
         given(guestRepository.save(guest)).willThrow(new DataIntegrityViolationException(""));
 
         assertThrows(DuplicatedEmailException.class,
-                () -> guestService.register(guestRequest)
+                () -> guestAuthService.register(guestRequest)
         );
     }
 }

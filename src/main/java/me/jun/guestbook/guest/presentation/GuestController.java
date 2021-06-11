@@ -1,7 +1,7 @@
 package me.jun.guestbook.guest.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.guest.application.GuestService;
+import me.jun.guestbook.guest.application.GuestAuthService;
 import me.jun.guestbook.dto.GuestRequest;
 import me.jun.guestbook.dto.GuestResponse;
 import org.springframework.stereotype.Controller;
@@ -15,11 +15,11 @@ import javax.servlet.http.HttpSession;
 @RequiredArgsConstructor
 public class GuestController {
 
-    private final GuestService guestService;
+    private final GuestAuthService guestAuthService;
 
     @PostMapping("/register")
     public String register(@RequestBody GuestRequest requestDto) {
-        guestService.register(requestDto);
+        guestAuthService.register(requestDto);
 
         return "redirect:/index";
     }
@@ -27,7 +27,7 @@ public class GuestController {
     @PostMapping("/login")
     public String login(@RequestBody GuestRequest requestDto,
                         HttpSession httpSession) {
-        final GuestResponse accountInfo = guestService.login(requestDto);
+        final GuestResponse accountInfo = guestAuthService.login(requestDto);
 
         httpSession.setAttribute("login", accountInfo);
         httpSession.setMaxInactiveInterval(60 * 10);
