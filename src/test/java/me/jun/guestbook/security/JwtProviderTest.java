@@ -22,4 +22,12 @@ public class JwtProviderTest {
         assertThat(jwt.getClass()).isEqualTo(String.class);
         assertThat(jwt.split("\\.").length).isEqualTo(3);
     }
+
+    @Test
+    void extractSubjectTest() {
+        String jwt = jwtProvider.createJwt(email);
+        String subject = jwtProvider.extractSubject(jwt);
+
+        assertThat(subject).isEqualTo(email);
+    }
 }
