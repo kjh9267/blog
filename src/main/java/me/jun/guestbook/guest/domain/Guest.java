@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@Setter
 @EqualsAndHashCode(of = "id")
 public class Guest {
 
@@ -34,15 +33,7 @@ public class Guest {
     private String email;
 
     @Embedded
-    @Column(length = 12, nullable = false)
     private Password password;
-
-//    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private final List<Post> posts = new ArrayList<>();
-//
-//    public void addPost(Post post) {
-//        this.posts.add(post);
-//    }
 
     public void validate(String password) {
         if (!this.password.match(password)) {
