@@ -1,6 +1,6 @@
 package me.jun.guestbook.common;
 
-import me.jun.guestbook.guest.application.GuestService;
+import me.jun.guestbook.guest.application.GuestAuthService;
 import me.jun.guestbook.dto.GuestRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 public class Runner implements ApplicationRunner {
 
     @Autowired
-    GuestService guestService;
+    GuestAuthService guestAuthService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        guestService.register(
+        guestAuthService.register(
                 GuestRequest.builder()
                         .email("user@email.com")
                         .password("pass")
