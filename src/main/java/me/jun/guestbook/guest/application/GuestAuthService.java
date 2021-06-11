@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class GuestService {
+public class GuestAuthService {
 
     private final GuestRepository guestRepository;
 

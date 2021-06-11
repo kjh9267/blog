@@ -2,7 +2,7 @@ package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.guest.application.GuestService;
+import me.jun.guestbook.guest.application.GuestAuthService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ public class GuestControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    GuestService guestService;
+    GuestAuthService guestAuthService;
 
     MockHttpSession mockHttpSession;
 
@@ -62,7 +62,7 @@ public class GuestControllerTest {
                 .password("pass")
                 .build();
 
-        guestService.register(requestDto);
+        guestAuthService.register(requestDto);
 
         final String content = objectMapper.writeValueAsString(requestDto);
 
@@ -81,7 +81,7 @@ public class GuestControllerTest {
                 .password("pass")
                 .build();
 
-        guestService.register(requestDto);
+        guestAuthService.register(requestDto);
 
         mockHttpSession = new MockHttpSession();
 
