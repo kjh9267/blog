@@ -2,40 +2,37 @@ package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.dto.GuestRequest;
+import me.jun.guestbook.dto.TokenResponse;
 import me.jun.guestbook.guest.application.GuestAuthService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-@Disabled
+@SpringBootTest
 public class GuestControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
-    @Autowired
-    GuestAuthService guestAuthService;
-
-    MockHttpSession mockHttpSession;
+    @MockBean
+    private GuestAuthService guestAuthService;
 
     @Test
     public void registerTest() throws Exception {
@@ -56,21 +53,26 @@ public class GuestControllerTest {
 
     @Test
     public void loginTest() throws Exception {
-        final GuestRequest requestDto = GuestRequest.builder()
+        GuestRequest request = GuestRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
                 .build();
 
-        guestAuthService.register(requestDto);
+        given(guestAuthService.login(any()))
+                .willReturn(TokenResponse.from("1.2.3"));
 
-        final String content = objectMapper.writeValueAsString(requestDto);
+        String content = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(post("/login")
                     .content(content)
-                    .contentType("application/json"))
+                    .contentType("application/json")
+                    .accept("application/hal+json"))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/login"))
+                .andExpect(jsonPath("access_token").value("1.2.3"))
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/login"));
     }
 
     @Test
@@ -83,12 +85,7 @@ public class GuestControllerTest {
 
         guestAuthService.register(requestDto);
 
-        mockHttpSession = new MockHttpSession();
-
-        mockHttpSession.setAttribute("login", requestDto);
-
         mockMvc.perform(get("/index")
-                .session(mockHttpSession)
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
