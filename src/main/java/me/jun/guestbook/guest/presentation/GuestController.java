@@ -1,15 +1,20 @@
 package me.jun.guestbook.guest.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.guest.application.GuestAuthService;
 import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.dto.GuestResponse;
+import me.jun.guestbook.dto.TokenResponse;
+import me.jun.guestbook.guest.application.GuestAuthService;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.servlet.http.HttpSession;
+import java.net.URI;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,14 +30,17 @@ public class GuestController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody GuestRequest requestDto,
-                        HttpSession httpSession) {
-        final GuestResponse accountInfo = guestAuthService.login(requestDto);
+    public ResponseEntity<EntityModel<TokenResponse>> login(@RequestBody GuestRequest requestDto) {
+        TokenResponse tokenResponse = guestAuthService.login(requestDto);
+        Link selfLink = linkTo(GuestController.class).slash("login")
+                .withSelfRel();
+        URI selfUri = selfLink.toUri();
 
-        httpSession.setAttribute("login", accountInfo);
-        httpSession.setMaxInactiveInterval(60 * 10);
-
-        return "redirect:/index";
+        return ResponseEntity.created(selfUri)
+                .body(
+                        EntityModel.of(tokenResponse)
+                                .add(selfLink)
+                );
     }
 
     @GetMapping("/login")
