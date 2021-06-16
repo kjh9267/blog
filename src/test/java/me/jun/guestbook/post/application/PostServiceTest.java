@@ -1,9 +1,8 @@
 package me.jun.guestbook.post.application;
 
-import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMisMatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
@@ -25,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
@@ -65,7 +62,7 @@ public class PostServiceTest {
                 .id(1L)
                 .title(title)
                 .content(content)
-                .guestId(guestId)
+                .writerId(guestId)
                 .build();
 
         guest = Guest.builder()
@@ -127,7 +124,7 @@ public class PostServiceTest {
     void guestMismatch_updatePostFailTest() {
         given(postRepository.findById(any())).willReturn(Optional.of(post));
 
-        assertThrows(GuestMisMatchException.class,
+        assertThrows(WriterMisMatchException.class,
                 () -> postService.updatePost(postUpdateRequest, 2L)
         );
     }
