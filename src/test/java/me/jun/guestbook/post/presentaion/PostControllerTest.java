@@ -5,10 +5,9 @@ import me.jun.guestbook.dto.PostCreateRequest;
 import me.jun.guestbook.dto.PostResponse;
 import me.jun.guestbook.dto.PostUpdateRequest;
 import me.jun.guestbook.post.application.PostService;
-import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMisMatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +136,7 @@ public class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        doThrow(GuestMisMatchException.class)
+        doThrow(WriterMisMatchException.class)
                 .when(postService)
                 .updatePost(any(), anyLong());
 
@@ -170,7 +169,7 @@ public class PostControllerTest {
 
     @Test
     void guestMisMatch_deletePostFailTest() throws Exception {
-        doThrow(GuestMisMatchException.class)
+        doThrow(WriterMisMatchException.class)
                 .when(postService)
                 .deletePost(any(), anyLong());
 

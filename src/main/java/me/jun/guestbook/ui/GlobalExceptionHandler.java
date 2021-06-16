@@ -1,6 +1,6 @@
 package me.jun.guestbook.ui;
 
-import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMisMatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.ui.error.ErrorCode;
 import me.jun.guestbook.ui.error.ErrorResponse;
@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
 
-    @ExceptionHandler(GuestMisMatchException.class)
-    public ResponseEntity<ErrorResponse> postNotFoundExceptionHandler(GuestMisMatchException e) {
+    @ExceptionHandler(WriterMisMatchException.class)
+    public ResponseEntity<ErrorResponse> postNotFoundExceptionHandler(WriterMisMatchException e) {
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_MISMATCH);
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
     }

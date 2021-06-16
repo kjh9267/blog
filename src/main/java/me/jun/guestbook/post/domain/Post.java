@@ -24,7 +24,7 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    private Long guestId;
+    private Long writerId;
 
     public void updatePost(String title, String content) {
         this.title = title;
