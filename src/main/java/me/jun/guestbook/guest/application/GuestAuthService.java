@@ -1,12 +1,14 @@
 package me.jun.guestbook.guest.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.dto.GuestResponse;
+import me.jun.guestbook.guest.presentation.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.GuestResponse;
+import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.guest.application.exception.EmailNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
+import me.jun.guestbook.security.JwtProvider;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +18,17 @@ public class GuestAuthService {
 
     private final GuestRepository guestRepository;
 
-    public GuestResponse login(GuestRequest dto) {
-        Guest guest = dto.toEntity();
-        guest = guestRepository.findByEmail(guest.getEmail())
+    private final JwtProvider jwtProvider;
+
+    public TokenResponse login(GuestRequest request) {
+        String email = request.getEmail();
+        Guest guest = guestRepository.findByEmail(email)
                 .orElseThrow(EmailNotFoundException::new);
 
-        guest.validate(dto.getPassword());
+        guest.validate(request.getPassword());
+        String jwt = jwtProvider.createJwt(email);
 
-        return GuestResponse.from(guest);
+        return TokenResponse.from(jwt);
     }
 
     public GuestResponse register(GuestRequest dto) {

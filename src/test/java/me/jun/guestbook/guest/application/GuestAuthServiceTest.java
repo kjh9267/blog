@@ -1,16 +1,16 @@
 package me.jun.guestbook.guest.application;
 
+import me.jun.guestbook.guest.presentation.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.GuestResponse;
+import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.guest.application.exception.EmailNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.dto.GuestResponse;
-import org.junit.Rule;
+import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +30,9 @@ public class GuestAuthServiceTest {
 
     @Mock
     private GuestRepository guestRepository;
+
+    @Mock
+    private JwtProvider jwtProvider;
 
     private Guest guest;
 
@@ -42,7 +46,7 @@ public class GuestAuthServiceTest {
 
     @BeforeEach
     public void setUp() {
-        guestAuthService = new GuestAuthService(guestRepository);
+        guestAuthService = new GuestAuthService(guestRepository, jwtProvider);
 
         guest = Guest.builder()
                 .name(name)
@@ -59,22 +63,12 @@ public class GuestAuthServiceTest {
 
     @Test
     void loginTest() {
-        given(guestRepository.findByEmail(email)).willReturn(Optional.of(guest));
+        given(jwtProvider.createJwt(any())).willReturn("1.2.3");
+        given(guestRepository.findByEmail(any())).willReturn(Optional.of(guest));
 
-        // When
-        GuestResponse guestResponse = guestAuthService.login(guestRequest);
-
-        // Then
-        assertAll(
-                () -> assertThat(guestResponse).isInstanceOf(GuestResponse.class),
-                () -> assertThat(guestResponse.getName()).isEqualTo(name),
-                () -> assertThat(guestResponse.getEmail()).isEqualTo(email)
-        );
-
+        assertThat(guestAuthService.login(guestRequest))
+                .isEqualTo(TokenResponse.from("1.2.3"));
     }
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     void NoGuest_loginFailTest() {

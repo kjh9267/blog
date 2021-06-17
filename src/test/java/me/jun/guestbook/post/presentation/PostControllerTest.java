@@ -1,14 +1,13 @@
-package me.jun.guestbook.post.presentaion;
+package me.jun.guestbook.post.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.dto.PostCreateRequest;
-import me.jun.guestbook.dto.PostResponse;
-import me.jun.guestbook.dto.PostUpdateRequest;
+import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
+import me.jun.guestbook.post.presentation.dto.PostResponse;
+import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
 import me.jun.guestbook.post.application.PostService;
-import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +117,7 @@ public class PostControllerTest {
 
         doThrow(PostNotFoundException.class)
                 .when(postService)
-                .updatePost(any(), anyLong());
+                .updatePost(any(), any());
 
         mockMvc.perform(put("/post")
                 .content(content)
@@ -137,9 +136,9 @@ public class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        doThrow(GuestMisMatchException.class)
+        doThrow(WriterMismatchException.class)
                 .when(postService)
-                .updatePost(any(), anyLong());
+                .updatePost(any(), any());
 
         mockMvc.perform(put("/post")
                 .content(content)
@@ -161,7 +160,7 @@ public class PostControllerTest {
     void noPost_deletePostFailTest() throws Exception {
         doThrow(PostNotFoundException.class)
                 .when(postService)
-                .deletePost(any(), anyLong());
+                .deletePost(any(), any());
 
         mockMvc.perform(delete("/post/2"))
                 .andDo(print())
@@ -170,9 +169,9 @@ public class PostControllerTest {
 
     @Test
     void guestMisMatch_deletePostFailTest() throws Exception {
-        doThrow(GuestMisMatchException.class)
+        doThrow(WriterMismatchException.class)
                 .when(postService)
-                .deletePost(any(), anyLong());
+                .deletePost(any(), any());
 
         mockMvc.perform(delete("/post/1"))
                 .andDo(print())
