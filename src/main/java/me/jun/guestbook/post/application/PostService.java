@@ -1,11 +1,11 @@
 package me.jun.guestbook.post.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dto.*;
-import me.jun.guestbook.post.application.exception.WriterMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
+import me.jun.guestbook.post.presentation.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class PostService {
 
         Long id = post.getWriterId();
         if (!id.equals(writerId)) {
-            throw new WriterMisMatchException("writer mismatch");
+            throw new WriterMismatchException("writer mismatch");
         }
 
         String title = requestPost.getTitle();
@@ -54,7 +54,7 @@ public class PostService {
 
         Long id = post.getWriterId();
         if (!id.equals(writerId)) {
-            throw new WriterMisMatchException("writer mismatch");
+            throw new WriterMismatchException("writer mismatch");
         }
 
         postRepository.deleteById(postId);
