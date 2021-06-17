@@ -1,5 +1,7 @@
 package me.jun.guestbook.post.presentation.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +12,10 @@ import me.jun.guestbook.post.domain.Post;
 @AllArgsConstructor
 @Getter
 @Builder
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PostResponse {
 
     private final Long id;
-
-    private final String writer;
 
     private final String title;
 
