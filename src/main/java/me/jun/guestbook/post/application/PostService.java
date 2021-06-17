@@ -18,11 +18,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public void createPost(PostCreateRequest postCreateRequest, Long writerId) {
+    public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
         post.setWriterId(writerId);
-
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+        return PostResponse.of(savedPost);
     }
 
     public PostResponse readPost(Long postId) {
@@ -32,7 +32,7 @@ public class PostService {
         return PostResponse.of(post);
     }
 
-    public void updatePost(PostUpdateRequest dto, Long writerId) {
+    public PostResponse updatePost(PostUpdateRequest dto, Long writerId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
@@ -45,10 +45,12 @@ public class PostService {
         String title = requestPost.getTitle();
         String content = requestPost.getContent();
         post.updatePost(title, content);
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+
+        return PostResponse.of(savedPost);
     }
 
-    public void deletePost(Long postId, Long writerId) {
+    public Long deletePost(Long postId, Long writerId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -58,6 +60,7 @@ public class PostService {
         }
 
         postRepository.deleteById(postId);
+        return postId;
     }
 
     public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
