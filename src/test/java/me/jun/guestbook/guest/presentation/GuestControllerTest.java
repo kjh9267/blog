@@ -1,8 +1,8 @@
 package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.dto.TokenResponse;
+import me.jun.guestbook.guest.presentation.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import me.jun.guestbook.guest.application.GuestAuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

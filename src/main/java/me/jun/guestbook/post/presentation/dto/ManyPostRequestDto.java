@@ -1,4 +1,4 @@
-package me.jun.guestbook.dto;
+package me.jun.guestbook.post.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

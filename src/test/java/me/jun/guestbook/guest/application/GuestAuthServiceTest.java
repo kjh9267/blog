@@ -1,8 +1,8 @@
 package me.jun.guestbook.guest.application;
 
-import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.dto.GuestResponse;
-import me.jun.guestbook.dto.TokenResponse;
+import me.jun.guestbook.guest.presentation.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.GuestResponse;
+import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.guest.application.exception.EmailNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
