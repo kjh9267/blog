@@ -1,7 +1,8 @@
 package me.jun.guestbook.ui;
 
-import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
+import me.jun.guestbook.security.InvalidTokenException;
 import me.jun.guestbook.ui.error.ErrorCode;
 import me.jun.guestbook.ui.error.ErrorResponse;
 import org.slf4j.Logger;
@@ -29,9 +30,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
 
-    @ExceptionHandler(GuestMisMatchException.class)
-    public ResponseEntity<ErrorResponse> postNotFoundExceptionHandler(GuestMisMatchException e) {
+    @ExceptionHandler(WriterMismatchException.class)
+    public ResponseEntity<ErrorResponse> writerMismatchExceptionHandler(WriterMismatchException e) {
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_MISMATCH);
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorResponse> NoTokenExceptionHandler(InvalidTokenException e) {
+        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.UNAUTHORIZED);
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
 }

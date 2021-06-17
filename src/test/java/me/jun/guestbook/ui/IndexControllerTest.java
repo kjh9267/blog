@@ -1,6 +1,6 @@
 package me.jun.guestbook.ui;
 
-import me.jun.guestbook.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
