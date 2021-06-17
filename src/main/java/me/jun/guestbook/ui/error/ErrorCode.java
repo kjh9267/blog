@@ -8,7 +8,8 @@ public enum ErrorCode {
 
     EMPTY_VALUE(400, "Empty input"),
     POST_NOT_FOUND(404, "No post"),
-    GUEST_MISMATCH(403, "Guest Mismatch");
+    GUEST_MISMATCH(403, "Guest Mismatch"),
+    UNAUTHORIZED(401, "Use valid token");
 
     private final int statusCode;
     private final String message;

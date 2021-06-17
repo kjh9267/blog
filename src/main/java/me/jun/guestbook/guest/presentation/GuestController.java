@@ -1,8 +1,8 @@
 package me.jun.guestbook.guest.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dto.GuestRequest;
-import me.jun.guestbook.dto.TokenResponse;
+import me.jun.guestbook.guest.presentation.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import me.jun.guestbook.guest.application.GuestAuthService;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;

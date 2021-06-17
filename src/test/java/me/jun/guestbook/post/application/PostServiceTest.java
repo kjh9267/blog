@@ -2,11 +2,11 @@ package me.jun.guestbook.post.application;
 
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.post.application.exception.WriterMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
-import me.jun.guestbook.dto.*;
+import me.jun.guestbook.post.presentation.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -124,7 +124,7 @@ public class PostServiceTest {
     void guestMismatch_updatePostFailTest() {
         given(postRepository.findById(any())).willReturn(Optional.of(post));
 
-        assertThrows(WriterMisMatchException.class,
+        assertThrows(WriterMismatchException.class,
                 () -> postService.updatePost(postUpdateRequest, 2L)
         );
     }
