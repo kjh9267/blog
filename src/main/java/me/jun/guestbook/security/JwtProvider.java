@@ -1,9 +1,6 @@
 package me.jun.guestbook.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -31,13 +28,28 @@ public class JwtProvider {
     }
 
     public String extractSubject(String jwt) {
-        JwtParser parser = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
-                .build();
-
-        return parser
-                .parseClaimsJws(jwt)
+        return extractClaimsJws(jwt)
                 .getBody()
                 .getSubject();
+    }
+
+    public void validateToken(String jwt) {
+        try {
+            extractClaimsJws(jwt);
+        }
+        catch (Exception e) {
+            throw new InvalidTokenException("invalid token");
+        }
+    }
+
+    private Jws<Claims> extractClaimsJws(String jwt) {
+        return createParser()
+                .parseClaimsJws(jwt);
+    }
+
+    private JwtParser createParser() {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build();
     }
 }
