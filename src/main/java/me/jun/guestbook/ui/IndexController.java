@@ -2,8 +2,8 @@ package me.jun.guestbook.ui;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.post.application.PostService;
-import me.jun.guestbook.dto.ManyPostRequestDto;
-import me.jun.guestbook.dto.ManyPostResponseDto;
+import me.jun.guestbook.post.presentation.dto.ManyPostRequestDto;
+import me.jun.guestbook.post.presentation.dto.ManyPostResponseDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

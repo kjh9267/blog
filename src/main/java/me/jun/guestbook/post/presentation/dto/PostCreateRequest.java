@@ -1,4 +1,4 @@
-package me.jun.guestbook.dto;
+package me.jun.guestbook.post.presentation.dto;
 
 import lombok.*;
 import me.jun.guestbook.post.domain.Post;
@@ -9,10 +9,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostUpdateRequest {
-
-    @NotBlank
-    private final Long id;
+public class PostCreateRequest {
 
     @NotBlank
     private final String title;
@@ -22,7 +19,6 @@ public class PostUpdateRequest {
 
     public Post toEntity() {
         return Post.builder()
-                .id(this.id)
                 .title(this.title)
                 .content(this.content)
                 .build();

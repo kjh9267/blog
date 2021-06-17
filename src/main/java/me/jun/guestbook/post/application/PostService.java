@@ -1,11 +1,11 @@
 package me.jun.guestbook.post.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.dto.*;
-import me.jun.guestbook.post.application.exception.GuestMisMatchException;
+import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
+import me.jun.guestbook.post.presentation.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public void createPost(PostCreateRequest postCreateRequest, Long guestId) {
+    public void createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
-        post.setGuestId(guestId);
+        post.setWriterId(writerId);
 
         postRepository.save(post);
     }
@@ -32,14 +32,14 @@ public class PostService {
         return PostResponse.of(post);
     }
 
-    public void updatePost(PostUpdateRequest dto, Long guestId) {
+    public void updatePost(PostUpdateRequest dto, Long writerId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
-        Long id = post.getGuestId();
-        if (!id.equals(guestId)) {
-            throw new GuestMisMatchException("guest mismatch");
+        Long id = post.getWriterId();
+        if (!id.equals(writerId)) {
+            throw new WriterMismatchException("writer mismatch");
         }
 
         String title = requestPost.getTitle();
@@ -48,13 +48,13 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void deletePost(Long postId, Long guestId) {
+    public void deletePost(Long postId, Long writerId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        Long id = post.getGuestId();
-        if (!id.equals(guestId)) {
-            throw new GuestMisMatchException("guest mismatch");
+        Long id = post.getWriterId();
+        if (!id.equals(writerId)) {
+            throw new WriterMismatchException("writer mismatch");
         }
 
         postRepository.deleteById(postId);
