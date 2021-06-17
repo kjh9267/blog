@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -25,7 +27,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -42,9 +44,15 @@ public class PostControllerTest {
     @MockBean
     private PostService postService;
 
+    private PostResponse postResponse;
+
     @BeforeEach
     public void setUp() {
-
+        postResponse = PostResponse.builder()
+                .id(1L)
+                .title("test title")
+                .content("test content")
+                .build();
     }
 
     @Test
@@ -56,23 +64,39 @@ public class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        doNothing().when(postService);
+        given(postService.createPost(any(), any()))
+                .willReturn(postResponse);
 
-        mockMvc.perform(post("/post")
+        mockMvc.perform(post("/api/post")
                     .content(content)
-                    .contentType("application/json"))
+                    .contentType("application/json")
+                    .accept("application/hal+json"))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(header().string("location", "http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/post/1"));
     }
 
     @Test
     public void readPostTest() throws Exception {
         given(postService.readPost(any()))
-                .willReturn(PostResponse.builder().build());
+                .willReturn(postResponse);
 
-        mockMvc.perform(get("/post/1"))
+        mockMvc.perform(get("/api/post/1")
+                    .contentType("application/json")
+                    .accept("application/hal+json"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/post"))
+                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("id").value("1"))
+                .andExpect(jsonPath("title").value("test title"))
+                .andExpect(jsonPath("content").value("test content"));
     }
 
     @Test
@@ -80,7 +104,7 @@ public class PostControllerTest {
         given(postService.readPost(any()))
                 .willThrow(new PostNotFoundException());
 
-        mockMvc.perform(get("/post/1"))
+        mockMvc.perform(get("/api/post/1"))
                 .andExpect(status().is4xxClientError())
                 .andDo(print());
     }
@@ -89,20 +113,28 @@ public class PostControllerTest {
     public void updatePostTest() throws Exception {
         PostUpdateRequest request = PostUpdateRequest.builder()
                 .id(1L)
-                .title("new title")
-                .content("new content")
+                .title("test title")
+                .content("test content")
                 .build();
 
         String content = objectMapper.writeValueAsString(request);
 
-        doNothing().when(postService)
-                .updatePost(any(), anyLong());
+        given(postService.updatePost(any(), any()))
+                .willReturn(postResponse);
 
-        mockMvc.perform(put("/post")
-                .content(content)
-                .contentType("application/json"))
+        mockMvc.perform(put("/api/post")
+                    .content(content)
+                    .contentType("application/json")
+                    .accept("application/hal+json"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/post"))
+                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("id").value("1"))
+                .andExpect(jsonPath("title").value("test title"))
+                .andExpect(jsonPath("content").value("test content"));
     }
 
     @Test
@@ -119,7 +151,7 @@ public class PostControllerTest {
                 .when(postService)
                 .updatePost(any(), any());
 
-        mockMvc.perform(put("/post")
+        mockMvc.perform(put("/api/post")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -140,7 +172,7 @@ public class PostControllerTest {
                 .when(postService)
                 .updatePost(any(), any());
 
-        mockMvc.perform(put("/post")
+        mockMvc.perform(put("/api/post")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -149,11 +181,16 @@ public class PostControllerTest {
 
     @Test
     public void deletePostTest() throws Exception {
-        doNothing().when(postService).deletePost(any(), anyLong());
+        given(postService.deletePost(any(), any()))
+                .willReturn(1L);
 
-        mockMvc.perform(delete("/post/1"))
+        mockMvc.perform(delete("/api/post/1")
+                    .contentType("application/json")
+                    .accept("application/hal+json"))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post"))
+                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/post"));
     }
 
     @Test
@@ -162,7 +199,7 @@ public class PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/post/2"))
+        mockMvc.perform(delete("/api/post/2"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -173,7 +210,7 @@ public class PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/post/1"))
+        mockMvc.perform(delete("/api/post/1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
