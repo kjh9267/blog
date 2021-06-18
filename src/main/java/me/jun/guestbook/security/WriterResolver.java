@@ -1,10 +1,7 @@
-package me.jun.guestbook.post.presentation;
+package me.jun.guestbook.security;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.post.application.WriterService;
-import me.jun.guestbook.post.presentation.dto.WriterInfo;
-import me.jun.guestbook.security.InvalidTokenException;
-import me.jun.guestbook.security.JwtProvider;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
