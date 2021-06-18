@@ -26,4 +26,8 @@ public class Comment {
     public void setWriterId(Long writerId) {
         this.writerId = writerId;
     }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
