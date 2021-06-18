@@ -1,4 +1,4 @@
-package me.jun.guestbook.post.presentation;
+package me.jun.guestbook.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

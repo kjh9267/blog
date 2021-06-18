@@ -8,6 +8,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Getter
 @EqualsAndHashCode(of = "id")
 public class Comment {
 
@@ -21,4 +22,8 @@ public class Comment {
 
     @Column(length = 100, nullable = false)
     private String content;
+
+    public void setWriterId(Long writerId) {
+        this.writerId = writerId;
+    }
 }
