@@ -5,8 +5,7 @@ import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
 import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
-import me.jun.guestbook.post.presentation.dto.WriterInfo;
-import me.jun.guestbook.security.Writer;
+import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -26,7 +25,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<EntityModel<PostResponse>> createPost(@RequestBody PostCreateRequest request,
-                                           @Writer WriterInfo writer) {
+                                           @PostWriter PostWriterInfo writer) {
         PostResponse postResponse = postService.createPost(request, writer.getId());
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class)
@@ -64,7 +63,7 @@ public class PostController {
 
     @PutMapping
     public ResponseEntity<EntityModel<PostResponse>> updatePost(@RequestBody PostUpdateRequest requestDto,
-                                           @Writer WriterInfo writer) {
+                                           @PostWriter PostWriterInfo writer) {
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class)
@@ -81,7 +80,7 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<RepresentationModel> deletePost(@PathVariable Long postId,
-                                           @Writer WriterInfo writer) {
+                                           @PostWriter PostWriterInfo writer) {
         postService.deletePost(postId, writer.getId());
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class);

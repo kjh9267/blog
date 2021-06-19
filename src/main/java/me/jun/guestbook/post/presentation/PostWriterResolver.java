@@ -1,7 +1,9 @@
-package me.jun.guestbook.security;
+package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.post.application.WriterService;
+import me.jun.guestbook.post.application.PostWriterService;
+import me.jun.guestbook.security.InvalidTokenException;
+import me.jun.guestbook.security.JwtProvider;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -14,15 +16,15 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class WriterResolver implements HandlerMethodArgumentResolver {
+public class PostWriterResolver implements HandlerMethodArgumentResolver {
 
     private final JwtProvider provider;
 
-    private final WriterService writerService;
+    private final PostWriterService postWriterService;
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.hasParameterAnnotation(Writer.class);
+        return methodParameter.hasParameterAnnotation(PostWriter.class);
     }
 
     @Override
@@ -36,7 +38,7 @@ public class WriterResolver implements HandlerMethodArgumentResolver {
 
         provider.validateToken(token);
         String email = provider.extractSubject(token);
-        return writerService.findWriterByEmail(email);
+        return postWriterService.retrievePostWriterBy(email);
     }
 
     private Optional<String> extractToken(NativeWebRequest nativeWebRequest) {
