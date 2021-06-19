@@ -7,7 +7,7 @@ import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class WriterInfo {
+public class PostWriterInfo {
 
     private Long id;
 
@@ -15,8 +15,8 @@ public class WriterInfo {
 
     private String email;
 
-    public static WriterInfo from(GuestResponse guestResponse) {
-        return WriterInfo.builder()
+    public static PostWriterInfo from(GuestResponse guestResponse) {
+        return PostWriterInfo.builder()
                 .id(guestResponse.getId())
                 .name(guestResponse.getName())
                 .email(guestResponse.getEmail())

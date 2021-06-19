@@ -1,7 +1,7 @@
 package me.jun.guestbook.config;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.security.WriterResolver;
+import me.jun.guestbook.post.presentation.PostWriterResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,10 +12,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer {
 
-    private final WriterResolver writerResolver;
+    private final PostWriterResolver postWriterResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(writerResolver);
+        resolvers.add(postWriterResolver);
     }
 }

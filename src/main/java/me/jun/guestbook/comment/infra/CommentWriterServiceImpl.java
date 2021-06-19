@@ -1,22 +1,21 @@
-package me.jun.guestbook.post.infra;
+package me.jun.guestbook.comment.infra;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.guest.application.GuestAuthService;
+import me.jun.guestbook.comment.application.CommentWriterService;
+import me.jun.guestbook.comment.presentation.dto.CommentWriterInfo;
 import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.presentation.dto.GuestResponse;
-import me.jun.guestbook.post.application.WriterService;
-import me.jun.guestbook.post.presentation.dto.WriterInfo;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class WriterServiceImpl implements WriterService {
+public class CommentWriterServiceImpl implements CommentWriterService {
 
     private final GuestService guestService;
 
     @Override
-    public WriterInfo findWriterByEmail(String email) {
+    public CommentWriterInfo retrieveCommentWriterBy(String email) {
         GuestResponse guestResponse = guestService.retrieveGuestBy(email);
-        return WriterInfo.from(guestResponse);
+        return CommentWriterInfo.from(guestResponse);
     }
 }
