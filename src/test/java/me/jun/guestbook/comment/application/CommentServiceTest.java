@@ -19,6 +19,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
@@ -104,7 +106,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void NoComment_updateCommentFailTest() {
+    void noComment_updateCommentFailTest() {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.empty());
 
@@ -113,11 +115,36 @@ class CommentServiceTest {
     }
 
     @Test
-    void CommentWriterMismatch_updateCommentFailTest() {
+    void commentWriterMismatch_updateCommentFailTest() {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.of(comment));
 
         assertThrows(CommentWriterMismatchException.class,
                 () -> commentService.updateComment(commentUpdateRequest, 2L));
+    }
+
+    @Test
+    void deleteCommentTest() {
+        given(commentRepository.findById(any()))
+                .willReturn(Optional.of(comment));
+
+        commentService.deleteComment(1L, 1L);
+
+        verify(commentRepository).deleteById(any());
+    }
+
+    @Test
+    void noComment_deleteCommentFailTest() {
+        assertThrows(CommentNotFoundException.class,
+                () -> commentService.deleteComment(1L, 1L));
+    }
+
+    @Test
+    void writerMismatch_deleteCommentFailTest() {
+        given(commentRepository.findById(any()))
+                .willReturn(Optional.of(comment));
+
+        assertThrows(CommentWriterMismatchException.class,
+                () -> commentService.deleteComment(1L, 2L));
     }
 }
