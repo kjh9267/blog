@@ -5,7 +5,6 @@ import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.comment.presentation.dto.CommentWriterInfo;
-import me.jun.guestbook.post.presentation.PostController;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/comment")
+@RequestMapping(value = "/api/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -42,6 +41,7 @@ public class CommentController {
                 .body(
                         EntityModel.of(comment)
                                 .add(selfLinkBuilder.withSelfRel())
+                                .add(linkTo(CommentController.class).withRel(CREATE_COMMENT))
                                 .add(selfLinkBuilder.withRel(GET_COMMENT))
                                 .add(selfLinkBuilder.withRel(UPDATE_COMMENT))
                                 .add(selfLinkBuilder.withRel(DELETE_COMMENT))
