@@ -91,18 +91,18 @@ public class PostControllerTest {
         given(guestService.retrieveGuestBy(any()))
                 .willReturn(guestResponse);
 
-        mockMvc.perform(post("/api/post")
+        mockMvc.perform(post("/api/posts")
                     .content(content)
                     .contentType("application/json")
                     .accept("application/hal+json")
                     .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(header().string("location", "http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/post/1"));
+                .andExpect(header().string("location", "http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/posts/1"));
     }
 
     @Test
@@ -110,15 +110,15 @@ public class PostControllerTest {
         given(postService.readPost(any()))
                 .willReturn(postResponse);
 
-        mockMvc.perform(get("/api/post/1")
+        mockMvc.perform(get("/api/posts/1")
                     .contentType("application/json")
                     .accept("application/hal+json"))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/post"))
-                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/posts"))
+                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/posts/1"))
                 .andExpect(jsonPath("id").value("1"))
                 .andExpect(jsonPath("title").value("test title"))
                 .andExpect(jsonPath("content").value("test content"));
@@ -129,7 +129,7 @@ public class PostControllerTest {
         given(postService.readPost(any()))
                 .willThrow(new PostNotFoundException());
 
-        mockMvc.perform(get("/api/post/1"))
+        mockMvc.perform(get("/api/posts/1"))
                 .andExpect(status().is4xxClientError())
                 .andDo(print());
     }
@@ -150,17 +150,17 @@ public class PostControllerTest {
         given(guestService.retrieveGuestBy(any()))
                 .willReturn(guestResponse);
 
-        mockMvc.perform(put("/api/post")
+        mockMvc.perform(put("/api/posts")
                     .content(content)
                     .contentType("application/json")
                     .accept("application/hal+json")
                     .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/post"))
-                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/post/1"))
-                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/post/1"))
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/posts"))
+                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/posts/1"))
                 .andExpect(jsonPath("id").value("1"))
                 .andExpect(jsonPath("title").value("test title"))
                 .andExpect(jsonPath("content").value("test content"));
@@ -180,7 +180,7 @@ public class PostControllerTest {
                 .when(postService)
                 .updatePost(any(), any());
 
-        mockMvc.perform(put("/api/post")
+        mockMvc.perform(put("/api/posts")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -201,7 +201,7 @@ public class PostControllerTest {
                 .when(postService)
                 .updatePost(any(), any());
 
-        mockMvc.perform(put("/api/post")
+        mockMvc.perform(put("/api/posts")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -216,14 +216,14 @@ public class PostControllerTest {
         given(guestService.retrieveGuestBy(any()))
                 .willReturn(guestResponse);
 
-        mockMvc.perform(delete("/api/post/1")
+        mockMvc.perform(delete("/api/posts/1")
                     .contentType("application/json")
                     .accept("application/hal+json")
                 .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/post"))
-                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/post"));
+                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts"))
+                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/posts"));
     }
 
     @Test
@@ -232,7 +232,7 @@ public class PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/api/post/2"))
+        mockMvc.perform(delete("/api/posts/2"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -243,7 +243,7 @@ public class PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/api/post/1"))
+        mockMvc.perform(delete("/api/posts/1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
