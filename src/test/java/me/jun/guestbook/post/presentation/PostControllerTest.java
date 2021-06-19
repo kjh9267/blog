@@ -25,9 +25,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.lang.reflect.Field;
 import java.security.Key;
 
+import static me.jun.guestbook.utils.ControllerTestUtils.*;
+import static me.jun.guestbook.utils.RelUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -93,16 +96,17 @@ public class PostControllerTest {
 
         mockMvc.perform(post("/api/posts")
                     .content(content)
-                    .contentType("application/json")
-                    .accept("application/hal+json")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(HAL_JSON)
                     .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(header().string("location", "http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/posts/1"));
+                .andExpect(header().string("location", POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"));
     }
 
     @Test
@@ -111,14 +115,15 @@ public class PostControllerTest {
                 .willReturn(postResponse);
 
         mockMvc.perform(get("/api/posts/1")
-                    .contentType("application/json")
-                    .accept("application/hal+json"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(HAL_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/posts"))
-                .andExpect(jsonPath("_links.update_post.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath("id").value("1"))
                 .andExpect(jsonPath("title").value("test title"))
                 .andExpect(jsonPath("content").value("test content"));
@@ -152,15 +157,16 @@ public class PostControllerTest {
 
         mockMvc.perform(put("/api/posts")
                     .content(content)
-                    .contentType("application/json")
-                    .accept("application/hal+json")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(HAL_JSON)
                     .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/posts"))
-                .andExpect(jsonPath("_links.get_post.href").value("http://localhost/api/posts/1"))
-                .andExpect(jsonPath("_links.delete_post.href").value("http://localhost/api/posts/1"))
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath("id").value("1"))
                 .andExpect(jsonPath("title").value("test title"))
                 .andExpect(jsonPath("content").value("test content"));
@@ -217,13 +223,13 @@ public class PostControllerTest {
                 .willReturn(guestResponse);
 
         mockMvc.perform(delete("/api/posts/1")
-                    .contentType("application/json")
-                    .accept("application/hal+json")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(HAL_JSON)
                 .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/posts"))
-                .andExpect(jsonPath("_links.create_post.href").value("http://localhost/api/posts"));
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI));
     }
 
     @Test
