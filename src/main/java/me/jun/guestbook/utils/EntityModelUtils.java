@@ -1,5 +1,7 @@
 package me.jun.guestbook.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import me.jun.guestbook.post.presentation.PostController;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
 import org.springframework.hateoas.EntityModel;
@@ -9,8 +11,8 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import static me.jun.guestbook.utils.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-
-public class EntityModelUtils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class EntityModelUtils {
 
     public static EntityModel<PostResponse> postEntityModel(PostResponse postResponse) {
         EntityModel<PostResponse> entityModel = EntityModel.of(postResponse);
