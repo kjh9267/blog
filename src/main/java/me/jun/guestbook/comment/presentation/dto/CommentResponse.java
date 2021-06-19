@@ -1,5 +1,7 @@
 package me.jun.guestbook.comment.presentation.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import me.jun.guestbook.comment.domain.Comment;
 
@@ -7,6 +9,7 @@ import me.jun.guestbook.comment.domain.Comment;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CommentResponse {
 
     private Long id;
