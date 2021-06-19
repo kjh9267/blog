@@ -8,17 +8,17 @@ import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
 import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static me.jun.guestbook.utils.EntityModelUtils.postEntityModel;
+import static me.jun.guestbook.utils.SelfUriUtils.postSelfUri;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/post")
+@RequestMapping(value = "/api/posts")
 public class PostController {
 
     private final PostService postService;
@@ -26,68 +26,40 @@ public class PostController {
     @PostMapping
     public ResponseEntity<EntityModel<PostResponse>> createPost(@RequestBody PostCreateRequest request,
                                            @PostWriter PostWriterInfo writer) {
-        PostResponse postResponse = postService.createPost(request, writer.getId());
 
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class)
-                .slash(postResponse.getId());
-        URI selfUri = selfLinkBuilder
-                .withSelfRel()
-                .toUri();
+        PostResponse postResponse = postService.createPost(request, writer.getId());
+        URI selfUri = postSelfUri(postResponse);
 
         return ResponseEntity.created(selfUri)
-                .body(
-                        EntityModel.of(postResponse)
-                        .add(selfLinkBuilder.withSelfRel())
-                        .add(selfLinkBuilder.withRel("get_post"))
-                        .add(selfLinkBuilder.withRel("update_post"))
-                        .add(selfLinkBuilder.withRel("delete_post"))
-                );
+                .body(postEntityModel(postResponse));
     }
 
     @GetMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<EntityModel<PostResponse>> readPost(@PathVariable Long postId) {
+
         PostResponse postResponse = postService.readPost(postId);
 
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class)
-                .slash(postResponse.getId());
-
-        return ResponseEntity.ok(
-                EntityModel.of(postResponse)
-                        .add(selfLinkBuilder.withSelfRel())
-                        .add(linkTo(PostController.class).withRel("create_post"))
-                        .add(selfLinkBuilder.withRel("update_post"))
-                        .add(selfLinkBuilder.withRel("delete_post"))
-        );
+        return ResponseEntity.ok()
+                .body(postEntityModel(postResponse));
     }
 
     @PutMapping
     public ResponseEntity<EntityModel<PostResponse>> updatePost(@RequestBody PostUpdateRequest requestDto,
                                            @PostWriter PostWriterInfo writer) {
+
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class)
-                .slash(postResponse.getId());
-
-        return ResponseEntity.ok(
-                EntityModel.of(postResponse)
-                        .add(selfLinkBuilder.withSelfRel())
-                        .add(selfLinkBuilder.withRel("get_post"))
-                        .add(linkTo(PostController.class).withRel("create_post"))
-                        .add(selfLinkBuilder.withRel("delete_post"))
-        );
+        return ResponseEntity.ok()
+                .body(postEntityModel(postResponse));
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<RepresentationModel> deletePost(@PathVariable Long postId,
                                            @PostWriter PostWriterInfo writer) {
+
         postService.deletePost(postId, writer.getId());
 
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(PostController.class);
-
-        return ResponseEntity.ok(
-                new RepresentationModel<>()
-                        .add(selfLinkBuilder.withSelfRel())
-                        .add(linkTo(PostController.class).withRel("create_post")));
+        return ResponseEntity.ok().body(postEntityModel());
     }
 }

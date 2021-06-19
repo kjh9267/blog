@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
+import static me.jun.guestbook.utils.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -41,9 +42,9 @@ public class CommentController {
                 .body(
                         EntityModel.of(comment)
                                 .add(selfLinkBuilder.withSelfRel())
-                                .add(selfLinkBuilder.withRel("get_comment"))
-                                .add(selfLinkBuilder.withRel("update_comment"))
-                                .add(selfLinkBuilder.withRel("delete_comment"))
+                                .add(selfLinkBuilder.withRel(GET_COMMENT))
+                                .add(selfLinkBuilder.withRel(UPDATE_COMMENT))
+                                .add(selfLinkBuilder.withRel(DELETE_COMMENT))
                 );
     }
 

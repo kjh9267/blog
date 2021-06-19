@@ -1,0 +1,24 @@
+package me.jun.guestbook.utils;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class RelUtils {
+
+    public static final String CREATE_POST = "create_post";
+
+    public static final String GET_POST = "get_post";
+
+    public static final String UPDATE_POST = "update_post";
+
+    public static final String DELETE_POST = "delete_post";
+
+    public static final String CREATE_COMMENT = "create_comment";
+
+    public static final String GET_COMMENT = "get_comment";
+
+    public static final String UPDATE_COMMENT = "update_comment";
+
+    public static final String DELETE_COMMENT = "delete_comment";
+}
