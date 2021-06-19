@@ -5,7 +5,6 @@ import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.security.JwtProvider;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,11 +13,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static me.jun.guestbook.utils.ControllerTestUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 public class CommentControllerTest {
-    private static final String HAL_JSON = "application/hal+json";
-    private static final String JSON = "application/json";
 
     @Autowired
     private MockMvc mockMvc;
@@ -72,17 +72,18 @@ public class CommentControllerTest {
         given(commentService.createComment(any(), any()))
                 .willReturn(commentResponse);
 
-        mockMvc.perform(post("/api/comment")
+        mockMvc.perform(post("/api/comments")
                         .content(content)
-                        .contentType(JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(HAL_JSON)
                         .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
-                .andExpect(header().string("location", "http://localhost/api/comment/1"))
+                .andExpect(header().string("location", COMMENTS_SELF_URI + "/1"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/api/comment/1"))
-                .andExpect(jsonPath("_links.get_comment.href").value("http://localhost/api/comment/1"))
-                .andExpect(jsonPath("_links.update_comment.href").value("http://localhost/api/comment/1"))
-                .andExpect(jsonPath("_links.delete_comment.href").value("http://localhost/api/comment/1"));
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"));
     }
 }
