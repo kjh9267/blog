@@ -2,8 +2,13 @@ package me.jun.guestbook.comment.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.comment.application.CommentService;
+import me.jun.guestbook.comment.application.CommentWriterService;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
+import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
+import me.jun.guestbook.comment.presentation.dto.CommentWriterInfo;
+import me.jun.guestbook.guest.application.GuestService;
+import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import static me.jun.guestbook.utils.ControllerTestUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,6 +42,9 @@ public class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
+    @MockBean
+    private CommentWriterService commentWriterService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -48,6 +57,8 @@ public class CommentControllerTest {
 
     private CommentResponse commentResponse;
 
+    private CommentWriterInfo writerInfo;
+
     @BeforeEach
     void setUp() {
         jwt = jwtProvider.createJwt("testuser@email.com");
@@ -57,6 +68,12 @@ public class CommentControllerTest {
                 .writerId(1L)
                 .postId(1L)
                 .content("test content")
+                .build();
+
+        writerInfo = CommentWriterInfo.builder()
+                .id(1L)
+                .email("testuser@email.com")
+                .name("test")
                 .build();
     }
 
@@ -72,6 +89,9 @@ public class CommentControllerTest {
         given(commentService.createComment(any(), any()))
                 .willReturn(commentResponse);
 
+        given(commentWriterService.retrieveCommentWriterBy(any()))
+                .willReturn(writerInfo);
+
         mockMvc.perform(post("/api/comments")
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -80,10 +100,87 @@ public class CommentControllerTest {
                 .andDo(print())
                 .andExpect(header().string("location", COMMENTS_SELF_URI + "/1"))
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("writer_id").value(1))
+                .andExpect(jsonPath("post_id").value(1))
+                .andExpect(jsonPath("content").value("test content"))
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
                 .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"));
+    }
+
+    @Test
+    void readCommentTest() throws Exception {
+        given(commentService.retrieveComment(any()))
+                .willReturn(commentResponse);
+
+        mockMvc.perform(get("/api/comments/1")
+                    .accept(HAL_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("writer_id").value(1))
+                .andExpect(jsonPath("post_id").value(1))
+                .andExpect(jsonPath("content").value("test content"))
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andDo(print());
+    }
+
+    @Test
+    void updateCommentTest() throws Exception {
+        given(commentWriterService.retrieveCommentWriterBy(any()))
+                .willReturn(writerInfo);
+
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder()
+                .id(1L)
+                .postId(1L)
+                .content("test content")
+                .build();
+
+        String content = objectMapper.writeValueAsString(commentUpdateRequest);
+
+        given(commentService.updateComment(any(), any()))
+                .willReturn(commentResponse);
+
+        mockMvc.perform(put("/api/comments")
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(HAL_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("writer_id").value(1))
+                .andExpect(jsonPath("post_id").value(1))
+                .andExpect(jsonPath("content").value("test content"))
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
+                .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"));
+    }
+
+    @Test
+    void deleteCommentTest() throws Exception {
+        given(commentService.deleteComment(any(), any()))
+                .willReturn(1L);
+
+        given(commentWriterService.retrieveCommentWriterBy(any()))
+                .willReturn(writerInfo);
+
+        mockMvc.perform(delete("/api/comments/1")
+                    .header(HttpHeaders.AUTHORIZATION, jwt)
+                    .accept(HAL_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI))
+                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI));
+
+        verify(commentService).deleteComment(any(), any());
     }
 }
