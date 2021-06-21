@@ -24,9 +24,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class GuestAuthServiceTest {
+public class LoginServiceTest {
 
-    private GuestAuthService guestAuthService;
+    private LoginService loginService;
 
     @Mock
     private GuestRepository guestRepository;
@@ -46,7 +46,7 @@ public class GuestAuthServiceTest {
 
     @BeforeEach
     public void setUp() {
-        guestAuthService = new GuestAuthService(guestRepository, jwtProvider);
+        loginService = new LoginService(guestRepository, jwtProvider);
 
         guest = Guest.builder()
                 .name(name)
@@ -66,7 +66,7 @@ public class GuestAuthServiceTest {
         given(jwtProvider.createJwt(any())).willReturn("1.2.3");
         given(guestRepository.findByEmail(any())).willReturn(Optional.of(guest));
 
-        assertThat(guestAuthService.login(guestRequest))
+        assertThat(loginService.login(guestRequest))
                 .isEqualTo(TokenResponse.from("1.2.3"));
     }
 
@@ -75,29 +75,7 @@ public class GuestAuthServiceTest {
         given(guestRepository.findByEmail(email)).willReturn(Optional.empty());
 
         assertThrows(EmailNotFoundException.class,
-                () -> guestAuthService.login(guestRequest)
-        );
-    }
-
-    @Test
-    void registerTest() {
-        given(guestRepository.save(guest)).willReturn(guest);
-
-        GuestResponse guestResponse = guestAuthService.register(guestRequest);
-
-        assertAll(
-                () -> assertThat(guestResponse).isInstanceOf(GuestResponse.class),
-                () -> assertThat(guestResponse.getName()).isEqualTo(name),
-                () -> assertThat(guestResponse.getEmail()).isEqualTo(email)
-        );
-    }
-
-    @Test
-    void registerFailTest() {
-        given(guestRepository.save(guest)).willThrow(new DataIntegrityViolationException(""));
-
-        assertThrows(DuplicatedEmailException.class,
-                () -> guestAuthService.register(guestRequest)
+                () -> loginService.login(guestRequest)
         );
     }
 }
