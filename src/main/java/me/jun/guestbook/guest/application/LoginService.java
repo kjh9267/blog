@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class GuestAuthService {
+public class LoginService {
 
     private final GuestRepository guestRepository;
 
@@ -29,27 +29,5 @@ public class GuestAuthService {
         String jwt = jwtProvider.createJwt(email);
 
         return TokenResponse.from(jwt);
-    }
-
-    public GuestResponse register(GuestRequest dto) {
-        Guest guest = dto.toEntity();
-
-        try {
-            guest = guestRepository.save(guest);
-
-            return GuestResponse.from(guest);
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new DuplicatedEmailException(e);
-        }
-    }
-
-    public void deleteGuest(GuestRequest dto) {
-        Guest guest = guestRepository.findByEmail(dto.getEmail())
-                .orElseThrow(EmailNotFoundException::new);
-
-        guest.validate(dto.getPassword());
-
-        guestRepository.deleteById(guest.getId());
     }
 }
