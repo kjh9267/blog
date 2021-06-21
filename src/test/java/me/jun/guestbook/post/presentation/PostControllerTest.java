@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.post.application.PostService;
+import me.jun.guestbook.post.application.PostWriterService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
 import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
+import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
 import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,14 +53,14 @@ public class PostControllerTest {
     private PostService postService;
 
     @MockBean
-    private GuestService guestService;
+    private PostWriterService postWriterService;
 
     @Autowired
     private JwtProvider jwtProvider;
 
     private PostResponse postResponse;
 
-    private GuestResponse guestResponse;
+    private PostWriterInfo writerInfo;
 
     private String jwt;
 
@@ -72,10 +74,10 @@ public class PostControllerTest {
 
         jwt = jwtProvider.createJwt("testuser@email.com");
 
-        guestResponse = GuestResponse.builder()
+        writerInfo = PostWriterInfo.builder()
                 .id(1L)
+                .name("tset")
                 .email("testuser@email.com")
-                .name("testuser")
                 .build();
     }
 
@@ -91,8 +93,8 @@ public class PostControllerTest {
         given(postService.createPost(any(), any()))
                 .willReturn(postResponse);
 
-        given(guestService.retrieveGuestBy(any()))
-                .willReturn(guestResponse);
+        given(postWriterService.retrievePostWriterBy(any()))
+                .willReturn(writerInfo);
 
         mockMvc.perform(post("/api/posts")
                     .content(content)
@@ -152,8 +154,8 @@ public class PostControllerTest {
         given(postService.updatePost(any(), any()))
                 .willReturn(postResponse);
 
-        given(guestService.retrieveGuestBy(any()))
-                .willReturn(guestResponse);
+        given(postWriterService.retrievePostWriterBy(any()))
+                .willReturn(writerInfo);
 
         mockMvc.perform(put("/api/posts")
                     .content(content)
@@ -219,8 +221,8 @@ public class PostControllerTest {
         given(postService.deletePost(any(), any()))
                 .willReturn(1L);
 
-        given(guestService.retrieveGuestBy(any()))
-                .willReturn(guestResponse);
+        given(postWriterService.retrievePostWriterBy(any()))
+                .willReturn(writerInfo);
 
         mockMvc.perform(delete("/api/posts/1")
                     .contentType(MediaType.APPLICATION_JSON)

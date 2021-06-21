@@ -47,7 +47,7 @@ public class CommentService {
         return CommentResponse.from(savedComment);
     }
 
-    public void deleteComment(Long id, Long writerId) {
+    public Long deleteComment(Long id, Long writerId) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
@@ -56,6 +56,7 @@ public class CommentService {
         }
 
         commentRepository.deleteById(id);
+        return id;
     }
 
     private boolean isWriter(Long writerId, Comment comment) {
