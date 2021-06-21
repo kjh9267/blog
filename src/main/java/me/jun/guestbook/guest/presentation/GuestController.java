@@ -1,9 +1,10 @@
 package me.jun.guestbook.guest.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.guest.application.RegisterService;
 import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
-import me.jun.guestbook.guest.application.GuestAuthService;
+import me.jun.guestbook.guest.application.LoginService;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +21,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequiredArgsConstructor
 public class GuestController {
 
-    private final GuestAuthService guestAuthService;
+    private final LoginService loginService;
+
+    private final RegisterService registerService;
 
     @PostMapping("/register")
     public String register(@RequestBody GuestRequest requestDto) {
-        guestAuthService.register(requestDto);
+        registerService.register(requestDto);
 
         return "redirect:/index";
     }
 
     @PostMapping("/login")
     public ResponseEntity<EntityModel<TokenResponse>> login(@RequestBody GuestRequest requestDto) {
-        TokenResponse tokenResponse = guestAuthService.login(requestDto);
+        TokenResponse tokenResponse = loginService.login(requestDto);
         Link selfLink = linkTo(GuestController.class).slash("login")
                 .withSelfRel();
         URI selfUri = selfLink.toUri();

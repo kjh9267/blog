@@ -1,9 +1,9 @@
 package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.guestbook.guest.application.LoginService;
 import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
-import me.jun.guestbook.guest.application.GuestAuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,7 +31,7 @@ public class GuestControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private GuestAuthService guestAuthService;
+    private LoginService loginService;
 
     @Test
     public void registerTest() throws Exception {
@@ -59,7 +58,7 @@ public class GuestControllerTest {
                 .password("pass")
                 .build();
 
-        given(guestAuthService.login(any()))
+        given(loginService.login(any()))
                 .willReturn(TokenResponse.from("1.2.3"));
 
         String content = objectMapper.writeValueAsString(request);
@@ -73,21 +72,5 @@ public class GuestControllerTest {
                 .andExpect(header().string("location", "http://localhost/login"))
                 .andExpect(jsonPath("access_token").value("1.2.3"))
                 .andExpect(jsonPath("_links.self.href").value("http://localhost/login"));
-    }
-
-    @Test
-    public void loginSessionTest() throws Exception {
-        final GuestRequest requestDto = GuestRequest.builder()
-                .name("jun")
-                .email("testuser@email.com")
-                .password("pass")
-                .build();
-
-        guestAuthService.register(requestDto);
-
-        mockMvc.perform(get("/index")
-                .contentType("application/json"))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection());
     }
 }
