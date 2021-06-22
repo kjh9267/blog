@@ -1,4 +1,4 @@
-package me.jun.guestbook.ui;
+package me.jun.guestbook.home.presentation;
 
 import org.springframework.web.bind.annotation.RestController;
 
