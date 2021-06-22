@@ -5,7 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 public interface EntityModelCreator<T> {
 
-    EntityModel<T> createEntityModel(T Resource, Class controller);
+    EntityModel<T> createEntityModel(T resource, Class controller);
 
     RepresentationModel createEntityModel(Class controller);
 }
