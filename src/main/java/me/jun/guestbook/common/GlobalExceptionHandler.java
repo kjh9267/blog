@@ -1,10 +1,10 @@
-package me.jun.guestbook.ui;
+package me.jun.guestbook.common;
 
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.security.InvalidTokenException;
-import me.jun.guestbook.ui.error.ErrorCode;
-import me.jun.guestbook.ui.error.ErrorResponse;
+import me.jun.guestbook.common.error.ErrorCode;
+import me.jun.guestbook.common.error.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

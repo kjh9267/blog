@@ -131,29 +131,6 @@ public class PostServiceTest {
                 () -> postService.updatePost(postUpdateRequest, 2L)
         );
     }
-//
-//    @Test
-//    void readPostByPageTest() {
-//
-//        // Given
-//        ManyPostRequestDto request = ManyPostRequestDto.builder()
-//                .page(0)
-//                .build();
-//
-//        Page<Post> posts = new PageImpl<Post>(Arrays.asList(post, post, post));
-//
-//        given(postRepository.findAll(PageRequest.of(0, 10)))
-//                .willReturn(posts);
-//
-//        // When
-//        ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(request);
-//
-//        assertAll(
-//                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalPages()).isEqualTo(1),
-//                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalElements()).isEqualTo(3)
-//        );
-//    }
-
 
     @Test
     void queryPostsTest() {
