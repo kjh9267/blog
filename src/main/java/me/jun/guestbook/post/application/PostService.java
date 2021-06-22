@@ -63,12 +63,8 @@ public class PostService {
         return postId;
     }
 
-    public ManyPostResponseDto readPostByPage(ManyPostRequestDto manyPostRequestDto) {
-        int requestPage = manyPostRequestDto.getPage();
-        int size = 10;
-
-        Page<Post> posts = postRepository.findAll(PageRequest.of(requestPage, size));
-
-        return ManyPostResponseDto.from(posts);
+    public PagedPostsResponse readPostsByPage(PageRequest request) {
+        Page<Post> posts = postRepository.findAll(request);
+        return PagedPostsResponse.from(posts);
     }
 }

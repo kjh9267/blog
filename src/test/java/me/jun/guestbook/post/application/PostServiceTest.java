@@ -1,7 +1,5 @@
 package me.jun.guestbook.post.application;
 
-import me.jun.guestbook.guest.domain.Guest;
-import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
@@ -15,8 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,22 +31,17 @@ public class PostServiceTest {
     @Mock
     private PostRepository postRepository;
 
-    @Mock
-    private GuestRepository guestRepository;
-
     private Post post;
-
-    private Guest guest;
 
     private PostCreateRequest postCreateRequest;
 
     private PostUpdateRequest postUpdateRequest;
 
+    private PostResponse postResponse;
+
     private final Long postId = 1L;
 
     private final Long guestId = 1L;
-
-    private final String guestName = "test user";
 
     private final String title = "test title";
 
@@ -65,10 +58,6 @@ public class PostServiceTest {
                 .writerId(guestId)
                 .build();
 
-        guest = Guest.builder()
-                .name(guestName)
-                .build();
-
         postCreateRequest = PostCreateRequest.builder()
                 .title(title)
                 .content(content)
@@ -79,24 +68,32 @@ public class PostServiceTest {
                 .title(title)
                 .content(content)
                 .build();
+
+        postResponse = PostResponse.of(post);
+    }
+
+    @Test
+    void createPostTest() {
+        given(postRepository.save(any()))
+                .willReturn(post);
+
+        assertThat(postService.createPost(postCreateRequest, 1L))
+                .isEqualToComparingFieldByField(postResponse);
     }
 
     @Test
     void readPostTest() {
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findById(any()))
+                .willReturn(Optional.of(post));
 
-        PostResponse postResponse = postService.readPost(postId);
-
-        assertAll(
-//                () -> assertThat(postResponse.getWriter()).isEqualTo(guestName),
-                () -> assertThat(postResponse.getTitle()).isEqualTo(title),
-                () -> assertThat(postResponse.getContent()).isEqualTo(content)
-        );
+        assertThat(postService.readPost(postId))
+                .isEqualToComparingFieldByField(postResponse);
     }
 
     @Test
     void readPostFailTest() {
-        given(postRepository.findById(postId)).willReturn(Optional.empty());
+        given(postRepository.findById(any()))
+                .willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
                 () -> postService.readPost(postId)
@@ -105,15 +102,20 @@ public class PostServiceTest {
 
     @Test
     void updatePostTest() {
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
-        given(postRepository.save(post)).willReturn(post);
+        given(postRepository.findById(any()))
+                .willReturn(Optional.of(post));
 
-        postService.updatePost(postUpdateRequest, guestId);
+        given(postRepository.save(any()))
+                .willReturn(post);
+
+        assertThat(postService.updatePost(postUpdateRequest, guestId))
+                .isEqualToComparingFieldByField(postResponse);
     }
 
     @Test
     void noPost_updatePostFailTest() {
-        given(postRepository.findById(postId)).willReturn(Optional.empty());
+        given(postRepository.findById(any()))
+                .willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
                 () -> postService.updatePost(postUpdateRequest, guestId)
@@ -121,33 +123,44 @@ public class PostServiceTest {
     }
 
     @Test
-    void guestMismatch_updatePostFailTest() {
-        given(postRepository.findById(any())).willReturn(Optional.of(post));
+    void writerMismatch_updatePostFailTest() {
+        given(postRepository.findById(any()))
+                .willReturn(Optional.of(post));
 
         assertThrows(WriterMismatchException.class,
                 () -> postService.updatePost(postUpdateRequest, 2L)
         );
     }
+//
+//    @Test
+//    void readPostByPageTest() {
+//
+//        // Given
+//        ManyPostRequestDto request = ManyPostRequestDto.builder()
+//                .page(0)
+//                .build();
+//
+//        Page<Post> posts = new PageImpl<Post>(Arrays.asList(post, post, post));
+//
+//        given(postRepository.findAll(PageRequest.of(0, 10)))
+//                .willReturn(posts);
+//
+//        // When
+//        ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(request);
+//
+//        assertAll(
+//                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalPages()).isEqualTo(1),
+//                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalElements()).isEqualTo(3)
+//        );
+//    }
+
 
     @Test
-    void readPostByPageTest() {
+    void queryPostsTest() {
+        given(postRepository.findAll(any(Pageable.class)))
+                .willReturn(Page.empty());
 
-        // Given
-        ManyPostRequestDto request = ManyPostRequestDto.builder()
-                .page(0)
-                .build();
-
-        Page<Post> posts = new PageImpl<Post>(Arrays.asList(post, post, post));
-
-        given(postRepository.findAll(PageRequest.of(0, 10)))
-                .willReturn(posts);
-
-        // When
-        ManyPostResponseDto manyPostResponseDto = postService.readPostByPage(request);
-
-        assertAll(
-                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalPages()).isEqualTo(1),
-                () -> assertThat(manyPostResponseDto.getPostResponses().getTotalElements()).isEqualTo(3)
-        );
+        assertThat(postService.readPostsByPage(PageRequest.of(1, 3)))
+                .isInstanceOf(PagedPostsResponse.class);
     }
 }
