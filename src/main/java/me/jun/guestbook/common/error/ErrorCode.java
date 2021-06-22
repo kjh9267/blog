@@ -1,7 +1,6 @@
-package me.jun.guestbook.ui.error;
+package me.jun.guestbook.common.error;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
