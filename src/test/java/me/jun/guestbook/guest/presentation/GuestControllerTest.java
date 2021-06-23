@@ -20,8 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static me.jun.guestbook.guest.presentation.GuestControllerUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -75,7 +73,9 @@ public class GuestControllerTest {
                     .content(content)
                     .accept(HAL_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+        .andExpect(jsonPath(LINKS_SELF_HREF).value(REGISTER_SELF_URI))
+        .andExpect(jsonPath(LINKS_LOGIN_HREF).value(LOGIN_SELF_URI));
     }
 
     @Test
@@ -92,7 +92,8 @@ public class GuestControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", LOGIN_SELF_URI))
-                .andExpect(jsonPath(ACCESS_TOKEN).value("1.2.3"))
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(LOGIN_SELF_URI));
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(LOGIN_SELF_URI))
+                .andExpect(jsonPath(LINKS_REGISTER_HREF).value(REGISTER_SELF_URI))
+                .andExpect(jsonPath(ACCESS_TOKEN).value("1.2.3"));
     }
 }

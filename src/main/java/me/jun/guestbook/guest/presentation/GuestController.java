@@ -6,7 +6,6 @@ import me.jun.guestbook.guest.application.RegisterService;
 import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,24 +26,29 @@ public class GuestController {
 
     private final RegisterService registerService;
 
+    private final GuestEntityModelCreator entityModelCreator;
+
     @PostMapping("/register")
     public ResponseEntity<RepresentationModel> register(@RequestBody GuestRequest requestDto) {
         registerService.register(requestDto);
+        URI selfUri = createSelfUri();
 
-        return null;
+        return ResponseEntity.created(selfUri)
+                .body(entityModelCreator.createRegisterRepresentationModel());
     }
 
     @PostMapping("/login")
     public ResponseEntity<EntityModel<TokenResponse>> login(@RequestBody GuestRequest requestDto) {
         TokenResponse tokenResponse = loginService.login(requestDto);
-        Link selfLink = linkTo(GuestController.class).slash("login")
-                .withSelfRel();
-        URI selfUri = selfLink.toUri();
+        URI selfUri = createSelfUri();
 
         return ResponseEntity.created(selfUri)
-                .body(
-                        EntityModel.of(tokenResponse)
-                                .add(selfLink)
-                );
+                .body(entityModelCreator.createLoginEntityModel(tokenResponse));
+    }
+
+    private URI createSelfUri() {
+        return linkTo(GuestController.class).slash("login")
+                .withSelfRel()
+                .toUri();
     }
 }
