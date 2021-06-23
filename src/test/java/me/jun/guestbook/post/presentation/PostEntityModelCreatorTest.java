@@ -33,16 +33,16 @@ class PostEntityModelCreatorTest {
     @Test
     void createEntityModelTest() {
         assertAll(
-                () -> assertThat(creator.createEntityModel(resource, controller))
+                () -> assertThat(creator.createRepresentationModel(resource, controller))
                         .isInstanceOf(EntityModel.class),
-                () -> assertThat(creator.createEntityModel(resource, controller).getContent())
+                () -> assertThat(creator.createRepresentationModel(resource, controller).getContent())
                         .isEqualToComparingFieldByField(resource)
         );
     }
 
     @Test
     void creatRepresentationModelTest() {
-        assertThat(creator.createEntityModel(controller))
+        assertThat(creator.createRepresentationModel(controller))
                 .isInstanceOf(RepresentationModel.class);
     }
 }
