@@ -32,7 +32,7 @@ public class PostController {
         URI selfUri = createSelfUri(postResponse);
 
         return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createRepresentationModel(postResponse, getClass()));
+                .body(entityModelCreator.createRepresentationModel(postResponse));
     }
 
     @GetMapping("/{postId}")
@@ -42,7 +42,7 @@ public class PostController {
         PostResponse postResponse = postService.readPost(postId);
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel(postResponse, getClass()));
+                .body(entityModelCreator.createRepresentationModel(postResponse));
     }
 
     @PutMapping
@@ -52,7 +52,7 @@ public class PostController {
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel(postResponse, getClass()));
+                .body(entityModelCreator.createRepresentationModel(postResponse));
     }
 
     @DeleteMapping("/{postId}")
@@ -62,7 +62,7 @@ public class PostController {
         postService.deletePost(postId, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel(getClass()));
+                .body(entityModelCreator.createRepresentationModel());
     }
 
     private URI createSelfUri(PostResponse postResponse) {
