@@ -23,4 +23,8 @@ public abstract class RelUtils {
     public static final String DELETE_COMMENT = "delete_comment";
 
     public static final String QUERY_COMMENTS_BY_POST = "query_comments_by_post_id";
+
+    public static final String LOGIN = "login";
+
+    public static final String REGISTER = "register";
 }
