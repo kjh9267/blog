@@ -1,13 +1,11 @@
 package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.common.EntityModelCreator;
 import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
 import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
 import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +22,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @Qualifier("postEntityModelCreator")
-    private final EntityModelCreator<PostResponse> entityModelCreator;
+    private final PostEntityModelCreator entityModelCreator;
 
     @PostMapping
     public ResponseEntity<EntityModel<PostResponse>> createPost(@RequestBody PostCreateRequest request,
@@ -35,7 +32,7 @@ public class PostController {
         URI selfUri = createSelfUri(postResponse);
 
         return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createEntityModel(postResponse, getClass()));
+                .body(entityModelCreator.createRepresentationModel(postResponse, getClass()));
     }
 
     @GetMapping("/{postId}")
@@ -45,7 +42,7 @@ public class PostController {
         PostResponse postResponse = postService.readPost(postId);
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(postResponse, getClass()));
+                .body(entityModelCreator.createRepresentationModel(postResponse, getClass()));
     }
 
     @PutMapping
@@ -55,7 +52,7 @@ public class PostController {
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(postResponse, getClass()));
+                .body(entityModelCreator.createRepresentationModel(postResponse, getClass()));
     }
 
     @DeleteMapping("/{postId}")
@@ -65,7 +62,7 @@ public class PostController {
         postService.deletePost(postId, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(getClass()));
+                .body(entityModelCreator.createRepresentationModel(getClass()));
     }
 
     private URI createSelfUri(PostResponse postResponse) {

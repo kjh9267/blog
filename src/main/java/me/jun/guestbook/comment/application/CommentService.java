@@ -8,6 +8,9 @@ import me.jun.guestbook.comment.domain.CommentRepository;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
+import me.jun.guestbook.comment.presentation.dto.PagedCommentsResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,11 @@ public class CommentService {
 
         commentRepository.deleteById(id);
         return id;
+    }
+
+    public PagedCommentsResponse queryCommentsByPostId(Long postId, PageRequest pageRequest) {
+        Page<Comment> comments = commentRepository.findAllByPostId(postId, pageRequest);
+        return PagedCommentsResponse.from(comments);
     }
 
     private boolean isWriter(Long writerId, Comment comment) {
