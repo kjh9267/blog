@@ -2,19 +2,27 @@ package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.guest.application.LoginService;
+import me.jun.guestbook.guest.application.RegisterService;
 import me.jun.guestbook.guest.presentation.dto.GuestRequest;
+import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static me.jun.guestbook.guest.presentation.GuestControllerUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,46 +39,60 @@ public class GuestControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
+    private RegisterService registerService;
+
+    @MockBean
     private LoginService loginService;
 
-    @Test
-    public void registerTest() throws Exception {
-        final GuestRequest requestDto = GuestRequest.builder()
+    private GuestRequest request;
+
+    private GuestResponse response;
+
+    @BeforeEach
+    void setUp() {
+        request = GuestRequest.builder()
                 .name("jun")
                 .email("testuser@email.com")
                 .password("pass")
                 .build();
 
-        final String content = objectMapper.writeValueAsString(requestDto);
+        response = GuestResponse.builder()
+                .id(1L)
+                .email("testuser@email.com")
+                .name("jun")
+                .build();
+    }
 
-        mockMvc.perform(post("/register")
-                    .contentType("application/json")
-                    .content(content))
+    @Test
+    public void registerTest() throws Exception {
+        String content = objectMapper.writeValueAsString(request);
+
+        given(registerService.register(any()))
+                .willReturn(response);
+
+        mockMvc.perform(post("/api/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(content)
+                    .accept(HAL_JSON))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     public void loginTest() throws Exception {
-        GuestRequest request = GuestRequest.builder()
-                .name("jun")
-                .email("testuser@email.com")
-                .password("pass")
-                .build();
-
         given(loginService.login(any()))
                 .willReturn(TokenResponse.from("1.2.3"));
 
         String content = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/api/login")
                     .content(content)
-                    .contentType("application/json")
-                    .accept("application/hal+json"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(HAL_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "http://localhost/login"))
-                .andExpect(jsonPath("access_token").value("1.2.3"))
-                .andExpect(jsonPath("_links.self.href").value("http://localhost/login"));
+                .andExpect(header().string("location", LOGIN_SELF_URI))
+                .andExpect(jsonPath(ACCESS_TOKEN).value("1.2.3"))
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(LOGIN_SELF_URI));
     }
 }
