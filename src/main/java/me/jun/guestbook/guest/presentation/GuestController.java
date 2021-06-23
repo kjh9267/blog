@@ -1,24 +1,26 @@
 package me.jun.guestbook.guest.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.guest.application.LoginService;
 import me.jun.guestbook.guest.application.RegisterService;
 import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
-import me.jun.guestbook.guest.application.LoginService;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class GuestController {
 
     private final LoginService loginService;
@@ -26,10 +28,10 @@ public class GuestController {
     private final RegisterService registerService;
 
     @PostMapping("/register")
-    public String register(@RequestBody GuestRequest requestDto) {
+    public ResponseEntity<RepresentationModel> register(@RequestBody GuestRequest requestDto) {
         registerService.register(requestDto);
 
-        return "redirect:/index";
+        return null;
     }
 
     @PostMapping("/login")
@@ -44,10 +46,5 @@ public class GuestController {
                         EntityModel.of(tokenResponse)
                                 .add(selfLink)
                 );
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "/login";
     }
 }
