@@ -1,6 +1,7 @@
 package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.comment.presentation.CommentController;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
@@ -14,23 +15,27 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequiredArgsConstructor
 public class PostEntityModelCreator {
 
-    public EntityModel<PostResponse> createRepresentationModel(PostResponse resource, Class controller) {
+    private final String QUERY = "query";
+    private final String POST_ID = "post-id";
+    private final Class<PostController> postController = PostController.class;
+
+    public EntityModel<PostResponse> createRepresentationModel(PostResponse resource) {
         EntityModel<PostResponse> entityModel = EntityModel.of(resource);
-        WebMvcLinkBuilder controllerLink = linkTo(controller);
+        WebMvcLinkBuilder controllerLink = linkTo(postController);
         WebMvcLinkBuilder selfLinkBuilder = controllerLink
                 .slash(resource.getId());
 
-        entityModel.add(selfLinkBuilder.withSelfRel());
-        entityModel.add(controllerLink.withRel(CREATE_POST));
-        entityModel.add(selfLinkBuilder.withRel(GET_POST));
-        entityModel.add(selfLinkBuilder.withRel(UPDATE_POST));
-        entityModel.add(selfLinkBuilder.withRel(DELETE_POST));
-        return entityModel;
+        return entityModel.add(selfLinkBuilder.withSelfRel())
+                .add(controllerLink.withRel(CREATE_POST))
+                .add(selfLinkBuilder.withRel(GET_POST))
+                .add(selfLinkBuilder.withRel(UPDATE_POST))
+                .add(selfLinkBuilder.withRel(DELETE_POST))
+                .add(linkTo(CommentController.class).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
     }
 
-    public RepresentationModel createRepresentationModel(Class controller) {
+    public RepresentationModel createRepresentationModel() {
         return new RepresentationModel<>()
-                .add(linkTo(controller).withSelfRel())
-                .add(linkTo(controller).withRel(CREATE_POST));
+                .add(linkTo(postController).withSelfRel())
+                .add(linkTo(postController).withRel(CREATE_POST));
     }
 }

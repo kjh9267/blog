@@ -20,10 +20,11 @@ public class CommentEntityModelCreator {
 
     private final String QUERY = "query";
     private final String POST_ID = "post-id";
+    private final Class<CommentController> commentController = CommentController.class;
 
-    public EntityModel<CommentResponse> createEntityModel(CommentResponse resource, Class controller) {
+    public EntityModel<CommentResponse> createEntityModel(CommentResponse resource) {
         EntityModel<CommentResponse> entityModel = EntityModel.of(resource);
-        WebMvcLinkBuilder controllerLink = linkTo(controller);
+        WebMvcLinkBuilder controllerLink = linkTo(commentController);
         WebMvcLinkBuilder selfLinkBuilder = controllerLink
                 .slash(resource.getId());
 
@@ -32,20 +33,20 @@ public class CommentEntityModelCreator {
                 .add(selfLinkBuilder.withRel(GET_COMMENT))
                 .add(selfLinkBuilder.withRel(UPDATE_COMMENT))
                 .add(selfLinkBuilder.withRel(DELETE_COMMENT))
-                .add(linkTo(controller).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
+                .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
     }
 
-    public RepresentationModel createRepresentationModel(Class controller) {
+    public RepresentationModel createRepresentationModel() {
         return new RepresentationModel<>()
-                .add(linkTo(controller).withSelfRel())
-                .add(linkTo(controller).withRel(CREATE_COMMENT))
-                .add(linkTo(controller).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
+                .add(linkTo(commentController).withSelfRel())
+                .add(linkTo(commentController).withRel(CREATE_COMMENT))
+                .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
     }
 
-    public CollectionModel<EntityModel<CommentResponse>> createCollectionModel(PagedCommentsResponse response, Class controller) {
+    public CollectionModel<EntityModel<CommentResponse>> createCollectionModel(PagedCommentsResponse response) {
         return PagedModel.of(response.getCommentResponses().map(EntityModel::of))
-                .add(linkTo(controller).slash(QUERY).slash(POST_ID).withSelfRel())
-                .add(linkTo(controller).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST))
-                .add(linkTo(controller).withRel(CREATE_COMMENT));
+                .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withSelfRel())
+                .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST))
+                .add(linkTo(commentController).withRel(CREATE_COMMENT));
     }
 }
