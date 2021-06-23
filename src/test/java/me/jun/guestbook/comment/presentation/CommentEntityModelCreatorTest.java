@@ -46,7 +46,7 @@ class CommentEntityModelCreatorTest {
 
     @Test
     void creatRepresentationModelTest() {
-        assertThat(creator.createEntityModel(controller))
+        assertThat(creator.createRepresentationModel(controller))
                 .isInstanceOf(RepresentationModel.class);
     }
 }
