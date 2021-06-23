@@ -1,7 +1,6 @@
 package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.common.EntityModelCreator;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
@@ -13,10 +12,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
 @RequiredArgsConstructor
-public class PostEntityModelCreator implements EntityModelCreator<PostResponse> {
+public class PostEntityModelCreator {
 
-    @Override
-    public EntityModel<PostResponse> createEntityModel(PostResponse resource, Class controller) {
+    public EntityModel<PostResponse> createRepresentationModel(PostResponse resource, Class controller) {
         EntityModel<PostResponse> entityModel = EntityModel.of(resource);
         WebMvcLinkBuilder controllerLink = linkTo(controller);
         WebMvcLinkBuilder selfLinkBuilder = controllerLink
@@ -30,7 +28,7 @@ public class PostEntityModelCreator implements EntityModelCreator<PostResponse> 
         return entityModel;
     }
 
-    public RepresentationModel createEntityModel(Class controller) {
+    public RepresentationModel createRepresentationModel(Class controller) {
         return new RepresentationModel<>()
                 .add(linkTo(controller).withSelfRel())
                 .add(linkTo(controller).withRel(CREATE_POST));

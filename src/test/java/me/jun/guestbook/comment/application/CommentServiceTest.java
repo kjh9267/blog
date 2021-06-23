@@ -7,11 +7,14 @@ import me.jun.guestbook.comment.domain.CommentRepository;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
+import me.jun.guestbook.comment.presentation.dto.PagedCommentsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
 
@@ -146,5 +149,14 @@ class CommentServiceTest {
 
         assertThrows(CommentWriterMismatchException.class,
                 () -> commentService.deleteComment(1L, 2L));
+    }
+
+    @Test
+    void queryCommentsByPostId() {
+        given(commentRepository.findAllByPostId(any(), any()))
+                .willReturn(Page.empty());
+
+        assertThat(commentService.queryCommentsByPostId(1L, PageRequest.of(1, 10)))
+                .isInstanceOf(PagedCommentsResponse.class);
     }
 }

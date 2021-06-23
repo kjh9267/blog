@@ -3,10 +3,8 @@ package me.jun.guestbook.comment.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.comment.application.CommentWriterService;
-import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
-import me.jun.guestbook.comment.presentation.dto.CommentResponse;
-import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
-import me.jun.guestbook.comment.presentation.dto.CommentWriterInfo;
+import me.jun.guestbook.comment.domain.Comment;
+import me.jun.guestbook.comment.presentation.dto.*;
 import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.security.JwtProvider;
@@ -17,10 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
 
 import static me.jun.guestbook.utils.ControllerTestUtils.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -182,5 +184,27 @@ public class CommentControllerTest {
                 .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI));
 
         verify(commentService).deleteComment(any(), any());
+    }
+
+    @Test
+    void queryCommentsByPostIdTest() throws Exception {
+        PagedCommentsResponse response = PagedCommentsResponse.from(new PageImpl<Comment>(
+                Arrays.asList(Comment.builder()
+                        .id(1L)
+                        .postId(1L)
+                        .writerId(1L)
+                        .content("test")
+                        .build())));
+
+        given(commentService.queryCommentsByPostId(any(), any()))
+                .willReturn(response);
+
+        mockMvc.perform(get("/api/comments/query/post-id/1?page=1&size=10")
+                    .accept(HAL_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(QUERY_COMMENTS_BY_POST_URI))
+                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
+                .andExpect(jsonPath(QUERY_COMMENTS_BY_POST_HREF).value(QUERY_COMMENTS_BY_POST_URI));
     }
 }

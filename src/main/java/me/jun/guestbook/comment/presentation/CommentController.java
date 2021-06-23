@@ -2,19 +2,16 @@ package me.jun.guestbook.comment.presentation;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.application.CommentService;
-import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
-import me.jun.guestbook.comment.presentation.dto.CommentResponse;
-import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
-import me.jun.guestbook.comment.presentation.dto.CommentWriterInfo;
-import me.jun.guestbook.common.EntityModelCreator;
-import me.jun.guestbook.post.presentation.dto.PostResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
+import me.jun.guestbook.comment.presentation.dto.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -27,8 +24,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Qualifier("commentEntityModelCreator")
-    private final EntityModelCreator<CommentResponse> entityModelCreator;
+    private final CommentEntityModelCreator entityModelCreator;
 
     @PostMapping
     public ResponseEntity<EntityModel<CommentResponse>>
@@ -67,7 +63,17 @@ public class CommentController {
                   @CommentWriter CommentWriterInfo writerInfo) {
         commentService.deleteComment(commentId, writerInfo.getId());
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(getClass()));
+                .body(entityModelCreator.createRepresentationModel(getClass()));
+    }
+
+    @GetMapping("/query/post-id/{postId}")
+    ResponseEntity<CollectionModel<EntityModel<CommentResponse>>>
+    queryCommentsByPostId(@PathVariable Long postId,
+                          @PathParam("page") Integer page,
+                          @PathParam("size") Integer size) {
+        PagedCommentsResponse response = commentService.queryCommentsByPostId(postId, PageRequest.of(page, size));
+        return ResponseEntity.ok()
+                .body(entityModelCreator.createCollectionModel(response, getClass()));
     }
 
     private URI createSelfUri(CommentResponse commentResponse) {
