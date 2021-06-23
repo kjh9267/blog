@@ -15,8 +15,6 @@ class PostEntityModelCreatorTest {
 
     private PostResponse resource;
 
-    private Class controller;
-
     @BeforeEach
     void setUp() {
         creator = new PostEntityModelCreator();
@@ -26,23 +24,21 @@ class PostEntityModelCreatorTest {
                 .title("test title")
                 .content("test content")
                 .build();
-
-        controller = PostController.class;
     }
 
     @Test
     void createEntityModelTest() {
         assertAll(
-                () -> assertThat(creator.createRepresentationModel(resource, controller))
+                () -> assertThat(creator.createRepresentationModel(resource))
                         .isInstanceOf(EntityModel.class),
-                () -> assertThat(creator.createRepresentationModel(resource, controller).getContent())
+                () -> assertThat(creator.createRepresentationModel(resource).getContent())
                         .isEqualToComparingFieldByField(resource)
         );
     }
 
     @Test
     void creatRepresentationModelTest() {
-        assertThat(creator.createRepresentationModel(controller))
+        assertThat(creator.createRepresentationModel())
                 .isInstanceOf(RepresentationModel.class);
     }
 }

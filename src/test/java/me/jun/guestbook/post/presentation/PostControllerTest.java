@@ -1,8 +1,6 @@
 package me.jun.guestbook.post.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jun.guestbook.guest.application.GuestService;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.post.application.PostWriterService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
@@ -27,8 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.lang.reflect.Field;
 import java.security.Key;
 
-import static me.jun.guestbook.utils.ControllerTestUtils.*;
-import static me.jun.guestbook.utils.RelUtils.*;
+import static me.jun.guestbook.post.presentation.PostControllerUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -40,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PostControllerTest {
 
     @Autowired
