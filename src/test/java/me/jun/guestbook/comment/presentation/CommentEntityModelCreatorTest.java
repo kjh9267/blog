@@ -18,8 +18,6 @@ class CommentEntityModelCreatorTest {
 
     private CommentResponse resource;
 
-    private Class controller;
-
     @BeforeEach
     void setUp() {
         creator = new CommentEntityModelCreator();
@@ -30,23 +28,21 @@ class CommentEntityModelCreatorTest {
                 .writerId(1L)
                 .content("test content")
                 .build();
-
-        controller = CommentController.class;
     }
 
     @Test
     void createEntityModelTest() {
         assertAll(
-                () -> assertThat(creator.createEntityModel(resource, controller))
+                () -> assertThat(creator.createEntityModel(resource))
                         .isInstanceOf(EntityModel.class),
-                () -> assertThat(creator.createEntityModel(resource, controller).getContent())
+                () -> assertThat(creator.createEntityModel(resource).getContent())
                         .isEqualToComparingFieldByField(resource)
         );
     }
 
     @Test
     void creatRepresentationModelTest() {
-        assertThat(creator.createRepresentationModel(controller))
+        assertThat(creator.createRepresentationModel())
                 .isInstanceOf(RepresentationModel.class);
     }
 }

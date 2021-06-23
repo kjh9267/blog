@@ -35,7 +35,7 @@ public class CommentController {
         URI selfUri = createSelfUri(commentResponse);
 
         return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createEntityModel(commentResponse, getClass()));
+                .body(entityModelCreator.createEntityModel(commentResponse));
     }
 
     @GetMapping("/{commentId}")
@@ -44,7 +44,7 @@ public class CommentController {
         CommentResponse commentResponse = commentService.retrieveComment(commentId);
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(commentResponse, getClass()));
+                .body(entityModelCreator.createEntityModel(commentResponse));
     }
 
     @PutMapping
@@ -54,7 +54,7 @@ public class CommentController {
         CommentResponse commentResponse = commentService.updateComment(request, writerInfo.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(commentResponse, getClass()));
+                .body(entityModelCreator.createEntityModel(commentResponse));
     }
 
     @DeleteMapping("/{commentId}")
@@ -63,7 +63,7 @@ public class CommentController {
                   @CommentWriter CommentWriterInfo writerInfo) {
         commentService.deleteComment(commentId, writerInfo.getId());
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel(getClass()));
+                .body(entityModelCreator.createRepresentationModel());
     }
 
     @GetMapping("/query/post-id/{postId}")
@@ -73,7 +73,7 @@ public class CommentController {
                           @PathParam("size") Integer size) {
         PagedCommentsResponse response = commentService.queryCommentsByPostId(postId, PageRequest.of(page, size));
         return ResponseEntity.ok()
-                .body(entityModelCreator.createCollectionModel(response, getClass()));
+                .body(entityModelCreator.createCollectionModel(response));
     }
 
     private URI createSelfUri(CommentResponse commentResponse) {
