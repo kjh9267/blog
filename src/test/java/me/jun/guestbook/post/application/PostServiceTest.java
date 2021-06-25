@@ -1,5 +1,6 @@
 package me.jun.guestbook.post.application;
 
+import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
@@ -22,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
@@ -30,6 +33,9 @@ public class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private CommentService commentService;
 
     private Post post;
 
@@ -49,7 +55,7 @@ public class PostServiceTest {
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository);
+        postService = new PostService(postRepository, commentService);
 
         post = Post.builder()
                 .id(1L)
@@ -130,6 +136,21 @@ public class PostServiceTest {
         assertThrows(WriterMismatchException.class,
                 () -> postService.updatePost(postUpdateRequest, 2L)
         );
+    }
+
+    @Test
+    void deletePostTest() {
+        given(postRepository.findById(any()))
+                .willReturn(Optional.of(post));
+        doNothing().when(postRepository)
+                .deleteById(any());
+        doNothing().when(commentService)
+                .deleteCommentByPostId(any());
+
+        postService.deletePost(1L, 1L);
+
+        verify(postRepository).deleteById(1L);
+        verify(commentService).deleteCommentByPostId(1L);
     }
 
     @Test
