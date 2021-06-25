@@ -154,11 +154,21 @@ class CommentServiceTest {
     @Test
     void deleteCommentByPostIdTest() {
         doNothing().when(commentRepository)
-                .deleteByPostId(1L);
+                .deleteByPostId(any());
 
         commentService.deleteCommentByPostId(1L);
 
         verify(commentRepository).deleteByPostId(any());
+    }
+
+    @Test
+    void deleteCommentByWriterIdTest() {
+        doNothing().when(commentRepository)
+                .deleteByWriterId(any());
+
+        commentService.deleteCommentByWriterId(1L);
+
+        verify(commentRepository).deleteByWriterId(1L);
     }
 
     @Test

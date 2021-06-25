@@ -66,6 +66,10 @@ public class CommentService {
         commentRepository.deleteByPostId(postId);
     }
 
+    public void deleteCommentByWriterId(Long writerId) {
+        commentRepository.deleteByWriterId(writerId);
+    }
+
     public PagedCommentsResponse queryCommentsByPostId(Long postId, PageRequest pageRequest) {
         Page<Comment> comments = commentRepository.findAllByPostId(postId, pageRequest);
         return PagedCommentsResponse.from(comments);
