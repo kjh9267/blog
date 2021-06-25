@@ -35,4 +35,21 @@ class CommentRepositoryTest {
                 () -> assertThat(comments.getSize()).isEqualTo(10)
         );
     }
+
+    @Test
+    void deleteCommentByPostId() {
+        Comment comment = Comment.builder()
+                .id(1L)
+                .writerId(1L)
+                .postId(1L)
+                .content("test content")
+                .build();
+
+        commentRepository.save(comment);
+
+        commentRepository.deleteByPostId(1L);
+
+        assertThat(commentRepository.findById(1L))
+                .isEmpty();
+    }
 }
