@@ -1,11 +1,14 @@
 package me.jun.guestbook.post.application;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.comment.application.CommentService;
+import me.jun.guestbook.comment.domain.CommentRepository;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.post.presentation.dto.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    private final CommentService commentService;
 
     public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
@@ -60,6 +65,7 @@ public class PostService {
         }
 
         postRepository.deleteById(postId);
+        commentService.deleteCommentByPostId(postId);
         return postId;
     }
 
