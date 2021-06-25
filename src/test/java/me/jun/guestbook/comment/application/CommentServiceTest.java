@@ -152,6 +152,16 @@ class CommentServiceTest {
     }
 
     @Test
+    void deleteCommentByPostIdTest() {
+        doNothing().when(commentRepository)
+                .deleteByPostId(1L);
+
+        commentService.deleteCommentByPostId(1L);
+
+        verify(commentRepository).deleteByPostId(any());
+    }
+
+    @Test
     void queryCommentsByPostId() {
         given(commentRepository.findAllByPostId(any(), any()))
                 .willReturn(Page.empty());
