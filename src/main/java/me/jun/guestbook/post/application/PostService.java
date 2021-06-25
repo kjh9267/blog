@@ -69,6 +69,10 @@ public class PostService {
         return postId;
     }
 
+    public void deletePostByWriterId(Long writerId) {
+        postRepository.deleteByWriterId(writerId);
+    }
+
     public PagedPostsResponse readPostsByPage(PageRequest request) {
         Page<Post> posts = postRepository.findAll(request);
         return PagedPostsResponse.from(posts);
