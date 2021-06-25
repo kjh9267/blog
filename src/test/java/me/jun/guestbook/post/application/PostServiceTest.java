@@ -154,6 +154,16 @@ public class PostServiceTest {
     }
 
     @Test
+    void deletePostByWriterIdTest() {
+        doNothing().when(postRepository)
+                .deleteByWriterId(1L);
+
+        postService.deletePostByWriterId(1L);
+
+        verify(postRepository).deleteByWriterId(1L);
+    }
+
+    @Test
     void queryPostsTest() {
         given(postRepository.findAll(any(Pageable.class)))
                 .willReturn(Page.empty());
