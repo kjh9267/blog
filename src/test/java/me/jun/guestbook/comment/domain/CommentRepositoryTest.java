@@ -1,5 +1,6 @@
 package me.jun.guestbook.comment.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,6 +16,18 @@ class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    private Comment comment;
+
+    @BeforeEach
+    void setUp() {
+        comment = Comment.builder()
+                .id(1L)
+                .writerId(1L)
+                .postId(1L)
+                .content("test content")
+                .build();
+    }
 
     @Test
     @Transactional
@@ -37,17 +50,20 @@ class CommentRepositoryTest {
     }
 
     @Test
-    void deleteCommentByPostId() {
-        Comment comment = Comment.builder()
-                .id(1L)
-                .writerId(1L)
-                .postId(1L)
-                .content("test content")
-                .build();
-
+    void deleteCommentByPostIdTest() {
         commentRepository.save(comment);
 
         commentRepository.deleteByPostId(1L);
+
+        assertThat(commentRepository.findById(1L))
+                .isEmpty();
+    }
+
+    @Test
+    void deleteCommentByWriterIdTest() {
+        commentRepository.save(comment);
+
+        commentRepository.deleteByWriterId(1L);
 
         assertThat(commentRepository.findById(1L))
                 .isEmpty();
