@@ -16,4 +16,6 @@ public abstract class GuestControllerUtils {
     public static final String LOGIN_SELF_URI = "http://localhost/api/login";
 
     public static final String REGISTER_SELF_URI = "http://localhost/api/register";
+
+    public static final String LEAVE_SELF_URI = "http://localhost/api/leave";
 }
