@@ -5,8 +5,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
-import static me.jun.guestbook.utils.RelUtils.LOGIN;
-import static me.jun.guestbook.utils.RelUtils.REGISTER;
+import static me.jun.guestbook.utils.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
@@ -23,5 +22,11 @@ public class GuestEntityModelCreator {
         return new RepresentationModel()
                 .add(linkTo(controller).slash(REGISTER).withSelfRel())
                 .add(linkTo(controller).slash(LOGIN).withRel(LOGIN));
+    }
+
+    RepresentationModel createLeaveRepresentationModel() {
+        return new RepresentationModel()
+                .add(linkTo(controller).slash(LEAVE).withSelfRel())
+                .add(linkTo(controller).slash(REGISTER).withRel(REGISTER));
     }
 }
