@@ -1,11 +1,13 @@
 package me.jun.guestbook.guest.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.application.LoginService;
 import me.jun.guestbook.guest.application.RegisterService;
 import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
+import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import static me.jun.guestbook.guest.presentation.GuestControllerUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,11 +41,17 @@ public class GuestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtProvider jwtProvider;
+
     @MockBean
     private RegisterService registerService;
 
     @MockBean
     private LoginService loginService;
+
+    @MockBean
+    private GuestService guestService;
 
     private GuestRequest request;
 
@@ -95,5 +106,21 @@ public class GuestControllerTest {
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(LOGIN_SELF_URI))
                 .andExpect(jsonPath(LINKS_REGISTER_HREF).value(REGISTER_SELF_URI))
                 .andExpect(jsonPath(ACCESS_TOKEN).value("1.2.3"));
+    }
+
+    @Test
+    void leaveTest() throws Exception {
+        String jwt = jwtProvider.createJwt("testuser@email.com");
+
+        doNothing().when(guestService)
+                .deleteGuest(any());
+
+        mockMvc.perform(delete("/api/leave")
+                .accept(HAL_JSON)
+                .header(AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(LEAVE_SELF_URI))
+                .andExpect(jsonPath(LINKS_REGISTER_HREF).value(REGISTER_SELF_URI));
     }
 }
