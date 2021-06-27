@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -96,7 +96,7 @@ public class PostControllerTest {
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(HAL_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, jwt))
+                    .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(header().string("location", POSTS_SELF_URI + "/1"))
@@ -105,6 +105,28 @@ public class PostControllerTest {
                 .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"));
+    }
+
+
+    @Test
+    void invalidInput_createPostFailTest() throws Exception {
+        PostCreateRequest request = PostCreateRequest.builder()
+                .title("")
+                .content(" ")
+                .build();
+
+        String content = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/api/posts")
+                .header(AUTHORIZATION, jwt)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(HAL_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath(STATUS_CODE).exists())
+                .andExpect(jsonPath(MESSAGE).exists())
+                .andExpect(jsonPath(LINKS_HOME_HREF).exists());
     }
 
     @Test
@@ -157,7 +179,7 @@ public class PostControllerTest {
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(HAL_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, jwt))
+                    .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
@@ -213,6 +235,28 @@ public class PostControllerTest {
     }
 
     @Test
+    void invalidInput_updatePostFailTest() throws Exception {
+        PostUpdateRequest request = PostUpdateRequest.builder()
+                .id(-123L)
+                .title("")
+                .content(" ")
+                .build();
+
+        String content = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(put("/api/posts")
+                .header(AUTHORIZATION, jwt)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(HAL_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                    .andExpect(jsonPath(STATUS_CODE).exists())
+                .andExpect(jsonPath(MESSAGE).exists())
+                .andExpect(jsonPath(LINKS_HOME_HREF).exists());
+    }
+
+    @Test
     public void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
                 .willReturn(1L);
@@ -223,7 +267,7 @@ public class PostControllerTest {
         mockMvc.perform(delete("/api/posts/1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(HAL_JSON)
-                .header(HttpHeaders.AUTHORIZATION, jwt))
+                .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI))

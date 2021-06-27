@@ -4,6 +4,8 @@ import lombok.*;
 import me.jun.guestbook.post.domain.Post;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -11,7 +13,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class PostUpdateRequest {
 
-    @NotBlank
+    @NotNull
+    @Positive
     private final Long id;
 
     @NotBlank

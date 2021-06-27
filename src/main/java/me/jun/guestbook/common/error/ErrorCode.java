@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    EMPTY_VALUE(400, "Empty input"),
+    EMPTY_VALUE(400, "Invalid input"),
     POST_NOT_FOUND(404, "No post"),
     GUEST_MISMATCH(403, "Guest Mismatch"),
-    UNAUTHORIZED(401, "Use valid token");
+    UNAUTHORIZED(401, "Invalid token");
 
     private final int statusCode;
     private final String message;
