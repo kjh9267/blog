@@ -29,4 +29,8 @@ public abstract class RelUtils {
     public static final String REGISTER = "register";
 
     public static final String LEAVE = "leave";
+
+    public static final String QUERY = "query";
+
+    public static final String POST_ID = "post-id";
 }

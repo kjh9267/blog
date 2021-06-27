@@ -15,9 +15,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequiredArgsConstructor
 public class PostEntityModelCreator {
 
-    private final String QUERY = "query";
-    private final String POST_ID = "post-id";
     private final Class<PostController> postController = PostController.class;
+
+    private final Class<CommentController> commentController = CommentController.class;
 
     public EntityModel<PostResponse> createRepresentationModel(PostResponse resource) {
         EntityModel<PostResponse> entityModel = EntityModel.of(resource);
