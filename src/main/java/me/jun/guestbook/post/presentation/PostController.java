@@ -11,6 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,8 +26,12 @@ public class PostController {
     private final PostEntityModelCreator entityModelCreator;
 
     @PostMapping
-    public ResponseEntity<EntityModel<PostResponse>> createPost(@RequestBody PostCreateRequest request,
-                                           @PostWriter PostWriterInfo writer) {
+    public ResponseEntity<EntityModel<PostResponse>>
+    createPost(@RequestBody @Valid PostCreateRequest request,
+               @PostWriter PostWriterInfo writer) {
+
+        System.out.println(request.getContent());
+        System.out.println(request.getTitle());
 
         PostResponse postResponse = postService.createPost(request, writer.getId());
         URI selfUri = createSelfUri(postResponse);
