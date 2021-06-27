@@ -18,4 +18,8 @@ public abstract class PostControllerUtils {
     public static final String POSTS_SELF_URI = "http://localhost/api/posts";
 
     public static final String LINKS_HOME_HREF = "_links.home.href";
+
+    public static final String STATUS_CODE = "status_code";
+
+    public static final String MESSAGE = "message";
 }

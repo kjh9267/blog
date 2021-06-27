@@ -29,10 +29,6 @@ public class PostController {
     public ResponseEntity<EntityModel<PostResponse>>
     createPost(@RequestBody @Valid PostCreateRequest request,
                @PostWriter PostWriterInfo writer) {
-
-        System.out.println(request.getContent());
-        System.out.println(request.getTitle());
-
         PostResponse postResponse = postService.createPost(request, writer.getId());
         URI selfUri = createSelfUri(postResponse);
 
@@ -43,7 +39,6 @@ public class PostController {
     @GetMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<EntityModel<PostResponse>> readPost(@PathVariable Long postId) {
-
         PostResponse postResponse = postService.readPost(postId);
 
         return ResponseEntity.ok()
@@ -51,9 +46,9 @@ public class PostController {
     }
 
     @PutMapping
-    public ResponseEntity<EntityModel<PostResponse>> updatePost(@RequestBody PostUpdateRequest requestDto,
-                                           @PostWriter PostWriterInfo writer) {
-
+    public ResponseEntity<EntityModel<PostResponse>>
+    updatePost(@RequestBody @Valid PostUpdateRequest requestDto,
+               @PostWriter PostWriterInfo writer) {
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
         return ResponseEntity.ok()
@@ -61,9 +56,9 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<RepresentationModel> deletePost(@PathVariable Long postId,
-                                           @PostWriter PostWriterInfo writer) {
-
+    public ResponseEntity<RepresentationModel>
+    deletePost(@PathVariable Long postId,
+               @PostWriter PostWriterInfo writer) {
         postService.deletePost(postId, writer.getId());
 
         return ResponseEntity.ok()
