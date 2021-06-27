@@ -18,8 +18,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequiredArgsConstructor
 public class CommentEntityModelCreator {
 
-    private final String QUERY = "query";
-    private final String POST_ID = "post-id";
     private final Class<CommentController> commentController = CommentController.class;
 
     public EntityModel<CommentResponse> createEntityModel(CommentResponse resource) {
