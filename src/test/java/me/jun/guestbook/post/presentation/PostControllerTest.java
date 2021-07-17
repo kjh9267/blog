@@ -6,9 +6,7 @@ import me.jun.guestbook.post.application.PostWriterService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
-import me.jun.guestbook.post.presentation.dto.PostResponse;
 import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
-import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
 import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,12 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.lang.reflect.Field;
 import java.security.Key;
 
-import static me.jun.guestbook.post.presentation.PostControllerUtils.*;
+import static me.jun.guestbook.post.PostFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -54,43 +53,22 @@ public class PostControllerTest {
     @Autowired
     private JwtProvider jwtProvider;
 
-    private PostResponse postResponse;
-
-    private PostWriterInfo writerInfo;
-
     private String jwt;
 
     @BeforeEach
     public void setUp() {
-        postResponse = PostResponse.builder()
-                .id(1L)
-                .title("test title")
-                .content("test content")
-                .build();
-
-        jwt = jwtProvider.createJwt("testuser@email.com");
-
-        writerInfo = PostWriterInfo.builder()
-                .id(1L)
-                .name("tset")
-                .email("testuser@email.com")
-                .build();
+        jwt = jwtProvider.createJwt(EMAIL);
     }
 
     @Test
     public void createPostTest() throws Exception {
-        PostCreateRequest request = PostCreateRequest.builder()
-                .title("test title")
-                .content("test content")
-                .build();
-
-        String content = objectMapper.writeValueAsString(request);
+        String content = objectMapper.writeValueAsString(postCreateRequest());
 
         given(postService.createPost(any(), any()))
-                .willReturn(postResponse);
+                .willReturn(postResponse());
 
         given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(writerInfo);
+                .willReturn(postWriterInfo());
 
         mockMvc.perform(post("/api/posts")
                     .content(content)
@@ -132,7 +110,7 @@ public class PostControllerTest {
     @Test
     public void readPostTest() throws Exception {
         given(postService.readPost(any()))
-                .willReturn(postResponse);
+                .willReturn(postResponse());
 
         mockMvc.perform(get("/api/posts/1")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -145,8 +123,8 @@ public class PostControllerTest {
                 .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath("id").value("1"))
-                .andExpect(jsonPath("title").value("test title"))
-                .andExpect(jsonPath("content").value("test content"));
+                .andExpect(jsonPath("title").value(TITLE))
+                .andExpect(jsonPath("content").value(CONTENT));
     }
 
     @Test
@@ -161,19 +139,13 @@ public class PostControllerTest {
 
     @Test
     public void updatePostTest() throws Exception {
-        PostUpdateRequest request = PostUpdateRequest.builder()
-                .id(1L)
-                .title("test title")
-                .content("test content")
-                .build();
-
-        String content = objectMapper.writeValueAsString(request);
+        String content = objectMapper.writeValueAsString(postUpdateRequest());
 
         given(postService.updatePost(any(), any()))
-                .willReturn(postResponse);
+                .willReturn(postResponse());
 
         given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(writerInfo);
+                .willReturn(postWriterInfo());
 
         mockMvc.perform(put("/api/posts")
                     .content(content)
@@ -188,19 +160,13 @@ public class PostControllerTest {
                 .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"))
                 .andExpect(jsonPath("id").value("1"))
-                .andExpect(jsonPath("title").value("test title"))
-                .andExpect(jsonPath("content").value("test content"));
+                .andExpect(jsonPath("title").value(TITLE))
+                .andExpect(jsonPath("content").value(CONTENT));
     }
 
     @Test
     void noPost_updatePostFailTest() throws Exception {
-        PostUpdateRequest request = PostUpdateRequest.builder()
-                .id(2L)
-                .title("new title")
-                .content("new content")
-                .build();
-
-        String content = objectMapper.writeValueAsString(request);
+        String content = objectMapper.writeValueAsString(postUpdateRequest());
 
         doThrow(PostNotFoundException.class)
                 .when(postService)
@@ -259,10 +225,10 @@ public class PostControllerTest {
     @Test
     public void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
-                .willReturn(1L);
+                .willReturn(POST_ID);
 
         given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(writerInfo);
+                .willReturn(postWriterInfo());
 
         mockMvc.perform(delete("/api/posts/1")
                     .contentType(MediaType.APPLICATION_JSON)
