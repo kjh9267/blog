@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 
+import static me.jun.guestbook.post.PostFixture.postResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -17,28 +18,27 @@ class PostEntityModelCreatorTest {
 
     @BeforeEach
     void setUp() {
-        creator = new PostEntityModelCreator();
-
-        resource = PostResponse.builder()
-                .id(1L)
-                .title("test title")
-                .content("test content")
-                .build();
-    }
+        creator = new PostEntityModelCreator(); }
 
     @Test
     void createEntityModelTest() {
+        resource = postResponse();
+
+        EntityModel<PostResponse> entityModel = creator.createRepresentationModel(resource);
+
         assertAll(
-                () -> assertThat(creator.createRepresentationModel(resource))
+                () -> assertThat(entityModel)
                         .isInstanceOf(EntityModel.class),
-                () -> assertThat(creator.createRepresentationModel(resource).getContent())
+                () -> assertThat(entityModel.getContent())
                         .isEqualToComparingFieldByField(resource)
         );
     }
 
     @Test
     void creatRepresentationModelTest() {
-        assertThat(creator.createRepresentationModel())
+        RepresentationModel representationModel = creator.createRepresentationModel();
+
+        assertThat(representationModel)
                 .isInstanceOf(RepresentationModel.class);
     }
 }
