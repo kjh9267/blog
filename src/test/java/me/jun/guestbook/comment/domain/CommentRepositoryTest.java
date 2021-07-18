@@ -1,6 +1,5 @@
 package me.jun.guestbook.comment.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -8,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static me.jun.guestbook.comment.CommentFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -17,31 +17,19 @@ class CommentRepositoryTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    private Comment comment;
-
-    @BeforeEach
-    void setUp() {
-        comment = Comment.builder()
-                .id(1L)
-                .writerId(1L)
-                .postId(1L)
-                .content("test content")
-                .build();
-    }
-
     @Test
     @Transactional
     void findAllByWriterIdTest() {
-        for (long postId = 0; postId < 20; postId++) {
+        for (int id = 1; id <= 20; id++) {
             Comment comment = Comment.builder()
-                    .postId(1L)
-                    .content(postId + "content")
+                    .postId(POST_ID)
+                    .content(CONTENT)
                     .build();
 
             commentRepository.save(comment);
         }
 
-        Page<Comment> comments = commentRepository.findAllByPostId(1L, PageRequest.of(0, 10));
+        Page<Comment> comments = commentRepository.findAllByPostId(POST_ID, PageRequest.of(0, 10));
 
         assertAll(() -> assertThat(comments.getTotalPages()).isEqualTo(2),
                 () -> assertThat(comments.getTotalElements()).isEqualTo(20),
@@ -51,21 +39,21 @@ class CommentRepositoryTest {
 
     @Test
     void deleteCommentByPostIdTest() {
-        commentRepository.save(comment);
+        commentRepository.save(comment());
 
-        commentRepository.deleteByPostId(1L);
+        commentRepository.deleteByPostId(POST_ID);
 
-        assertThat(commentRepository.findById(1L))
+        assertThat(commentRepository.findById(COMMENT_ID))
                 .isEmpty();
     }
 
     @Test
     void deleteCommentByWriterIdTest() {
-        commentRepository.save(comment);
+        commentRepository.save(comment());
 
-        commentRepository.deleteByWriterId(1L);
+        commentRepository.deleteByWriterId(WRITER_ID);
 
-        assertThat(commentRepository.findById(1L))
+        assertThat(commentRepository.findById(COMMENT_ID))
                 .isEmpty();
     }
 }
