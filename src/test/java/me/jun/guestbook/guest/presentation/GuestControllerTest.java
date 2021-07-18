@@ -1,9 +1,11 @@
 package me.jun.guestbook.guest.presentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.application.LoginService;
 import me.jun.guestbook.guest.application.RegisterService;
+import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.guest.presentation.dto.TokenResponse;
 import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.Test;
@@ -65,6 +67,20 @@ public class GuestControllerTest {
                 .andExpect(status().is2xxSuccessful())
         .andExpect(jsonPath(LINKS_SELF_HREF).value(REGISTER_SELF_URI))
         .andExpect(jsonPath(LINKS_LOGIN_HREF).value(LOGIN_SELF_URI));
+    }
+
+    @Test
+    void DuplicatedEmail_registerFailTest() throws Exception {
+        given(registerService.register(any()))
+                .willThrow(DuplicatedEmailException.class);
+
+        String content = objectMapper.writeValueAsString(guestRequest());
+
+        mockMvc.perform(post("/api/register")
+                .content(content)
+                .accept(HAL_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
