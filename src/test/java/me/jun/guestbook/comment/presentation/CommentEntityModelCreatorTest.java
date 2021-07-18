@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 
+import static me.jun.guestbook.comment.CommentFixture.commentResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -21,28 +22,27 @@ class CommentEntityModelCreatorTest {
     @BeforeEach
     void setUp() {
         creator = new CommentEntityModelCreator();
-
-        resource = CommentResponse.builder()
-                .id(1L)
-                .postId(1L)
-                .writerId(1L)
-                .content("test content")
-                .build();
     }
 
     @Test
     void createEntityModelTest() {
+        resource = commentResponse();
+
+        EntityModel<CommentResponse> entityModel = creator.createEntityModel(resource);
+
         assertAll(
-                () -> assertThat(creator.createEntityModel(resource))
+                () -> assertThat(entityModel)
                         .isInstanceOf(EntityModel.class),
-                () -> assertThat(creator.createEntityModel(resource).getContent())
+                () -> assertThat(entityModel.getContent())
                         .isEqualToComparingFieldByField(resource)
         );
     }
 
     @Test
     void creatRepresentationModelTest() {
-        assertThat(creator.createRepresentationModel())
+        RepresentationModel representationModel = creator.createRepresentationModel();
+
+        assertThat(representationModel)
                 .isInstanceOf(RepresentationModel.class);
     }
 }
