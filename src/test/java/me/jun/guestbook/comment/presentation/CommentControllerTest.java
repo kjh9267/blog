@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.comment.application.CommentWriterService;
 import me.jun.guestbook.comment.domain.Comment;
-import me.jun.guestbook.comment.presentation.dto.*;
+import me.jun.guestbook.comment.presentation.dto.PagedCommentsResponse;
 import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
-import static me.jun.guestbook.comment.presentation.CommentControllerUtils.*;
+import static me.jun.guestbook.comment.CommentFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -52,44 +52,20 @@ public class CommentControllerTest {
 
     private String jwt;
 
-    private CommentCreateRequest commentCreateRequest;
-
-    private CommentResponse commentResponse;
-
-    private CommentWriterInfo writerInfo;
-
     @BeforeEach
     void setUp() {
         jwt = jwtProvider.createJwt("testuser@email.com");
-
-        commentResponse = CommentResponse.builder()
-                .id(1L)
-                .writerId(1L)
-                .postId(1L)
-                .content("test content")
-                .build();
-
-        writerInfo = CommentWriterInfo.builder()
-                .id(1L)
-                .email("testuser@email.com")
-                .name("test")
-                .build();
     }
 
     @Test
     void createCommentTest() throws Exception {
-        commentCreateRequest = CommentCreateRequest.builder()
-                .postId(1L)
-                .content("test content")
-                .build();
-
-        String content = objectMapper.writeValueAsString(commentCreateRequest);
+        String content = objectMapper.writeValueAsString(commentCreateRequest());
 
         given(commentService.createComment(any(), any()))
-                .willReturn(commentResponse);
+                .willReturn(commentResponse());
 
         given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(writerInfo);
+                .willReturn(commentWriterInfo());
 
         mockMvc.perform(post("/api/comments")
                         .content(content)
@@ -99,10 +75,10 @@ public class CommentControllerTest {
                 .andDo(print())
                 .andExpect(header().string("location", COMMENTS_SELF_URI + "/1"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(1))
-                .andExpect(jsonPath("writer_id").value(1))
-                .andExpect(jsonPath("post_id").value(1))
-                .andExpect(jsonPath("content").value("test content"))
+                .andExpect(jsonPath("id").value(COMMENT_ID))
+                .andExpect(jsonPath("writer_id").value(WRITER_ID))
+                .andExpect(jsonPath("post_id").value(POST_ID))
+                .andExpect(jsonPath("content").value(CONTENT))
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
                 .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
@@ -113,15 +89,15 @@ public class CommentControllerTest {
     @Test
     void readCommentTest() throws Exception {
         given(commentService.retrieveComment(any()))
-                .willReturn(commentResponse);
+                .willReturn(commentResponse());
 
         mockMvc.perform(get("/api/comments/1")
                     .accept(HAL_JSON))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(1))
-                .andExpect(jsonPath("writer_id").value(1))
-                .andExpect(jsonPath("post_id").value(1))
-                .andExpect(jsonPath("content").value("test content"))
+                .andExpect(jsonPath("id").value(COMMENT_ID))
+                .andExpect(jsonPath("writer_id").value(WRITER_ID))
+                .andExpect(jsonPath("post_id").value(POST_ID))
+                .andExpect(jsonPath("content").value(CONTENT))
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
                 .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
@@ -133,18 +109,12 @@ public class CommentControllerTest {
     @Test
     void updateCommentTest() throws Exception {
         given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(writerInfo);
+                .willReturn(commentWriterInfo());
 
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequest.builder()
-                .id(1L)
-                .postId(1L)
-                .content("test content")
-                .build();
-
-        String content = objectMapper.writeValueAsString(commentUpdateRequest);
+        String content = objectMapper.writeValueAsString(commentUpdateRequest());
 
         given(commentService.updateComment(any(), any()))
-                .willReturn(commentResponse);
+                .willReturn(commentResponse());
 
         mockMvc.perform(put("/api/comments")
                     .content(content)
@@ -153,10 +123,10 @@ public class CommentControllerTest {
                     .header(HttpHeaders.AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(1))
-                .andExpect(jsonPath("writer_id").value(1))
-                .andExpect(jsonPath("post_id").value(1))
-                .andExpect(jsonPath("content").value("test content"))
+                .andExpect(jsonPath("id").value(COMMENT_ID))
+                .andExpect(jsonPath("writer_id").value(WRITER_ID))
+                .andExpect(jsonPath("post_id").value(POST_ID))
+                .andExpect(jsonPath("content").value(CONTENT))
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
                 .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
                 .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
@@ -167,10 +137,10 @@ public class CommentControllerTest {
     @Test
     void deleteCommentTest() throws Exception {
         given(commentService.deleteComment(any(), any()))
-                .willReturn(1L);
+                .willReturn(COMMENT_ID);
 
         given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(writerInfo);
+                .willReturn(commentWriterInfo());
 
         mockMvc.perform(delete("/api/comments/1")
                     .header(HttpHeaders.AUTHORIZATION, jwt)
@@ -186,12 +156,7 @@ public class CommentControllerTest {
     @Test
     void queryCommentsByPostIdTest() throws Exception {
         PagedCommentsResponse response = PagedCommentsResponse.from(new PageImpl<Comment>(
-                Arrays.asList(Comment.builder()
-                        .id(1L)
-                        .postId(1L)
-                        .writerId(1L)
-                        .content("test")
-                        .build())));
+                Arrays.asList(comment())));
 
         given(commentService.queryCommentsByPostId(any(), any()))
                 .willReturn(response);
