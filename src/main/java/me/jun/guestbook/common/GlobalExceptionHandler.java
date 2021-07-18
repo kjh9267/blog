@@ -3,6 +3,7 @@ package me.jun.guestbook.common;
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.common.error.ErrorCode;
 import me.jun.guestbook.common.error.ErrorResponse;
+import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.security.InvalidTokenException;
@@ -47,6 +48,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<EntityModel<ErrorResponse>>
     NoTokenExceptionHandler(InvalidTokenException e) {
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.UNAUTHORIZED);
+        return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
+                HttpStatus.valueOf(errorResponse.getStatusCode()));
+    }
+
+    @ExceptionHandler(DuplicatedEmailException.class)
+    public ResponseEntity<EntityModel<ErrorResponse>>
+    DuplicatedEmailExceptionHandler(DuplicatedEmailException e) {
+        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_ALREADY_EXIST);
         return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
                 HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
