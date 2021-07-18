@@ -1,9 +1,7 @@
 package me.jun.guestbook.guest.application;
 
 import me.jun.guestbook.comment.application.CommentService;
-import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.post.application.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static me.jun.guestbook.guest.GuestFixture.guest;
+import static me.jun.guestbook.guest.GuestFixture.guestResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -33,30 +33,18 @@ class GuestServiceTest {
     @Mock
     private CommentService commentService;
 
-    private Guest guest;
-
-    private GuestResponse guestResponse;
-
     @BeforeEach
     void setUp() {
         guestService = new GuestService(guestRepository, postService, commentService);
-
-        guest = Guest.builder()
-                .id(1L)
-                .name("test user")
-                .email("testuser@email.com")
-                .build();
-
-        guestResponse = GuestResponse.from(guest);
     }
 
     @Test
     void retrieveGuestByEmailTest() {
         given(guestRepository.findByEmail(any()))
-                .willReturn(Optional.of(guest));
+                .willReturn(Optional.of(guest()));
 
         assertThat(guestService.retrieveGuestBy("testuser@email.com"))
-                .isEqualToComparingFieldByField(guestResponse);
+                .isEqualToComparingFieldByField(guestResponse());
     }
 
     @Test
