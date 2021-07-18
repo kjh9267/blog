@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static me.jun.guestbook.guest.GuestFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,42 +25,18 @@ class RegisterServiceTest {
     @Mock
     private GuestRepository guestRepository;
 
-    private Guest guest;
-
-    private GuestRequest guestRequest;
-
-    private GuestResponse guestResponse;
-
     @BeforeEach
     void setUp() {
         registerService = new RegisterService(guestRepository);
-
-        guest = Guest.builder()
-                .id(1L)
-                .name("test")
-                .email("testuser@email.com")
-                .build();
-
-        guestRequest = GuestRequest.builder()
-                .name("test")
-                .email("testuser@email.com")
-                .password("pass")
-                .build();
-
-        guestResponse = GuestResponse.builder()
-                .id(1L)
-                .name("test")
-                .email("testuser@email.com")
-                .build();
     }
 
     @Test
     void registerTest() {
         given(guestRepository.save(any()))
-                .willReturn(guest);
+                .willReturn(guest());
 
-        assertThat(registerService.register(guestRequest))
-                .isEqualToComparingFieldByField(guestResponse);
+        assertThat(registerService.register(guestRequest()))
+                .isEqualToComparingFieldByField(guestResponse());
     }
 
     @Test
@@ -68,7 +45,7 @@ class RegisterServiceTest {
                 .willThrow(DuplicatedEmailException.class);
 
         assertThrows(DuplicatedEmailException.class,
-                () -> assertThat(registerService.register(guestRequest))
+                () -> assertThat(registerService.register(guestRequest()))
         );
     }
 }
