@@ -1,65 +1,32 @@
 package me.jun.guestbook.guest.domain;
 
-import me.jun.guestbook.post.domain.Post;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static me.jun.guestbook.guest.GuestFixture.guest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GuestTest {
 
-    private Guest guest;
-
-    private Post post;
-
-    private final String name = "jun";
-    private final String title = "test title";
-    private final String content = "test content";
-    private final String email = "user@email.com";
-    private final String password = "pass";
-
-    @BeforeEach
-    public void setUp() {
-
-        guest = Guest.builder()
-                .name(name)
-                .email(email)
-                .password(password)
-                .build();
-
-        post = Post.builder()
-                .title(title)
-                .content(content)
-                .build();
-    }
-
     @Test
     void constructorTest() {
-        assertThat(guest).isInstanceOf(Guest.class);
-    }
-
-    @Test
-    void constructorTest2() {
-        Guest newGuest = Guest.builder()
-                .name(name)
-                .email(email)
-                .password(password)
+        Guest expected = Guest.builder()
+                .id(1L)
+                .name("test user")
+                .email("testuser@email.com")
+                .password("pass")
                 .build();
 
-        assertAll(
-                () -> assertThat(newGuest).isEqualToIgnoringGivenFields(guest, "password", "id"),
-                () -> assertThat(newGuest.getPassword()).isInstanceOf(Password.class),
-                () -> assertThat(newGuest).isNotSameAs(guest)
+        assertAll(() -> assertThat(guest()).isInstanceOf(Guest.class),
+                () -> assertThat(guest()).isEqualToComparingFieldByField(expected)
         );
-
     }
 
     @Test
     void validateTest() {
         assertThrows(WrongPasswordException.class,
-                () -> guest.validate("123")
+                () -> guest().validate("wrong password")
         );
     }
 }
