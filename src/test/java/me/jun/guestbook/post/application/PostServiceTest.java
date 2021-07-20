@@ -130,7 +130,7 @@ public class PostServiceTest {
         given(postRepository.findAll(any(Pageable.class)))
                 .willReturn(Page.empty());
 
-        assertThat(postService.readPostsByPage(PageRequest.of(1, 3)))
+        assertThat(postService.queryPosts(PageRequest.of(1, 3)))
                 .isInstanceOf(PagedPostsResponse.class);
     }
 }
