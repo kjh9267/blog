@@ -14,6 +14,8 @@ public abstract class RelUtils {
 
     public static final String DELETE_POST = "delete_post";
 
+    public static final String QUERY_POSTS = "query_posts";
+
     public static final String CREATE_COMMENT = "create_comment";
 
     public static final String GET_COMMENT = "get_comment";
