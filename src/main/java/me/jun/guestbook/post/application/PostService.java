@@ -2,13 +2,14 @@ package me.jun.guestbook.post.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.application.CommentService;
-import me.jun.guestbook.comment.domain.CommentRepository;
-import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
+import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
-import me.jun.guestbook.post.presentation.dto.*;
-import org.springframework.beans.factory.annotation.Qualifier;
+import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
+import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
+import me.jun.guestbook.post.presentation.dto.PostResponse;
+import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class PostService {
         postRepository.deleteByWriterId(writerId);
     }
 
-    public PagedPostsResponse readPostsByPage(PageRequest request) {
+    public PagedPostsResponse queryPosts(PageRequest request) {
         Page<Post> posts = postRepository.findAll(request);
         return PagedPostsResponse.from(posts);
     }
