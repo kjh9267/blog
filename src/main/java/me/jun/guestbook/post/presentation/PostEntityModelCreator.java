@@ -2,8 +2,11 @@ package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.presentation.CommentController;
+import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
@@ -30,12 +33,21 @@ public class PostEntityModelCreator {
                 .add(selfLinkBuilder.withRel(GET_POST))
                 .add(selfLinkBuilder.withRel(UPDATE_POST))
                 .add(selfLinkBuilder.withRel(DELETE_POST))
-                .add(linkTo(CommentController.class).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
+                .add(linkTo(postController).slash(QUERY).withRel(QUERY_POSTS))
+                .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
     }
 
     public RepresentationModel createRepresentationModel() {
         return new RepresentationModel<>()
                 .add(linkTo(postController).withSelfRel())
+                .add(linkTo(postController).slash(QUERY).withRel(QUERY_POSTS))
                 .add(linkTo(postController).withRel(CREATE_POST));
+    }
+
+    public CollectionModel<EntityModel<PostResponse>> createCollectionModel(PagedPostsResponse response) {
+        return PagedModel.of(response.getPostResponses().map(EntityModel::of))
+                .add(linkTo(postController).slash(QUERY).withSelfRel())
+                .add(linkTo(postController).withRel(CREATE_POST))
+                .add(linkTo(postController).withRel(GET_POST));
     }
 }
