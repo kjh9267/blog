@@ -1,10 +1,13 @@
 package me.jun.guestbook.post.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.guestbook.post.PostFixture;
 import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.post.application.PostWriterService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.application.exception.WriterMismatchException;
+import me.jun.guestbook.post.domain.Post;
+import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
 import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
 import me.jun.guestbook.security.JwtProvider;
@@ -15,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.lang.reflect.Field;
 import java.security.Key;
+import java.util.Arrays;
 
 import static me.jun.guestbook.post.PostFixture.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -260,6 +265,22 @@ public class PostControllerTest {
         mockMvc.perform(delete("/api/posts/1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void queryPostsTest() throws Exception {
+        PagedPostsResponse response = PagedPostsResponse.from(new PageImpl<Post>(
+                Arrays.asList(PostFixture.post())));
+
+        given(postService.queryPosts(any()))
+                .willReturn(response);
+
+        mockMvc.perform(get("/api/posts/query/?page=1&size=10")
+                .accept(HAL_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath(LINKS_SELF_HREF).value(QUERY_POSTS_URI))
+                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI));
     }
 
     private Key getKey() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
