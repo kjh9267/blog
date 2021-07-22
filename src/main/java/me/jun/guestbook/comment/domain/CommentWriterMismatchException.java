@@ -1,4 +1,4 @@
-package me.jun.guestbook.comment.application.exception;
+package me.jun.guestbook.comment.domain;
 
 public class CommentWriterMismatchException extends RuntimeException {
     public CommentWriterMismatchException() {
