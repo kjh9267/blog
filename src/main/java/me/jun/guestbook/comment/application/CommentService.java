@@ -2,9 +2,9 @@ package me.jun.guestbook.comment.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.application.exception.CommentNotFoundException;
-import me.jun.guestbook.comment.application.exception.CommentWriterMismatchException;
 import me.jun.guestbook.comment.domain.Comment;
 import me.jun.guestbook.comment.domain.CommentRepository;
+import me.jun.guestbook.comment.domain.CommentWriter;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
@@ -23,7 +23,7 @@ public class CommentService {
 
     public CommentResponse createComment(CommentCreateRequest request, Long writerId) {
         Comment comment = request.toEntity();
-        comment.setWriterId(writerId);
+        comment.setCommentWriter(new CommentWriter(writerId));
         Comment savedComment = commentRepository.save(comment);
 
         return CommentResponse.from(savedComment);
@@ -40,9 +40,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(request.getId())
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!isWriter(writerId, comment)) {
-            throw new CommentWriterMismatchException();
-        }
+        comment.validateWriter(writerId);
 
         comment.setContent(request.getContent());
         Comment savedComment = commentRepository.save(comment);
@@ -54,9 +52,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!isWriter(writerId, comment)) {
-            throw new CommentWriterMismatchException();
-        }
+        comment.validateWriter(writerId);
 
         commentRepository.deleteById(id);
         return id;
@@ -67,15 +63,11 @@ public class CommentService {
     }
 
     public void deleteCommentByWriterId(Long writerId) {
-        commentRepository.deleteByWriterId(writerId);
+        commentRepository.deleteByCommentWriter(new CommentWriter(writerId));
     }
 
     public PagedCommentsResponse queryCommentsByPostId(Long postId, PageRequest pageRequest) {
         Page<Comment> comments = commentRepository.findAllByPostId(postId, pageRequest);
         return PagedCommentsResponse.from(comments);
-    }
-
-    private boolean isWriter(Long writerId, Comment comment) {
-        return writerId.equals(comment.getWriterId());
     }
 }
