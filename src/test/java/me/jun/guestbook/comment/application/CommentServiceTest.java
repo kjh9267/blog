@@ -1,7 +1,7 @@
 package me.jun.guestbook.comment.application;
 
 import me.jun.guestbook.comment.application.exception.CommentNotFoundException;
-import me.jun.guestbook.comment.application.exception.CommentWriterMismatchException;
+import me.jun.guestbook.comment.domain.CommentWriterMismatchException;
 import me.jun.guestbook.comment.domain.CommentRepository;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.comment.presentation.dto.PagedCommentsResponse;
@@ -138,11 +138,11 @@ class CommentServiceTest {
     @Test
     void deleteCommentByWriterIdTest() {
         doNothing().when(commentRepository)
-                .deleteByWriterId(any());
+                .deleteByCommentWriter(any());
 
         commentService.deleteCommentByWriterId(WRITER_ID);
 
-        verify(commentRepository).deleteByWriterId(WRITER_ID);
+        verify(commentRepository).deleteByCommentWriter(commentWriter());
     }
 
     @Test
