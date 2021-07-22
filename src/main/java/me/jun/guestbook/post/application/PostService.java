@@ -2,8 +2,8 @@ package me.jun.guestbook.post.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.application.CommentService;
+import me.jun.guestbook.comment.domain.PostWriter;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
-import me.jun.guestbook.post.application.exception.WriterMismatchException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
@@ -26,7 +26,7 @@ public class PostService {
 
     public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
-        post.setWriterId(writerId);
+        post.setPostWriter(new PostWriter(writerId));
         Post savedPost = postRepository.save(post);
         return PostResponse.of(savedPost);
     }
@@ -43,10 +43,7 @@ public class PostService {
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
-        Long id = post.getWriterId();
-        if (!id.equals(writerId)) {
-            throw new WriterMismatchException("writer mismatch");
-        }
+        post.validateWriter(writerId);
 
         String title = requestPost.getTitle();
         String content = requestPost.getContent();
@@ -60,10 +57,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        Long id = post.getWriterId();
-        if (!id.equals(writerId)) {
-            throw new WriterMismatchException("writer mismatch");
-        }
+        post.validateWriter(writerId);
 
         postRepository.deleteById(postId);
         commentService.deleteCommentByPostId(postId);
@@ -71,7 +65,8 @@ public class PostService {
     }
 
     public void deletePostByWriterId(Long writerId) {
-        postRepository.deleteByWriterId(writerId);
+        PostWriter postWriter = new PostWriter(writerId);
+        postRepository.deleteByPostWriter(postWriter);
     }
 
     public PagedPostsResponse queryPosts(PageRequest request) {

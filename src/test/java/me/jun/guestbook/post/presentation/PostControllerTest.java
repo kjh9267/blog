@@ -5,7 +5,7 @@ import me.jun.guestbook.post.PostFixture;
 import me.jun.guestbook.post.application.PostService;
 import me.jun.guestbook.post.application.PostWriterService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
-import me.jun.guestbook.post.application.exception.WriterMismatchException;
+import me.jun.guestbook.post.domain.PostWriterMismatchException;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
@@ -194,7 +194,7 @@ public class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        doThrow(WriterMismatchException.class)
+        doThrow(PostWriterMismatchException.class)
                 .when(postService)
                 .updatePost(any(), any());
 
@@ -258,7 +258,7 @@ public class PostControllerTest {
 
     @Test
     void guestMisMatch_deletePostFailTest() throws Exception {
-        doThrow(WriterMismatchException.class)
+        doThrow(PostWriterMismatchException.class)
                 .when(postService)
                 .deletePost(any(), any());
 
