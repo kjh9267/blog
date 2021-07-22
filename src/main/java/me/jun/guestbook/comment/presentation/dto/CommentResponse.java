@@ -14,8 +14,6 @@ public class CommentResponse {
 
     private Long id;
 
-    private Long writerId;
-
     private Long postId;
 
     private String content;
@@ -23,7 +21,6 @@ public class CommentResponse {
     public static CommentResponse from(Comment comment) {
         return CommentResponse.builder()
                 .id(comment.getId())
-                .writerId(comment.getWriterId())
                 .postId(comment.getPostId())
                 .content(comment.getContent())
                 .build();
