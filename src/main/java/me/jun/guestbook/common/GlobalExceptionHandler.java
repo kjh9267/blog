@@ -5,7 +5,7 @@ import me.jun.guestbook.common.error.ErrorCode;
 import me.jun.guestbook.common.error.ErrorResponse;
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
-import me.jun.guestbook.post.application.exception.WriterMismatchException;
+import me.jun.guestbook.post.domain.PostWriterMismatchException;
 import me.jun.guestbook.security.InvalidTokenException;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -36,9 +36,9 @@ public class GlobalExceptionHandler {
                 HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
 
-    @ExceptionHandler(WriterMismatchException.class)
+    @ExceptionHandler(PostWriterMismatchException.class)
     public ResponseEntity<EntityModel<ErrorResponse>>
-    writerMismatchExceptionHandler(WriterMismatchException e) {
+    writerMismatchExceptionHandler(PostWriterMismatchException e) {
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_MISMATCH);
         return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
                 HttpStatus.valueOf(errorResponse.getStatusCode()));
