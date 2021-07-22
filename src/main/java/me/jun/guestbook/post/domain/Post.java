@@ -1,7 +1,7 @@
 package me.jun.guestbook.post.domain;
 
 import lombok.*;
-import me.jun.guestbook.guest.domain.Guest;
+import me.jun.guestbook.comment.domain.PostWriter;
 
 import javax.persistence.*;
 
@@ -24,10 +24,16 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
-    private Long writerId;
+    private PostWriter postWriter;
 
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void validateWriter(Long writerId) {
+        if (!postWriter.match(writerId)) {
+            throw new PostWriterMismatchException("writer mismatch");
+        }
     }
 }
