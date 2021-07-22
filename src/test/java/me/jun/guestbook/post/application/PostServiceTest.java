@@ -2,7 +2,7 @@ package me.jun.guestbook.post.application;
 
 import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
-import me.jun.guestbook.post.application.exception.WriterMismatchException;
+import me.jun.guestbook.post.domain.PostWriterMismatchException;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +95,7 @@ public class PostServiceTest {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        assertThrows(WriterMismatchException.class,
+        assertThrows(PostWriterMismatchException.class,
                 () -> postService.updatePost(postUpdateRequest(), 2L)
         );
     }
@@ -118,11 +118,11 @@ public class PostServiceTest {
     @Test
     void deletePostByWriterIdTest() {
         doNothing().when(postRepository)
-                .deleteByWriterId(WRITER_ID);
+                .deleteByPostWriter(postWriter());
 
         postService.deletePostByWriterId(WRITER_ID);
 
-        verify(postRepository).deleteByWriterId(WRITER_ID);
+        verify(postRepository).deleteByPostWriter(postWriter());
     }
 
     @Test

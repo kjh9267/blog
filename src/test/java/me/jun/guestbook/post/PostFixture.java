@@ -2,6 +2,7 @@ package me.jun.guestbook.post;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jun.guestbook.comment.domain.PostWriter;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
@@ -46,12 +47,16 @@ public abstract class PostFixture {
 
     public static final String EMAIL = "testuser@email.com";
 
+    public static PostWriter postWriter() {
+        return new PostWriter(WRITER_ID);
+    }
+
     public static Post post() {
         return Post.builder()
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
-                .writerId(WRITER_ID)
+                .postWriter(postWriter())
                 .build();
     }
 
