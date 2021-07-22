@@ -3,6 +3,7 @@ package me.jun.guestbook.comment;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.comment.domain.Comment;
+import me.jun.guestbook.comment.domain.CommentWriter;
 import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
 import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
@@ -40,11 +41,15 @@ public abstract class CommentFixture {
 
     private static final String JWT = "1.2.3";
 
+    public static CommentWriter commentWriter() {
+        return new CommentWriter(WRITER_ID);
+    }
+
     public static Comment comment() {
         return Comment.builder()
                 .id(COMMENT_ID)
                 .postId(POST_ID)
-                .writerId(WRITER_ID)
+                .commentWriter(commentWriter())
                 .content(CONTENT)
                 .build();
     }
@@ -68,7 +73,6 @@ public abstract class CommentFixture {
         return CommentResponse.builder()
                 .id(COMMENT_ID)
                 .postId(POST_ID)
-                .writerId(WRITER_ID)
                 .content(CONTENT)
                 .build();
     }

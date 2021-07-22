@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import static me.jun.guestbook.comment.CommentFixture.*;
@@ -12,6 +13,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CommentRepositoryTest {
 
     @Autowired
@@ -51,7 +53,7 @@ class CommentRepositoryTest {
     void deleteCommentByWriterIdTest() {
         commentRepository.save(comment());
 
-        commentRepository.deleteByWriterId(WRITER_ID);
+        commentRepository.deleteByCommentWriter(commentWriter());
 
         assertThat(commentRepository.findById(COMMENT_ID))
                 .isEmpty();
