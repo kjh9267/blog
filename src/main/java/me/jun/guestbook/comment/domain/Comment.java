@@ -9,6 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 public class Comment {
 
@@ -16,18 +17,16 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long writerId;
+    private CommentWriter commentWriter;
 
     private Long postId;
 
     @Column(length = 100, nullable = false)
     private String content;
 
-    public void setWriterId(Long writerId) {
-        this.writerId = writerId;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void validateWriter(Long writerId) {
+        if (!commentWriter.match(writerId)) {
+            throw new CommentWriterMismatchException();
+        }
     }
 }
