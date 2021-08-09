@@ -8,9 +8,11 @@ import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import me.jun.guestbook.post.application.PostService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GuestService {
 
     private final GuestRepository guestRepository;
@@ -19,6 +21,7 @@ public class GuestService {
 
     private final CommentService commentService;
 
+    @Transactional(readOnly = true)
     public GuestResponse retrieveGuestBy(String email) {
         Guest guest = guestRepository.findByEmail(email)
                 .orElseThrow(() -> new GuestNotFoundException());
