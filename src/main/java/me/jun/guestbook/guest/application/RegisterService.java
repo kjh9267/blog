@@ -8,9 +8,11 @@ import me.jun.guestbook.guest.presentation.dto.GuestRequest;
 import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RegisterService {
 
     private final GuestRepository guestRepository;

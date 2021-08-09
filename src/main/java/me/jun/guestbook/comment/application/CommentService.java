@@ -29,6 +29,7 @@ public class CommentService {
         return CommentResponse.from(savedComment);
     }
 
+    @Transactional(readOnly = true)
     public CommentResponse retrieveComment(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);

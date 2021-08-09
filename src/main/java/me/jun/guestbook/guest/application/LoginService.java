@@ -11,15 +11,18 @@ import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.security.JwtProvider;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LoginService {
 
     private final GuestRepository guestRepository;
 
     private final JwtProvider jwtProvider;
 
+    @Transactional(readOnly = true)
     public TokenResponse login(GuestRequest request) {
         String email = request.getEmail();
         Guest guest = guestRepository.findByEmail(email)
