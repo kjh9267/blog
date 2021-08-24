@@ -2,24 +2,33 @@ package me.jun.guestbook.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
 @Component
+@PropertySource("classpath:application.properties")
 public class JwtProvider {
-    private static final Long THIRTY_MINUTE = 1000 * 60 * 30L;
+
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    private final Long expiredTime;
+
+    public JwtProvider(@Value("#{T(java.lang.Long).parseLong(${expired-time})}") Long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
 
     public String createJwt(String subject) {
         Date startTime = new Date();
-        Date expiredTime = new Date(startTime.getTime() + THIRTY_MINUTE);
+        Date endTime = new Date(startTime.getTime() + expiredTime);
 
         Claims claims = Jwts.claims()
                 .setSubject(subject)
                 .setIssuedAt(startTime)
-                .setExpiration(expiredTime);
+                .setExpiration(endTime);
 
         return Jwts.builder()
                 .setClaims(claims)
