@@ -1,6 +1,5 @@
 package me.jun.guestbook.guest.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.guest.application.GuestService;
 import me.jun.guestbook.guest.application.LoginService;
@@ -39,9 +38,6 @@ public class GuestControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private JwtProvider jwtProvider;
 
     @MockBean
     private RegisterService registerService;
@@ -104,14 +100,12 @@ public class GuestControllerTest {
 
     @Test
     void leaveTest() throws Exception {
-        String jwt = jwtProvider.createJwt(EMAIL);
-
         doNothing().when(guestService)
                 .deleteGuest(any());
 
         mockMvc.perform(delete("/api/leave")
                 .accept(HAL_JSON)
-                .header(AUTHORIZATION, jwt))
+                .header(AUTHORIZATION, JWT))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath(LINKS_SELF_HREF).value(LEAVE_SELF_URI))
