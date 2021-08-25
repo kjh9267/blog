@@ -39,8 +39,6 @@ public abstract class CommentFixture {
 
     private static final String EMAIL = "testuser@email.com";
 
-    private static final String JWT = "1.2.3";
-
     public static CommentWriter commentWriter() {
         return new CommentWriter(WRITER_ID);
     }
