@@ -9,7 +9,8 @@ public enum ErrorCode {
     POST_NOT_FOUND(404, "No post"),
     GUEST_MISMATCH(403, "Guest Mismatch"),
     UNAUTHORIZED(401, "Invalid token"),
-    GUEST_ALREADY_EXIST(409, "Email already exist");
+    GUEST_ALREADY_EXIST(409, "Email already exist"),
+    COMMENT_NOT_FOUND(404, "No comment");
 
     private final int statusCode;
     private final String message;

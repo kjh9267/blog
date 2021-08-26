@@ -73,11 +73,8 @@ public class PostServiceTest {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        given(postRepository.save(any()))
-                .willReturn(post());
-
         assertThat(postService.updatePost(postUpdateRequest(), WRITER_ID))
-                .isEqualToComparingFieldByField(postResponse());
+                .isEqualToComparingFieldByField(updatedPostResponse());
     }
 
     @Test
