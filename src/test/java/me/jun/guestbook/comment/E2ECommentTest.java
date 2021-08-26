@@ -1,22 +1,22 @@
-package me.jun.guestbook.post;
+package me.jun.guestbook.comment;
 
-import me.jun.guestbook.common.error.ErrorResponse;
+import me.jun.guestbook.comment.presentation.dto.CommentResponse;
 import me.jun.guestbook.guest.E2EGuestTest;
-import me.jun.guestbook.post.presentation.dto.PostResponse;
+import me.jun.guestbook.post.E2EPostTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.given;
-import static me.jun.guestbook.post.PostFixture.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static me.jun.guestbook.comment.CommentFixture.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class E2EPostTest {
+public class E2ECommentTest {
 
     @LocalServerPort
     private int port;
@@ -29,96 +29,97 @@ public class E2EPostTest {
     }
 
     @Test
-    void postTest() {
+    void commentTest() {
         guestTest.register();
         String token = guestTest.login();
 
-        createPost(token);
-        retrievePost(token);
-        updatePost(token);
-        deletePost(token);
+        createComment(token);
+        retrieveComment();
+        updateComment(token);
+        deleteComment(token);
     }
 
-    public void createPost(String token) {
-        PostResponse postResponse = given()
+    private void createComment(String token) {
+        CommentResponse commentResponse = given()
                 .log().all()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, token)
-                .body(postCreateRequest())
+                .body(commentCreateRequest())
 
                 .when()
-                .post("/api/posts")
+                .post("/api/comments")
 
                 .then()
                 .statusCode(CREATED.value())
                 .extract()
-                .as(PostResponse.class);
+                .as(CommentResponse.class);
 
-        assertThat(postResponse).isEqualToComparingFieldByField(postResponse());
+        assertThat(commentResponse)
+                .isEqualToComparingFieldByField(CommentFixture.commentResponse());
     }
 
-    private void retrievePost(String token) {
-        PostResponse postResponse = given()
+    private void retrieveComment() {
+        CommentResponse commentResponse = given()
                 .log().all()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
 
                 .when()
-                .get("/api/posts/1")
+                .get("/api/comments/1")
 
                 .then()
                 .statusCode(OK.value())
                 .extract()
-                .as(PostResponse.class);
+                .as(CommentResponse.class);
 
-        assertThat(postResponse).isEqualToComparingFieldByField(postResponse());
+        assertThat(commentResponse)
+                .isEqualToComparingFieldByField(CommentFixture.commentResponse());
     }
 
-    private void updatePost(String token) {
-        PostResponse postResponse = given()
+    private void updateComment(String token) {
+        CommentResponse commentResponse = given()
                 .log().all()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, token)
-                .body(postUpdateRequest())
+                .body(commentUpdateRequest())
 
                 .when()
-                .put("/api/posts")
+                .put("/api/comments")
 
                 .then()
+                .statusCode(OK.value())
                 .extract()
-                .as(PostResponse.class);
+                .as(CommentResponse.class);
 
-        assertThat(postResponse).isEqualToComparingFieldByField(updatedPostResponse());
+        assertThat(commentResponse)
+                .isEqualToComparingFieldByField(updatedCommentResponse());
     }
 
-    private void deletePost(String token) {
+    private void deleteComment(String token) {
         given()
-                .port(port)
                 .log().all()
+                .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, token)
 
                 .when()
-                .delete("/api/posts/1")
+                .delete("/api/comments/1")
 
                 .then()
                 .statusCode(OK.value());
 
-        ErrorResponse errorResponse = given()
-                .port(port)
+        given()
                 .log().all()
+                .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, token)
 
                 .when()
-                .get("api/posts/1")
+                .get("/api/comments/1")
 
                 .then()
-                .statusCode(NOT_FOUND.value())
-                .extract()
-                .as(ErrorResponse.class);
-
-        assertThat(errorResponse.getMessage()).isEqualTo("No post");
+                .statusCode(NOT_FOUND.value());
     }
 }

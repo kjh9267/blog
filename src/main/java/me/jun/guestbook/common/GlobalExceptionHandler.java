@@ -1,6 +1,7 @@
 package me.jun.guestbook.common;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.guestbook.comment.application.exception.CommentNotFoundException;
 import me.jun.guestbook.common.error.ErrorCode;
 import me.jun.guestbook.common.error.ErrorResponse;
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
@@ -56,6 +57,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<EntityModel<ErrorResponse>>
     DuplicatedEmailExceptionHandler(DuplicatedEmailException e) {
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_ALREADY_EXIST);
+        return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
+                HttpStatus.valueOf(errorResponse.getStatusCode()));
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<EntityModel<ErrorResponse>>
+    commentNotFoundExceptionHandler() {
+        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.COMMENT_NOT_FOUND);
         return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
                 HttpStatus.valueOf(errorResponse.getStatusCode()));
     }

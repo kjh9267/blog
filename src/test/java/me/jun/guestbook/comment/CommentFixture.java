@@ -37,6 +37,8 @@ public abstract class CommentFixture {
 
     public static final String CONTENT = "test content";
 
+    public static final String NEW_CONTENT = "new content";
+
     private static final String EMAIL = "testuser@email.com";
 
     public static CommentWriter commentWriter() {
@@ -63,7 +65,7 @@ public abstract class CommentFixture {
         return CommentUpdateRequest.builder()
                 .id(COMMENT_ID)
                 .postId(POST_ID)
-                .content(CONTENT)
+                .content(NEW_CONTENT)
                 .build();
     }
 
@@ -72,6 +74,14 @@ public abstract class CommentFixture {
                 .id(COMMENT_ID)
                 .postId(POST_ID)
                 .content(CONTENT)
+                .build();
+    }
+
+    public static CommentResponse updatedCommentResponse() {
+        return CommentResponse.builder()
+                .id(COMMENT_ID)
+                .postId(POST_ID)
+                .content(NEW_CONTENT)
                 .build();
     }
 
