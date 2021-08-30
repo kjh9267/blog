@@ -1,12 +1,9 @@
 package me.jun.guestbook.post;
 
 import me.jun.guestbook.common.error.ErrorResponse;
-import me.jun.guestbook.guest.E2EGuestTest;
 import me.jun.guestbook.post.presentation.dto.PostResponse;
-import org.junit.jupiter.api.BeforeEach;
+import me.jun.guestbook.support.E2ETest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.guestbook.post.PostFixture.*;
@@ -15,23 +12,12 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class E2EPostTest {
-
-    @LocalServerPort
-    private int port;
-
-    private E2EGuestTest guestTest;
-
-    @BeforeEach
-    void setUp() {
-        guestTest = new E2EGuestTest(port);
-    }
+public class E2EPostTest extends E2ETest {
 
     @Test
     void postTest() {
-        guestTest.register();
-        String token = guestTest.login();
+        register();
+        token = login();
 
         createPost(token);
         retrievePost(token);
