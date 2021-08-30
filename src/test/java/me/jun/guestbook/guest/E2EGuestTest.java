@@ -1,58 +1,13 @@
 package me.jun.guestbook.guest;
 
+import me.jun.guestbook.support.E2ETest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 
-import static io.restassured.RestAssured.given;
-import static me.jun.guestbook.guest.GuestFixture.ACCESS_TOKEN;
-import static me.jun.guestbook.guest.GuestFixture.guestRequest;
-import static org.hamcrest.Matchers.hasKey;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class E2EGuestTest {
-
-    @LocalServerPort
-    private int port;
-
-    public E2EGuestTest(int port) {
-        this.port = port;
-    }
+public class E2EGuestTest extends E2ETest {
 
     @Test
     void guestTest() {
         register();
-        String token = login();
-    }
-
-    public void register() {
-        given()
-                .port(port)
-                .contentType(APPLICATION_JSON_VALUE)
-                .body(guestRequest())
-
-                .when()
-                .post("/api/register")
-
-                .then()
-                .statusCode(CREATED.value());
-    }
-
-    public String login() {
-        return given()
-                .port(port)
-                .contentType(APPLICATION_JSON_VALUE)
-                .body(guestRequest())
-
-                .when()
-                .post("/api/login")
-
-                .then()
-                .statusCode(CREATED.value())
-                .assertThat().body("$", hasKey(ACCESS_TOKEN))
-                .extract()
-                .path(ACCESS_TOKEN);
+        token = login();
     }
 }
