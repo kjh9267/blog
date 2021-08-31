@@ -1,7 +1,7 @@
 package me.jun.guestbook.post;
 
 import me.jun.guestbook.common.error.ErrorResponse;
-import me.jun.guestbook.post.presentation.dto.PostResponse;
+import me.jun.guestbook.post.application.dto.PostResponse;
 import me.jun.guestbook.support.E2ETest;
 import org.junit.jupiter.api.Test;
 

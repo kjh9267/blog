@@ -1,4 +1,4 @@
-package me.jun.guestbook.utils;
+package me.jun.guestbook.support;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
