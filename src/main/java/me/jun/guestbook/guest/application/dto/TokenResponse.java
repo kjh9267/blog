@@ -1,4 +1,4 @@
-package me.jun.guestbook.guest.presentation.dto;
+package me.jun.guestbook.guest.application.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

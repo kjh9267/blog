@@ -3,9 +3,9 @@ package me.jun.guestbook.guest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.guest.domain.Guest;
-import me.jun.guestbook.guest.presentation.dto.GuestRequest;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
-import me.jun.guestbook.guest.presentation.dto.TokenResponse;
+import me.jun.guestbook.guest.application.dto.GuestRequest;
+import me.jun.guestbook.guest.application.dto.GuestResponse;
+import me.jun.guestbook.guest.application.dto.TokenResponse;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class GuestFixture {

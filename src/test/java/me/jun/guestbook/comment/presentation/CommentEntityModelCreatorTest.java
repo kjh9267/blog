@@ -1,6 +1,6 @@
 package me.jun.guestbook.comment.presentation;
 
-import me.jun.guestbook.comment.presentation.dto.CommentResponse;
+import me.jun.guestbook.comment.application.dto.CommentResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
