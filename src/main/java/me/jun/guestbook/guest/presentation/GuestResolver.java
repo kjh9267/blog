@@ -1,8 +1,8 @@
 package me.jun.guestbook.guest.presentation;
 
 import me.jun.guestbook.guest.application.GuestService;
-import me.jun.guestbook.post.application.PostWriterService;
-import me.jun.guestbook.post.presentation.PostWriter;
+import me.jun.guestbook.guest.application.dto.GuestInfo;
+import me.jun.guestbook.guest.application.dto.GuestResponse;
 import me.jun.guestbook.security.InvalidTokenException;
 import me.jun.guestbook.security.JwtProvider;
 import org.springframework.core.MethodParameter;
@@ -42,7 +42,8 @@ public class GuestResolver implements HandlerMethodArgumentResolver {
 
         provider.validateToken(token);
         String email = provider.extractSubject(token);
-        return guestService.retrieveGuestBy(email);
+        GuestResponse guestResponse = guestService.retrieveGuestBy(email);
+        return GuestInfo.from(guestResponse);
     }
 
     private Optional<String> extractToken(NativeWebRequest nativeWebRequest) {
