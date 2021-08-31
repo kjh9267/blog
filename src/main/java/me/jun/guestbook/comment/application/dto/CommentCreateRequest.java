@@ -1,4 +1,4 @@
-package me.jun.guestbook.comment.presentation.dto;
+package me.jun.guestbook.comment.application.dto;
 
 import lombok.*;
 import me.jun.guestbook.comment.domain.Comment;

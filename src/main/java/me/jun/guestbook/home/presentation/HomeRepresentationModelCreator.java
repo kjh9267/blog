@@ -6,7 +6,7 @@ import me.jun.guestbook.post.presentation.PostController;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
-import static me.jun.guestbook.utils.RelUtils.*;
+import static me.jun.guestbook.support.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component

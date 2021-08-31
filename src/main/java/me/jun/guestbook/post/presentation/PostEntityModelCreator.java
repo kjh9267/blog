@@ -2,8 +2,8 @@ package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.presentation.CommentController;
-import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
-import me.jun.guestbook.post.presentation.dto.PostResponse;
+import me.jun.guestbook.post.application.dto.PagedPostsResponse;
+import me.jun.guestbook.post.application.dto.PostResponse;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -11,7 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import static me.jun.guestbook.utils.RelUtils.*;
+import static me.jun.guestbook.support.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component

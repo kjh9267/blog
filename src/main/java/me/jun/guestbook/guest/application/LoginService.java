@@ -1,15 +1,12 @@
 package me.jun.guestbook.guest.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.guest.presentation.dto.GuestRequest;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
-import me.jun.guestbook.guest.presentation.dto.TokenResponse;
-import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
+import me.jun.guestbook.guest.application.dto.GuestRequest;
+import me.jun.guestbook.guest.application.dto.TokenResponse;
 import me.jun.guestbook.guest.application.exception.EmailNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
 import me.jun.guestbook.security.JwtProvider;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
