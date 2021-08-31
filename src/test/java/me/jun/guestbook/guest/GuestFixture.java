@@ -31,7 +31,7 @@ public abstract class GuestFixture {
 
     public static final String PASSWORD = "pass";
 
-    public static final String JWT = "1.2.3";
+    public static final String JWT = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckBlbWFpbC5jb20iLCJpYXQiOjE2Mjk4ODAxMzQsImV4cCI6MTYyOTg4MTkzNH0.k2TUffQCtLTaWJ71JMCU_052ekg32sOsO4tJw8726cQ";
 
     public static Guest guest() {
         return Guest.builder()
