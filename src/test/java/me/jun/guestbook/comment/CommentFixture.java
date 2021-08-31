@@ -4,10 +4,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.comment.domain.Comment;
 import me.jun.guestbook.comment.domain.CommentWriter;
-import me.jun.guestbook.comment.presentation.dto.CommentCreateRequest;
-import me.jun.guestbook.comment.presentation.dto.CommentResponse;
-import me.jun.guestbook.comment.presentation.dto.CommentUpdateRequest;
-import me.jun.guestbook.comment.presentation.dto.CommentWriterInfo;
+import me.jun.guestbook.comment.application.dto.CommentCreateRequest;
+import me.jun.guestbook.comment.application.dto.CommentResponse;
+import me.jun.guestbook.comment.application.dto.CommentUpdateRequest;
+import me.jun.guestbook.comment.application.dto.CommentWriterInfo;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class CommentFixture {

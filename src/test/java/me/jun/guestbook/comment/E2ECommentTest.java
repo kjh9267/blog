@@ -1,6 +1,6 @@
 package me.jun.guestbook.comment;
 
-import me.jun.guestbook.comment.presentation.dto.CommentResponse;
+import me.jun.guestbook.comment.application.dto.CommentResponse;
 import me.jun.guestbook.support.E2ETest;
 import org.junit.jupiter.api.Test;
 

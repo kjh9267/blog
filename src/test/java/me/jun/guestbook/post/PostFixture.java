@@ -4,10 +4,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.comment.domain.PostWriter;
 import me.jun.guestbook.post.domain.Post;
-import me.jun.guestbook.post.presentation.dto.PostCreateRequest;
-import me.jun.guestbook.post.presentation.dto.PostResponse;
-import me.jun.guestbook.post.presentation.dto.PostUpdateRequest;
-import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
+import me.jun.guestbook.post.application.dto.PostCreateRequest;
+import me.jun.guestbook.post.application.dto.PostResponse;
+import me.jun.guestbook.post.application.dto.PostUpdateRequest;
+import me.jun.guestbook.post.application.dto.PostWriterInfo;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class PostFixture {

@@ -2,9 +2,9 @@ package me.jun.guestbook.post.infra;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.guest.application.GuestService;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
+import me.jun.guestbook.guest.application.dto.GuestResponse;
 import me.jun.guestbook.post.application.PostWriterService;
-import me.jun.guestbook.post.presentation.dto.PostWriterInfo;
+import me.jun.guestbook.post.application.dto.PostWriterInfo;
 import org.springframework.stereotype.Service;
 
 @Service
