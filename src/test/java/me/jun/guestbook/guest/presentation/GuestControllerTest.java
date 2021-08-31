@@ -6,6 +6,7 @@ import me.jun.guestbook.guest.application.LoginService;
 import me.jun.guestbook.guest.application.RegisterService;
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.guest.application.dto.TokenResponse;
+import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class GuestControllerTest {
 
     @MockBean
     private GuestService guestService;
+
+    @MockBean
+    private JwtProvider jwtProvider;
 
     @Test
     public void registerTest() throws Exception {
@@ -99,6 +103,15 @@ public class GuestControllerTest {
 
     @Test
     void leaveTest() throws Exception {
+        given(jwtProvider.extractSubject(any()))
+                .willReturn(EMAIL);
+
+        doNothing().when(jwtProvider)
+                .validateToken(any());
+
+        given(guestService.retrieveGuestBy(any()))
+                .willReturn(guestResponse());
+
         doNothing().when(guestService)
                 .deleteGuest(any());
 
