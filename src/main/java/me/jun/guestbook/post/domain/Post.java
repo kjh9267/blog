@@ -1,7 +1,6 @@
 package me.jun.guestbook.post.domain;
 
 import lombok.*;
-import me.jun.guestbook.comment.domain.PostWriter;
 
 import javax.persistence.*;
 
@@ -24,6 +23,7 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
+    @Embedded
     private PostWriter postWriter;
 
     public void updatePost(String title, String content) {
