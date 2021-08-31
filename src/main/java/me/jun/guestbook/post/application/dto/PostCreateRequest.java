@@ -1,21 +1,15 @@
-package me.jun.guestbook.post.presentation.dto;
+package me.jun.guestbook.post.application.dto;
 
 import lombok.*;
 import me.jun.guestbook.post.domain.Post;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Builder
 @Getter
-public class PostUpdateRequest {
-
-    @NotNull
-    @Positive
-    private final Long id;
+public class PostCreateRequest {
 
     @NotBlank
     private final String title;
@@ -25,7 +19,6 @@ public class PostUpdateRequest {
 
     public Post toEntity() {
         return Post.builder()
-                .id(this.id)
                 .title(this.title)
                 .content(this.content)
                 .build();

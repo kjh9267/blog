@@ -1,4 +1,4 @@
-package me.jun.guestbook.guest.presentation.dto;
+package me.jun.guestbook.guest.application.dto;
 
 import lombok.*;
 

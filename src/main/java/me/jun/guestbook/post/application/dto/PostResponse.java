@@ -1,4 +1,4 @@
-package me.jun.guestbook.post.presentation.dto;
+package me.jun.guestbook.post.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
