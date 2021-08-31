@@ -1,7 +1,7 @@
-package me.jun.guestbook.post.presentation.dto;
+package me.jun.guestbook.post.application.dto;
 
 import lombok.*;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
+import me.jun.guestbook.guest.application.dto.GuestResponse;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
