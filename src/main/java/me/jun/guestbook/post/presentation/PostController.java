@@ -2,7 +2,7 @@ package me.jun.guestbook.post.presentation;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.post.application.PostService;
-import me.jun.guestbook.post.presentation.dto.*;
+import me.jun.guestbook.post.application.dto.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;

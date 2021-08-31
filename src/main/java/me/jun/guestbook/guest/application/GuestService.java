@@ -5,7 +5,7 @@ import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.guest.application.exception.GuestNotFoundException;
 import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
+import me.jun.guestbook.guest.application.dto.GuestResponse;
 import me.jun.guestbook.post.application.PostService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

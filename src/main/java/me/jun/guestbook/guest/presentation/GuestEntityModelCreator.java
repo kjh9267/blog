@@ -1,11 +1,11 @@
 package me.jun.guestbook.guest.presentation;
 
-import me.jun.guestbook.guest.presentation.dto.TokenResponse;
+import me.jun.guestbook.guest.application.dto.TokenResponse;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
-import static me.jun.guestbook.utils.RelUtils.*;
+import static me.jun.guestbook.support.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component

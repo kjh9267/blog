@@ -4,7 +4,7 @@ import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
 import me.jun.guestbook.post.domain.PostWriterMismatchException;
 import me.jun.guestbook.post.domain.PostRepository;
-import me.jun.guestbook.post.presentation.dto.PagedPostsResponse;
+import me.jun.guestbook.post.application.dto.PagedPostsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
