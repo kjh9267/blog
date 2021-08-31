@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.comment.application.CommentWriterService;
 import me.jun.guestbook.comment.domain.Comment;
-import me.jun.guestbook.comment.presentation.dto.PagedCommentsResponse;
+import me.jun.guestbook.comment.application.dto.PagedCommentsResponse;
 import me.jun.guestbook.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,7 @@
 package me.jun.guestbook.guest.application;
 
 import me.jun.guestbook.guest.application.exception.DuplicatedEmailException;
-import me.jun.guestbook.guest.domain.Guest;
 import me.jun.guestbook.guest.domain.GuestRepository;
-import me.jun.guestbook.guest.presentation.dto.GuestRequest;
-import me.jun.guestbook.guest.presentation.dto.GuestResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
