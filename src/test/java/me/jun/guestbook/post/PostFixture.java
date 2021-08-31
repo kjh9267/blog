@@ -79,6 +79,14 @@ public abstract class PostFixture {
         return PostResponse.of(post());
     }
 
+    public static PostResponse updatedPostResponse() {
+        return PostResponse.of(Post.builder()
+                .id(POST_ID)
+                .title(NEW_TITLE)
+                .content(NEW_CONTENT)
+                .build());
+    }
+
     public static PostWriterInfo postWriterInfo() {
         return PostWriterInfo.builder()
                 .id(WRITER_ID)
