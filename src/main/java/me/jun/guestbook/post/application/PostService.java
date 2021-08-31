@@ -49,9 +49,8 @@ public class PostService {
         String title = requestPost.getTitle();
         String content = requestPost.getContent();
         post.updatePost(title, content);
-        Post savedPost = postRepository.save(post);
 
-        return PostResponse.of(savedPost);
+        return PostResponse.of(post);
     }
 
     public Long deletePost(Long postId, Long writerId) {
