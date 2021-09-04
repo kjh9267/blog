@@ -1,4 +1,4 @@
-package me.jun.guestbook.comment.domain;
+package me.jun.guestbook.post.domain;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @Embeddable
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
 public class PostWriter {
 
     @Column(name = "writerId")
