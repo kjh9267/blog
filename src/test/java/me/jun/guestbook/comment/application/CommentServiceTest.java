@@ -138,11 +138,11 @@ class CommentServiceTest {
     @Test
     void deleteCommentByWriterIdTest() {
         doNothing().when(commentRepository)
-                .deleteByCommentWriter(any());
+                .deleteAllByCommentWriter(any());
 
         commentService.deleteCommentByWriterId(WRITER_ID);
 
-        verify(commentRepository).deleteByCommentWriter(commentWriter());
+        verify(commentRepository).deleteAllByCommentWriter(commentWriter());
     }
 
     @Test

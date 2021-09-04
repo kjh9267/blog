@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static me.jun.guestbook.comment.CommentFixture.*;
@@ -50,12 +51,18 @@ class CommentRepositoryTest {
     }
 
     @Test
-    void deleteCommentByWriterIdTest() {
+    @Rollback(value = false)
+    void deleteAllCommentByWriterIdTest() {
         commentRepository.save(comment());
+        commentRepository.save(comment().toBuilder().id(2L).build());
+        commentRepository.save(comment().toBuilder().id(3L).build());
 
-        commentRepository.deleteByCommentWriter(commentWriter());
+        commentRepository.deleteAllByCommentWriter(commentWriter());
 
-        assertThat(commentRepository.findById(COMMENT_ID))
-                .isEmpty();
+        assertAll(
+                () -> assertThat(commentRepository.findById(1L)).isEmpty(),
+                () -> assertThat(commentRepository.findById(2L)).isEmpty(),
+                () -> assertThat(commentRepository.findById(3L)).isEmpty()
+        );
     }
 }
