@@ -115,11 +115,11 @@ public class PostServiceTest {
     @Test
     void deletePostByWriterIdTest() {
         doNothing().when(postRepository)
-                .deleteByPostWriter(postWriter());
+                .deleteAllByPostWriter(postWriter());
 
         postService.deletePostByWriterId(WRITER_ID);
 
-        verify(postRepository).deleteByPostWriter(postWriter());
+        verify(postRepository).deleteAllByPostWriter(postWriter());
     }
 
     @Test
