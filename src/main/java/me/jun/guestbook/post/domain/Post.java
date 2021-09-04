@@ -1,12 +1,11 @@
 package me.jun.guestbook.post.domain;
 
 import lombok.*;
-import me.jun.guestbook.comment.domain.PostWriter;
 
 import javax.persistence.*;
 
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -24,6 +23,7 @@ public class Post {
     @Column(length = 300, nullable = false)
     private String content;
 
+    @Embedded
     private PostWriter postWriter;
 
     public void updatePost(String title, String content) {

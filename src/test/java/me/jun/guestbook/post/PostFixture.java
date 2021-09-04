@@ -2,7 +2,7 @@ package me.jun.guestbook.post;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.comment.domain.PostWriter;
+import me.jun.guestbook.post.domain.PostWriter;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.application.dto.PostCreateRequest;
 import me.jun.guestbook.post.application.dto.PostResponse;
