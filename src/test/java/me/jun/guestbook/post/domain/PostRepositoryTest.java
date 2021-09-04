@@ -32,7 +32,7 @@ public class PostRepositoryTest {
 
     @Test
     @Rollback(value = false)
-    void deleteByPostWriterTest() {
+    void deleteAllByPostWriterTest() {
         postRepository.save(post());
         postRepository.save(post().toBuilder().id(2L).build());
         postRepository.save(post().toBuilder().id(3L).build());
