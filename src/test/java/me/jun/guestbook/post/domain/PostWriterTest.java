@@ -1,6 +1,5 @@
 package me.jun.guestbook.post.domain;
 
-import me.jun.guestbook.comment.domain.PostWriter;
 import org.junit.jupiter.api.Test;
 
 import static me.jun.guestbook.post.PostFixture.postWriter;

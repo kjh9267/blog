@@ -2,14 +2,14 @@ package me.jun.guestbook.post.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.application.CommentService;
-import me.jun.guestbook.comment.domain.PostWriter;
-import me.jun.guestbook.post.application.exception.PostNotFoundException;
-import me.jun.guestbook.post.domain.Post;
-import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.post.application.dto.PagedPostsResponse;
 import me.jun.guestbook.post.application.dto.PostCreateRequest;
 import me.jun.guestbook.post.application.dto.PostResponse;
 import me.jun.guestbook.post.application.dto.PostUpdateRequest;
+import me.jun.guestbook.post.application.exception.PostNotFoundException;
+import me.jun.guestbook.post.domain.Post;
+import me.jun.guestbook.post.domain.PostRepository;
+import me.jun.guestbook.post.domain.PostWriter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -66,7 +66,7 @@ public class PostService {
 
     public void deletePostByWriterId(Long writerId) {
         PostWriter postWriter = new PostWriter(writerId);
-        postRepository.deleteByPostWriter(postWriter);
+        postRepository.deleteAllByPostWriter(postWriter);
     }
 
     public PagedPostsResponse queryPosts(PageRequest request) {
