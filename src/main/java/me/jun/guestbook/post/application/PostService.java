@@ -66,7 +66,7 @@ public class PostService {
 
     public void deletePostByWriterId(Long writerId) {
         PostWriter postWriter = new PostWriter(writerId);
-        postRepository.deleteByPostWriter(postWriter);
+        postRepository.deleteAllByPostWriter(postWriter);
     }
 
     public PagedPostsResponse queryPosts(PageRequest request) {
