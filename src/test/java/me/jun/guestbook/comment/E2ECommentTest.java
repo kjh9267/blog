@@ -1,7 +1,13 @@
 package me.jun.guestbook.comment;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import me.jun.guestbook.comment.application.dto.CommentResponse;
 import me.jun.guestbook.support.E2ETest;
+import org.apache.http.auth.AUTH;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -13,18 +19,57 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class E2ECommentTest extends E2ETest {
 
+    private Gson gson;
+
+    @BeforeEach
+    void setUp() {
+        gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+    }
+
     @Test
     void commentTest() {
         register();
         token = login();
 
-        createComment(token);
+        createComment(token, COMMENT_ID);
         retrieveComment();
         updateComment(token);
         deleteComment(token);
     }
 
-    private void createComment(String token) {
+    @Test
+    void commentQueryTest() {
+        register();
+        token = login();
+
+        for (long id = 1; id <= 30; id++) {
+            createComment(token, id);
+        }
+
+        String response = given()
+                .port(port)
+                .log().all()
+                .header(AUTHORIZATION, token)
+                .queryParam("page", 2)
+                .queryParam("size", 10)
+
+                .when()
+                .get("/api/comments/query/post-id/1")
+
+                .then()
+                .statusCode(OK.value())
+                .extract()
+                .asString();
+
+        JsonElement jsonElement = JsonParser.parseString(response);
+        response = gson.toJson(jsonElement);
+
+        System.out.println(response);
+    }
+
+    private void createComment(String token, Long commentId) {
         CommentResponse commentResponse = given()
                 .log().all()
                 .port(port)
@@ -41,7 +86,11 @@ public class E2ECommentTest extends E2ETest {
                 .as(CommentResponse.class);
 
         assertThat(commentResponse)
-                .isEqualToComparingFieldByField(CommentFixture.commentResponse());
+                .isEqualToComparingFieldByField(
+                        commentResponse().toBuilder()
+                                .id(commentId)
+                                .build()
+                );
     }
 
     private void retrieveComment() {
