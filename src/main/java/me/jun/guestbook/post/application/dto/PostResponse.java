@@ -12,7 +12,7 @@ import me.jun.guestbook.post.domain.Post;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostResponse {
