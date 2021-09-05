@@ -1,8 +1,13 @@
 package me.jun.guestbook.post;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import me.jun.guestbook.common.error.ErrorResponse;
 import me.jun.guestbook.post.application.dto.PostResponse;
 import me.jun.guestbook.support.E2ETest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -14,18 +19,58 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class E2EPostTest extends E2ETest {
 
+    private Gson gson;
+
+    @BeforeEach
+    void setUp() {
+        gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+    }
+
     @Test
-    void postTest() {
+    void postCRUDTest() {
         register();
         token = login();
 
-        createPost(token);
+        createPost(token, POST_ID);
         retrievePost(token);
         updatePost(token);
         deletePost(token);
     }
 
-    public void createPost(String token) {
+    @Test
+    void postQueryTest() {
+        register();
+        token = login();
+
+        for (long id = 1; id <= 30; id++) {
+            createPost(token, id);
+        }
+
+        String response = given()
+                .log().all()
+                .port(port)
+                .header(AUTHORIZATION, this.token)
+                .contentType(APPLICATION_JSON_VALUE)
+                .queryParam("page", 2 )
+                .queryParam("size", 10)
+
+                .when()
+                .get("api/posts/query")
+
+                .then()
+                .statusCode(OK.value())
+                .extract()
+                .asString();
+
+        JsonElement jsonElement = JsonParser.parseString(response);
+        response = gson.toJson(jsonElement);
+
+        System.out.println(response);
+    }
+
+    public void createPost(String token, Long postId) {
         PostResponse postResponse = given()
                 .log().all()
                 .port(port)
@@ -41,7 +86,12 @@ public class E2EPostTest extends E2ETest {
                 .extract()
                 .as(PostResponse.class);
 
-        assertThat(postResponse).isEqualToComparingFieldByField(postResponse());
+        assertThat(postResponse)
+                .isEqualToComparingFieldByField(
+                        postResponse().toBuilder()
+                                .id(postId)
+                                .build()
+                );
     }
 
     private void retrievePost(String token) {
