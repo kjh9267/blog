@@ -5,9 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static me.jun.guestbook.post.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +48,20 @@ public class PostRepositoryTest {
                 () -> assertThat(postRepository.findById(1L)).isEmpty(),
                 () -> assertThat(postRepository.findById(2L)).isEmpty(),
                 () -> assertThat(postRepository.findById(3L)).isEmpty()
+        );
+    }
+
+    @Test
+    void findAllTest() {
+        postRepository.save(post());
+        postRepository.save(post().toBuilder().id(2L).build());
+        postRepository.save(post().toBuilder().id(3L).build());
+
+        Page<Post> posts = postRepository.findAll(pageRequest());
+
+        assertAll(
+                () -> assertThat(posts.getTotalElements()).isEqualTo(3),
+                () -> assertThat(posts.getTotalPages()).isEqualTo(2)
         );
     }
 }
