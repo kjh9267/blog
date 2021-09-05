@@ -8,6 +8,7 @@ import me.jun.guestbook.post.application.dto.PostCreateRequest;
 import me.jun.guestbook.post.application.dto.PostResponse;
 import me.jun.guestbook.post.application.dto.PostUpdateRequest;
 import me.jun.guestbook.post.application.dto.PostWriterInfo;
+import org.springframework.data.domain.PageRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class PostFixture {
@@ -93,5 +94,9 @@ public abstract class PostFixture {
                 .name(WRITER_NAME)
                 .email(EMAIL)
                 .build();
+    }
+
+    public static PageRequest pageRequest() {
+        return PageRequest.of(1, 2);
     }
 }
