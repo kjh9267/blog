@@ -24,7 +24,7 @@ class PostEntityModelCreatorTest {
     void createEntityModelTest() {
         resource = postResponse();
 
-        EntityModel<PostResponse> entityModel = creator.createRepresentationModel(resource);
+        EntityModel<PostResponse> entityModel = creator.createEntityModel(resource);
 
         assertAll(
                 () -> assertThat(entityModel)
@@ -36,7 +36,7 @@ class PostEntityModelCreatorTest {
 
     @Test
     void creatRepresentationModelTest() {
-        RepresentationModel representationModel = creator.createRepresentationModel();
+        RepresentationModel representationModel = creator.createHyperlinks();
 
         assertThat(representationModel)
                 .isInstanceOf(RepresentationModel.class);
