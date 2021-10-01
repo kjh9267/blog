@@ -63,7 +63,7 @@ public class CommentController {
                   @CommentWriter CommentWriterInfo writerInfo) {
         commentService.deleteComment(commentId, writerInfo.getId());
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel());
+                .body(entityModelCreator.createHyperlinks());
     }
 
     @GetMapping("/query/post-id/{postId}")

@@ -64,7 +64,8 @@ public class GuestControllerTest {
                     .accept(HAL_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-        .andExpect(jsonPath(LINKS_SELF_HREF).value(REGISTER_SELF_URI))
+        .andExpect(jsonPath(LINKS_REGISTER_HREF).value(REGISTER_SELF_URI))
+        .andExpect(jsonPath(LINKS_REGISTER_HREF).value(REGISTER_SELF_URI))
         .andExpect(jsonPath(LINKS_LOGIN_HREF).value(LOGIN_SELF_URI));
     }
 
@@ -120,7 +121,8 @@ public class GuestControllerTest {
                 .header(AUTHORIZATION, JWT))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(LEAVE_SELF_URI))
+                .andExpect(jsonPath(LINKS_LEAVE_HREF).value(LEAVE_SELF_URI))
+                .andExpect(jsonPath(LINKS_LOGIN_HREF).value(LOGIN_SELF_URI))
                 .andExpect(jsonPath(LINKS_REGISTER_HREF).value(REGISTER_SELF_URI));
     }
 }

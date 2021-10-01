@@ -17,7 +17,7 @@ public class HomeController {
     @GetMapping
     public ResponseEntity<RepresentationModel> home() {
         return ResponseEntity.ok(
-                homeRepresentationModelCreator.createRepresentationModel()
+                homeRepresentationModelCreator.createHyperlinks()
         );
     }
 }
