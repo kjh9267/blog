@@ -3,6 +3,9 @@ package me.jun.guestbook.comment.presentation;
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.comment.application.dto.CommentResponse;
 import me.jun.guestbook.comment.application.dto.PagedCommentsResponse;
+import me.jun.guestbook.hateoas.CollectionModelCreator;
+import me.jun.guestbook.hateoas.EntityModelCreator;
+import me.jun.guestbook.hateoas.HyperlinksCreator;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -16,10 +19,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
 @RequiredArgsConstructor
-public class CommentEntityModelCreator {
+public class CommentEntityModelCreator implements EntityModelCreator<CommentResponse>, HyperlinksCreator, CollectionModelCreator<PagedCommentsResponse, CommentResponse> {
 
     private final Class<CommentController> commentController = CommentController.class;
 
+    @Override
     public EntityModel<CommentResponse> createEntityModel(CommentResponse resource) {
         EntityModel<CommentResponse> entityModel = EntityModel.of(resource);
         WebMvcLinkBuilder controllerLink = linkTo(commentController);
@@ -34,13 +38,15 @@ public class CommentEntityModelCreator {
                 .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
     }
 
-    public RepresentationModel createRepresentationModel() {
+    @Override
+    public RepresentationModel createHyperlinks() {
         return new RepresentationModel<>()
                 .add(linkTo(commentController).withSelfRel())
                 .add(linkTo(commentController).withRel(CREATE_COMMENT))
                 .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST));
     }
 
+    @Override
     public CollectionModel<EntityModel<CommentResponse>> createCollectionModel(PagedCommentsResponse response) {
         return PagedModel.of(response.getCommentResponses().map(EntityModel::of))
                 .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withSelfRel())
