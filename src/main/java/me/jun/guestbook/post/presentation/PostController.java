@@ -33,7 +33,7 @@ public class PostController {
         URI selfUri = createSelfUri(postResponse);
 
         return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createRepresentationModel(postResponse));
+                .body(entityModelCreator.createEntityModel(postResponse));
     }
 
     @GetMapping("/{postId}")
@@ -41,7 +41,7 @@ public class PostController {
         PostResponse postResponse = postService.readPost(postId);
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel(postResponse));
+                .body(entityModelCreator.createEntityModel(postResponse));
     }
 
     @PutMapping
@@ -51,7 +51,7 @@ public class PostController {
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel(postResponse));
+                .body(entityModelCreator.createEntityModel(postResponse));
     }
 
     @DeleteMapping("/{postId}")
@@ -61,7 +61,7 @@ public class PostController {
         postService.deletePost(postId, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createRepresentationModel());
+                .body(entityModelCreator.createHyperlinks());
     }
 
     @GetMapping("/query")
