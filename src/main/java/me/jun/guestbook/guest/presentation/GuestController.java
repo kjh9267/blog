@@ -35,7 +35,7 @@ public class GuestController {
         URI selfUri = createSelfUri();
 
         return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createRegisterRepresentationModel());
+                .body(entityModelCreator.createHyperlinks());
     }
 
     @PostMapping("/login")
@@ -44,14 +44,14 @@ public class GuestController {
         URI selfUri = createSelfUri();
 
         return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createLoginEntityModel(tokenResponse));
+                .body(entityModelCreator.createEntityModel(tokenResponse));
     }
 
     @DeleteMapping("/leave")
     public ResponseEntity<RepresentationModel> leave(@Guest GuestInfo guestInfo) {
         guestService.deleteGuest(guestInfo.getId());
         return ResponseEntity.ok()
-                .body(entityModelCreator.createLeaveRepresentationModel());
+                .body(entityModelCreator.createHyperlinks());
     }
 
     private URI createSelfUri() {
