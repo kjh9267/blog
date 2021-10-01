@@ -40,7 +40,7 @@ class CommentEntityModelCreatorTest {
 
     @Test
     void creatRepresentationModelTest() {
-        RepresentationModel representationModel = creator.createRepresentationModel();
+        RepresentationModel representationModel = creator.createHyperlinks();
 
         assertThat(representationModel)
                 .isInstanceOf(RepresentationModel.class);
