@@ -2,6 +2,7 @@ package me.jun.guestbook.home.presentation;
 
 import me.jun.guestbook.comment.presentation.CommentController;
 import me.jun.guestbook.guest.presentation.GuestController;
+import me.jun.guestbook.hateoas.HyperlinksCreator;
 import me.jun.guestbook.post.presentation.PostController;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import static me.jun.guestbook.support.RelUtils.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
-public class HomeRepresentationModelCreator {
+public class HomeRepresentationModelCreator implements HyperlinksCreator {
 
     private final Class<PostController> postController = PostController.class;
 
@@ -18,7 +19,8 @@ public class HomeRepresentationModelCreator {
 
     private final Class<GuestController> guestController = GuestController.class;
 
-    public RepresentationModel createRepresentationModel() {
+    @Override
+    public RepresentationModel createHyperlinks() {
         return new RepresentationModel()
                 .add(linkTo(postController).slash(QUERY).withRel(QUERY_POSTS))
                 .add(linkTo(commentController).slash(QUERY).slash(POST_ID).withRel(QUERY_COMMENTS_BY_POST))
