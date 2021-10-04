@@ -2,9 +2,7 @@ package me.jun.guestbook.config;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.guest.presentation.GuestResolver;
-import me.jun.guestbook.post.presentation.CommentWriterResolver;
-import me.jun.guestbook.post.presentation.PostWriterResolver;
-import org.slf4j.LoggerFactory;
+import me.jun.guestbook.support.WriterResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -16,9 +14,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer {
 
-    private final PostWriterResolver postWriterResolver;
+    private final WriterResolver postWriterResolver;
 
-    private final CommentWriterResolver commentWriterResolver;
+    private final WriterResolver commentWriterResolver;
 
     private final GuestResolver guestResolver;
 
