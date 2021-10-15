@@ -3,6 +3,8 @@ package me.jun.guestbook.post.application;
 import me.jun.guestbook.comment.application.CommentService;
 import me.jun.guestbook.post.application.dto.PagedPostsResponse;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
+import me.jun.guestbook.post.domain.Hits;
+import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.post.domain.PostWriterMismatchException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static me.jun.guestbook.post.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +58,10 @@ public class PostServiceTest {
     @Test
     void readPostTest() {
         given(postRepository.findById(any()))
-                .willReturn(Optional.of(post()));
+                .willReturn(Optional.of(post()
+                        .toBuilder()
+                        .hits(new Hits(0L))
+                        .build()));
 
         assertThat(postService.readPost(POST_ID))
                 .isEqualToComparingFieldByField(postResponse());
