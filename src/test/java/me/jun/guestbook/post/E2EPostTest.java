@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import me.jun.guestbook.common.error.ErrorResponse;
 import me.jun.guestbook.post.application.dto.PostResponse;
+import me.jun.guestbook.post.domain.Hits;
 import me.jun.guestbook.support.E2ETest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,6 +91,7 @@ public class E2EPostTest extends E2ETest {
                 .isEqualToComparingFieldByField(
                         postResponse().toBuilder()
                                 .id(postId)
+                                .hits(0L)
                                 .build()
                 );
     }
