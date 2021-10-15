@@ -7,6 +7,7 @@ import me.jun.guestbook.post.application.dto.PostCreateRequest;
 import me.jun.guestbook.post.application.dto.PostResponse;
 import me.jun.guestbook.post.application.dto.PostUpdateRequest;
 import me.jun.guestbook.post.application.exception.PostNotFoundException;
+import me.jun.guestbook.post.domain.Hits;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.domain.PostRepository;
 import me.jun.guestbook.post.domain.PostWriter;
@@ -27,14 +28,16 @@ public class PostService {
     public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
         post.setPostWriter(new PostWriter(writerId));
+        post.setHits(new Hits(0L));
         Post savedPost = postRepository.save(post);
         return PostResponse.of(savedPost);
     }
 
-    @Transactional(readOnly = true)
     public PostResponse readPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+
+        post.updateHits();
 
         return PostResponse.of(post);
     }
