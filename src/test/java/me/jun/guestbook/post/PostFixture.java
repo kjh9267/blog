@@ -2,6 +2,7 @@ package me.jun.guestbook.post;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jun.guestbook.post.domain.Hits;
 import me.jun.guestbook.post.domain.PostWriter;
 import me.jun.guestbook.post.domain.Post;
 import me.jun.guestbook.post.application.dto.PostCreateRequest;
@@ -52,12 +53,17 @@ public abstract class PostFixture {
         return new PostWriter(WRITER_ID);
     }
 
+    public static Hits hits() {
+        return new Hits(1L);
+    }
+
     public static Post post() {
         return Post.builder()
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
                 .postWriter(postWriter())
+                .hits(hits())
                 .build();
     }
 
@@ -85,6 +91,7 @@ public abstract class PostFixture {
                 .id(POST_ID)
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
+                .hits(hits())
                 .build());
     }
 
