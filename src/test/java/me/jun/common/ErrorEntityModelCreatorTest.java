@@ -25,7 +25,7 @@ class ErrorEntityModelCreatorTest {
 
     @Test
     void createErrorEntityModelTest() {
-        resource = ErrorResponse.from(ErrorCode.GUEST_ALREADY_EXIST);
+        resource = ErrorResponse.from(ErrorCode.MEMBER_ALREADY_EXIST);
 
         EntityModel<ErrorResponse> errorEntityModel = creator.createErrorEntityModel(resource);
 
