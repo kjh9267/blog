@@ -1,7 +1,7 @@
 package me.jun.common.config;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guest.presentation.GuestResolver;
+import me.jun.member.presentation.MemberResolver;
 import me.jun.support.WriterResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -18,13 +18,13 @@ public class MvcConfig implements WebMvcConfigurer {
 
     private final WriterResolver commentWriterResolver;
 
-    private final GuestResolver guestResolver;
+    private final MemberResolver memberResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(postWriterResolver);
         resolvers.add(commentWriterResolver);
-        resolvers.add(guestResolver);
+        resolvers.add(memberResolver);
     }
 
     @Override

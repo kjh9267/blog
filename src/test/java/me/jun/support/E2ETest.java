@@ -5,8 +5,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
-import static me.jun.guest.GuestFixture.ACCESS_TOKEN;
-import static me.jun.guest.GuestFixture.guestRequest;
+import static me.jun.member.MemberFixture.ACCESS_TOKEN;
+import static me.jun.member.MemberFixture.memberRequest;
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -24,7 +24,7 @@ public abstract class E2ETest {
         given()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body(guestRequest())
+                .body(memberRequest())
 
                 .when()
                 .post("/api/register")
@@ -37,7 +37,7 @@ public abstract class E2ETest {
         return given()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body(guestRequest())
+                .body(memberRequest())
 
                 .when()
                 .post("/api/login")

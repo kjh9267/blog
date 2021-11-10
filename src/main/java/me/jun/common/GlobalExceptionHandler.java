@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.application.exception.CommentNotFoundException;
 import me.jun.common.error.ErrorCode;
 import me.jun.common.error.ErrorResponse;
-import me.jun.guest.application.exception.DuplicatedEmailException;
+import me.jun.member.application.exception.DuplicatedEmailException;
 import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
 import me.jun.common.security.InvalidTokenException;
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PostWriterMismatchException.class)
     public ResponseEntity<EntityModel<ErrorResponse>>
     writerMismatchExceptionHandler(PostWriterMismatchException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_MISMATCH);
+        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.MEMBER_MISMATCH);
         return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
                 HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedEmailException.class)
     public ResponseEntity<EntityModel<ErrorResponse>>
     DuplicatedEmailExceptionHandler(DuplicatedEmailException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.GUEST_ALREADY_EXIST);
+        ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.MEMBER_ALREADY_EXIST);
         return new ResponseEntity<>(errorEntityModelCreator.createErrorEntityModel(errorResponse),
                 HttpStatus.valueOf(errorResponse.getStatusCode()));
     }
