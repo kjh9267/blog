@@ -1,7 +1,7 @@
 package me.jun.guestbook.application.dto;
 
 import lombok.*;
-import me.jun.guest.application.dto.GuestResponse;
+import me.jun.member.application.dto.MemberResponse;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,11 +15,11 @@ public class CommentWriterInfo {
 
     private String email;
 
-    public static CommentWriterInfo from(GuestResponse guestResponse) {
+    public static CommentWriterInfo from(MemberResponse memberResponse) {
         return CommentWriterInfo.builder()
-                .id(guestResponse.getId())
-                .name(guestResponse.getName())
-                .email(guestResponse.getEmail())
+                .id(memberResponse.getId())
+                .name(memberResponse.getName())
+                .email(memberResponse.getEmail())
                 .build();
     }
 }

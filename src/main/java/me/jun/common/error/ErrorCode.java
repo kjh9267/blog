@@ -7,9 +7,9 @@ public enum ErrorCode {
 
     EMPTY_VALUE(400, "Invalid input"),
     POST_NOT_FOUND(404, "No post"),
-    GUEST_MISMATCH(403, "Guest Mismatch"),
+    MEMBER_MISMATCH(403, "Member Mismatch"),
     UNAUTHORIZED(401, "Invalid token"),
-    GUEST_ALREADY_EXIST(409, "Email already exist"),
+    MEMBER_ALREADY_EXIST(409, "Email already exist"),
     COMMENT_NOT_FOUND(404, "No comment");
 
     private final int statusCode;

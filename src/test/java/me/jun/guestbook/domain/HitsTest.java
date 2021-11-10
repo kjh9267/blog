@@ -31,7 +31,7 @@ class HitsTest {
     }
 
     @Test
-    void ConcurrentUpdateTest() throws InterruptedException {
+    void concurrentUpdateTest() throws InterruptedException {
         final Hits[] hits = {hits()};
 
         ExecutorService executorService = Executors.newCachedThreadPool();

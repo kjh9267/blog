@@ -185,7 +185,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void guestMisMatch_updatePostFailTest() throws Exception {
+    void memberMisMatch_updatePostFailTest() throws Exception {
         PostUpdateRequest request = PostUpdateRequest.builder()
                 .id(1L)
                 .title("new title")
@@ -257,7 +257,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void guestMisMatch_deletePostFailTest() throws Exception {
+    void memberMisMatch_deletePostFailTest() throws Exception {
         doThrow(PostWriterMismatchException.class)
                 .when(postService)
                 .deletePost(any(), any());
