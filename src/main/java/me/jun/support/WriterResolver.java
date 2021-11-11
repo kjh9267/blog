@@ -1,5 +1,6 @@
 package me.jun.support;
 
+import lombok.extern.slf4j.Slf4j;
 import me.jun.common.security.InvalidTokenException;
 import me.jun.common.security.JwtProvider;
 import org.springframework.core.MethodParameter;
@@ -9,8 +10,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Iterator;
 import java.util.Optional;
 
+@Slf4j
 public abstract class WriterResolver implements HandlerMethodArgumentResolver {
 
     private final JwtProvider provider;
@@ -24,6 +27,11 @@ public abstract class WriterResolver implements HandlerMethodArgumentResolver {
                                   ModelAndViewContainer modelAndViewContainer,
                                   NativeWebRequest nativeWebRequest,
                                   WebDataBinderFactory webDataBinderFactory) {
+
+        Iterator<String> headerNames = nativeWebRequest.getHeaderNames();
+        while (headerNames.hasNext()) {
+            log.info(headerNames.next());
+        }
 
         String token = extractToken(nativeWebRequest)
                 .orElseThrow(() -> new InvalidTokenException("No token"));
