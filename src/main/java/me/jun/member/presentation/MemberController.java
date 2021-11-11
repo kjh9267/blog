@@ -12,6 +12,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -30,7 +31,7 @@ public class MemberController {
     private final MemberEntityModelCreator entityModelCreator;
 
     @PostMapping("/register")
-    public ResponseEntity<RepresentationModel> register(@RequestBody MemberRequest requestDto) {
+    public ResponseEntity<RepresentationModel> register(@RequestBody @Valid MemberRequest requestDto) {
         registerService.register(requestDto);
         URI selfUri = createSelfUri();
 
@@ -39,7 +40,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<EntityModel<TokenResponse>> login(@RequestBody MemberRequest requestDto) {
+    public ResponseEntity<EntityModel<TokenResponse>> login(@RequestBody @Valid MemberRequest requestDto) {
         TokenResponse tokenResponse = loginService.login(requestDto);
         URI selfUri = createSelfUri();
 
