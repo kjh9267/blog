@@ -38,7 +38,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<EntityModel<PostResponse>> readPost(@PathVariable Long postId) {
+    public ResponseEntity<EntityModel<PostResponse>> retrievePost(@PathVariable Long postId) {
         PostResponse postResponse = postService.readPost(postId);
 
         return ResponseEntity.ok()

@@ -86,7 +86,7 @@ public class CommentControllerTest {
     }
 
     @Test
-    void readCommentTest() throws Exception {
+    void retrieveCommentTest() throws Exception {
         given(commentService.retrieveComment(any()))
                 .willReturn(commentResponse());
 
