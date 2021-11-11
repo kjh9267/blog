@@ -2,6 +2,10 @@ package me.jun.guestbook.application.dto;
 
 import lombok.*;
 import me.jun.guestbook.domain.Comment;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -9,8 +13,10 @@ import me.jun.guestbook.domain.Comment;
 @Getter
 public class CommentCreateRequest {
 
+    @NotNull
     private Long postId;
 
+    @NotBlank
     private String content;
 
     public Comment toEntity() {
