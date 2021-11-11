@@ -3,30 +3,27 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
 function App() {
-  // axios.defaults.withCredentials = true;
 
   let [cookies, setCookie] = useCookies(['access_token']);
 
   return (
     <div className="App">
       <button onClick={() => {
-        // axios.defaults.withCredentials = true;
         axios.get("http://localhost:8080/api/posts/query?page=0&size=10")
-        .then((error) => console.log(error));
+        .then((response) => console.log(response.data));
       }}>
-      getlist
+      get posts list
       </button>
 
       <div>
       <button onClick={() => {
-        // axios.defaults.withCredentials = true;
         axios.post("http://localhost:8080/api/register",
           {'email': 'testuser@email.com',
           'name': 'testuser',
           'password': 'pass'
         }
         )
-        .then((error) => console.log(error));
+        .then((response) => console.log(response.data));
       }}>
       register
       </button>
@@ -40,16 +37,97 @@ function App() {
           'password': 'pass'
         })
         .then((response) => {
-          if(response.status === 200) {
+          console.log(response.status);
+          if(response.status === 201) {
             setCookie('access_token', response.data['access_token']);
           }
-          console.log(cookies);
           console.log(response.data['access_token']);
+          console.log(cookies);
         });
       }}>
       login
       </button>
       </div>
+
+      <div>
+      <button onClick={() => {
+        console.log(cookies['access_token']);
+        axios.post("http://localhost:8080/api/posts",
+          {'title': 'test title',
+          'content': 'test content'
+        },
+        {headers: {'Authorization': cookies['access_token']}}
+        )
+        .then((response) => console.log(response.data));
+      }}>
+      create post
+      </button>
+      </div>
+
+      <div>
+      <button onClick={() => {
+        console.log(cookies['access_token']);
+        axios.get("http://localhost:8080/api/posts/1",
+        )
+        .then((response) => console.log(response.data));
+      }}>
+      get post
+      </button>
+      </div>
+
+      <div>
+      <button onClick={() => {
+        console.log(cookies['access_token']);
+        axios.put("http://localhost:8080/api/posts",
+          {'id': 1,
+            'title': 'new title',
+            'content': 'new content'
+        },
+        {headers: {'Authorization': cookies['access_token']}}
+        )
+        .then((response) => console.log(response.data));
+      }}>
+      update post
+      </button>
+      </div>
+
+      <div>
+      <button onClick={() => {
+        console.log(cookies['access_token']);
+        axios.delete("http://localhost:8080/api/posts/1",
+        {headers: {'Authorization': cookies['access_token']}}
+        )
+        .then((response) => console.log(response.data));
+      }}>
+      delete post
+      </button>
+      </div>
+
+      <div>
+      <button onClick={() => {
+        axios.get("http://localhost:8080/api/comments/query/post-id/1?page=0&size=10",
+        )
+        .then((response) => console.log(response.data));
+      }}>
+      get comments list
+      </button>
+      </div>
+
+      <div>
+      <button onClick={() => {
+        console.log(cookies['access_token']);
+        axios.post("http://localhost:8080/api/comments",
+          {'postId': 1,
+            'content': 'test content'
+        },
+        {headers: {'Authorization': cookies['access_token']}}
+        )
+        .then((response) => console.log(response.data));
+      }}>
+      create comment
+      </button>
+      </div>
+
     </div>
   );
 }
