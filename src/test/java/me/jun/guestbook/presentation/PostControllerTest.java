@@ -113,7 +113,7 @@ public class PostControllerTest {
     }
 
     @Test
-    public void readPostTest() throws Exception {
+    public void retrievePostTest() throws Exception {
         given(postService.readPost(any()))
                 .willReturn(postResponse());
 
@@ -133,7 +133,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void readNoPostFailTest() throws Exception {
+    void retrieveNoPostFailTest() throws Exception {
         given(postService.readPost(any()))
                 .willThrow(new PostNotFoundException());
 

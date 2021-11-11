@@ -29,7 +29,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<EntityModel<CommentResponse>>
-    createComment(@RequestBody CommentCreateRequest request,
+    createComment(@RequestBody @Valid CommentCreateRequest request,
                   @CommentWriter CommentWriterInfo writer) {
         CommentResponse commentResponse = commentService.createComment(request, writer.getId());
 
@@ -41,7 +41,7 @@ public class CommentController {
 
     @GetMapping("/{commentId}")
     public ResponseEntity<EntityModel<CommentResponse>>
-        readComment(@PathVariable @Valid Long commentId) {
+    retrieveComment(@PathVariable @Valid Long commentId) {
         CommentResponse commentResponse = commentService.retrieveComment(commentId);
 
         return ResponseEntity.ok()
@@ -50,7 +50,7 @@ public class CommentController {
 
     @PutMapping
     public ResponseEntity<EntityModel<CommentResponse>>
-        updateComment(@RequestBody CommentUpdateRequest request,
+        updateComment(@RequestBody @Valid CommentUpdateRequest request,
                       @CommentWriter CommentWriterInfo writerInfo) {
         CommentResponse commentResponse = commentService.updateComment(request, writerInfo.getId());
 
