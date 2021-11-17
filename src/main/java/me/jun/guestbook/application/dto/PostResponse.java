@@ -23,14 +23,11 @@ public class PostResponse {
 
     private final String content;
 
-    private final long hits;
-
     public static PostResponse of(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .hits(post.getHits().getValue())
                 .build();
     }
 }
