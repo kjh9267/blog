@@ -21,6 +21,9 @@ public class PostCount {
     @Column
     private Long postId;
 
+    @Version
+    private Long version;
+
     public void updateHits() {
         this.hits = hits.update();
     }
