@@ -33,7 +33,6 @@ public class PostTest {
                 .title(TITLE)
                 .content(CONTENT)
                 .postWriter(new PostWriter(WRITER_ID))
-                .hits(hits())
                 .build();
 
         assertAll(() -> assertThat(expected).isEqualToComparingFieldByField(post()),
@@ -51,14 +50,5 @@ public class PostTest {
         assertThrows(PostWriterMismatchException.class,
                 () -> post.validateWriter(2L)
         );
-    }
-
-    @Test
-    void updateHitsTest() {
-        Post post = post();
-
-        post.updateHits();
-
-        assertThat(post.getHits().getValue()).isEqualTo(2L);
     }
 }

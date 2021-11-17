@@ -2,13 +2,12 @@ package me.jun.guestbook;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.jun.guestbook.domain.Hits;
-import me.jun.guestbook.domain.PostWriter;
-import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.guestbook.application.dto.PostWriterInfo;
+import me.jun.guestbook.domain.Post;
+import me.jun.guestbook.domain.PostWriter;
 import org.springframework.data.domain.PageRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -53,9 +52,6 @@ public abstract class PostFixture {
         return new PostWriter(WRITER_ID);
     }
 
-    public static Hits hits() {
-        return new Hits(1L);
-    }
 
     public static Post post() {
         return Post.builder()
@@ -63,7 +59,6 @@ public abstract class PostFixture {
                 .title(TITLE)
                 .content(CONTENT)
                 .postWriter(postWriter())
-                .hits(hits())
                 .build();
     }
 
@@ -91,7 +86,6 @@ public abstract class PostFixture {
                 .id(POST_ID)
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
-                .hits(hits())
                 .build());
     }
 
