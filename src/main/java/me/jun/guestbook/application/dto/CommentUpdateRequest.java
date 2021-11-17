@@ -15,7 +15,7 @@ public class CommentUpdateRequest {
     @NotNull
     private Long id;
 
-    @NotBlank
+    @NotNull
     private Long postId;
 
     @NotBlank
