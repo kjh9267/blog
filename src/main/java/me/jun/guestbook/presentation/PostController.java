@@ -39,7 +39,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<EntityModel<PostResponse>> retrievePost(@PathVariable Long postId) {
-        PostResponse postResponse = postService.readPost(postId);
+        PostResponse postResponse = postService.retrievePost(postId);
 
         return ResponseEntity.ok()
                 .body(entityModelCreator.createEntityModel(postResponse));

@@ -114,7 +114,7 @@ public class PostControllerTest {
 
     @Test
     public void retrievePostTest() throws Exception {
-        given(postService.readPost(any()))
+        given(postService.retrievePost(any()))
                 .willReturn(postResponse());
 
         mockMvc.perform(get("/api/posts/1")
@@ -134,7 +134,7 @@ public class PostControllerTest {
 
     @Test
     void retrieveNoPostFailTest() throws Exception {
-        given(postService.readPost(any()))
+        given(postService.retrievePost(any()))
                 .willThrow(new PostNotFoundException());
 
         mockMvc.perform(get("/api/posts/1"))

@@ -90,7 +90,6 @@ public class E2EPostTest extends E2ETest {
                 .isEqualToComparingFieldByField(
                         postResponse().toBuilder()
                                 .id(postId)
-                                .hits(0L)
                                 .build()
                 );
     }
