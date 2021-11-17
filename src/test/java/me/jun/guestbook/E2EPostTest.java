@@ -29,7 +29,7 @@ public class E2EPostTest extends E2ETest {
     }
 
     @Test
-    void postCRUDTest() {
+    void postTest() {
         register();
         token = login();
 
