@@ -5,6 +5,7 @@ import me.jun.guestbook.application.exception.PostCountNotFoundException;
 import me.jun.guestbook.domain.Hits;
 import me.jun.guestbook.domain.PostCount;
 import me.jun.guestbook.domain.repository.PostCountRepository;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class PostCountService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Retryable(maxAttempts = Integer.MAX_VALUE)
     public Long updateHits(Long postId) {
         PostCount postCount = postCountRepository.findByPostId(postId)
                 .orElseThrow(() -> new PostCountNotFoundException("post count not found"));
