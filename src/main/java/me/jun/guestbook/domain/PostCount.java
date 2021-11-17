@@ -18,6 +18,9 @@ public class PostCount {
     @Embedded
     private Hits hits;
 
+    @Column
+    private Long postId;
+
     public void updateHits() {
         this.hits = hits.update();
     }

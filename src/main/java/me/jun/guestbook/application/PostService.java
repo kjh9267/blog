@@ -27,10 +27,14 @@ public class PostService {
 
     public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
+
         post.setPostWriter(new PostWriter(writerId));
-//        post.setHits(new Hits(0L));
-        Post savedPost = postRepository.save(post);
-        return PostResponse.of(savedPost);
+        post = postRepository.save(post);
+
+        Long postId = post.getId();
+        postCountService.createPostCount(postId);
+
+        return PostResponse.of(post);
     }
 
     public PostResponse retrievePost(Long postId) {
