@@ -6,6 +6,7 @@ import me.jun.guestbook.domain.Hits;
 import me.jun.guestbook.domain.PostCount;
 import me.jun.guestbook.domain.repository.PostCountRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -25,6 +26,7 @@ public class PostCountService {
         return postCount;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long updateHits(Long postId) {
         PostCount postCount = postCountRepository.findByPostId(postId)
                 .orElseThrow(() -> new PostCountNotFoundException("post count not found"));

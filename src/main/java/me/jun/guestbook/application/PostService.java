@@ -37,6 +37,7 @@ public class PostService {
         return PostResponse.of(post);
     }
 
+    @Transactional(readOnly = true)
     public PostResponse retrievePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
