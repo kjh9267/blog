@@ -6,10 +6,9 @@ import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.guestbook.application.exception.PostNotFoundException;
-import me.jun.guestbook.domain.Hits;
 import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.domain.repository.PostRepository;
 import me.jun.guestbook.domain.PostWriter;
+import me.jun.guestbook.domain.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,19 +23,21 @@ public class PostService {
 
     private final CommentService commentService;
 
+    private final PostCountService postCountService;
+
     public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
         post.setPostWriter(new PostWriter(writerId));
-        post.setHits(new Hits(0L));
+//        post.setHits(new Hits(0L));
         Post savedPost = postRepository.save(post);
         return PostResponse.of(savedPost);
     }
 
-    public PostResponse readPost(Long postId) {
+    public PostResponse retrievePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        post.updateHits();
+        postCountService.updateHits(postId);
 
         return PostResponse.of(post);
     }

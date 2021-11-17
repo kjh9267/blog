@@ -27,9 +27,6 @@ public class Post {
     @Embedded
     private PostWriter postWriter;
 
-    @Embedded
-    private Hits hits;
-
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
@@ -39,9 +36,5 @@ public class Post {
         if (!postWriter.match(writerId)) {
             throw new PostWriterMismatchException("writer mismatch");
         }
-    }
-
-    public void updateHits() {
-        this.hits = hits.update();
     }
 }

@@ -2,9 +2,8 @@ package me.jun.guestbook.application;
 
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.exception.PostNotFoundException;
-import me.jun.guestbook.domain.Hits;
-import me.jun.guestbook.domain.repository.PostRepository;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
+import me.jun.guestbook.domain.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,9 +34,12 @@ public class PostServiceTest {
     @Mock
     private CommentService commentService;
 
+    @Mock
+    private PostCountService postCountService;
+
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, commentService);
+        postService = new PostService(postRepository, commentService, postCountService);
     }
 
     @Test
@@ -50,14 +52,16 @@ public class PostServiceTest {
     }
 
     @Test
-    void readPostTest() {
+    void retrievePostTest() {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()
                         .toBuilder()
-                        .hits(new Hits(0L))
                         .build()));
 
-        assertThat(postService.readPost(POST_ID))
+        given(postCountService.updateHits(any()))
+                .willReturn(1L);
+
+        assertThat(postService.retrievePost(POST_ID))
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -67,7 +71,7 @@ public class PostServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.readPost(POST_ID)
+                () -> postService.retrievePost(POST_ID)
         );
     }
 
