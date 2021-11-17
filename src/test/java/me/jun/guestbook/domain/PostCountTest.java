@@ -27,6 +27,7 @@ public class PostCountTest {
         PostCount expected = PostCount.builder()
                 .id(1L)
                 .hits(new Hits())
+                .postId(1L)
                 .build();
 
         assertAll(
