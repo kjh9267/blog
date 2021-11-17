@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
+import static me.jun.guestbook.PostCountFixture.postCount;
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,6 +47,9 @@ public class PostServiceTest {
     void createPostTest() {
         given(postRepository.save(any()))
                 .willReturn(post());
+
+        given(postCountService.createPostCount(any()))
+                .willReturn(postCount());
 
         assertThat(postService.createPost(postCreateRequest(), WRITER_ID))
                 .isEqualToComparingFieldByField(postResponse());
