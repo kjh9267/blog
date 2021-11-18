@@ -9,6 +9,8 @@ import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.PostWriter;
 import me.jun.guestbook.domain.repository.PostRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ public class PostService {
         return PostResponse.of(post);
     }
 
+    @CachePut(cacheNames = "posts")
     public PostResponse updatePost(PostUpdateRequest dto, Long writerId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
@@ -61,6 +64,7 @@ public class PostService {
         return PostResponse.of(post);
     }
 
+    @CacheEvict(cacheNames = "posts", key = "#postId")
     public Long deletePost(Long postId, Long writerId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
