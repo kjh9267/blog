@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @EqualsAndHashCode(of = "id")
-public class Category {
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -39,9 +39,11 @@ public class ArticleTest {
                 .categoryId(1L)
                 .build();
 
+        Article article = article();
+
         assertAll(
-                () -> assertThat(article()).isInstanceOf(Article.class),
-                () -> assertThat(article()).isEqualToComparingFieldByField(expected)
+                () -> assertThat(article).isInstanceOf(Article.class),
+                () -> assertThat(article).isEqualToComparingFieldByField(expected)
         );
     }
 

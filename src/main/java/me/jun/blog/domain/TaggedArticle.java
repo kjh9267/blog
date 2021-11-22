@@ -10,12 +10,15 @@ import javax.persistence.*;
 @Builder
 @Getter
 @EqualsAndHashCode(of = "id")
-public class Category {
+public class TaggedArticle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private String name;
+    private Long articleId;
+
+    @Column
+    private Long tagId;
 }
