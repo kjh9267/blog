@@ -37,6 +37,7 @@ public class ArticleTest {
         Article expected = Article.builder()
                 .id(1L)
                 .categoryId(1L)
+                .articleInfo(articleInfo())
                 .build();
 
         Article article = article();

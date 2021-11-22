@@ -20,6 +20,7 @@ abstract public class ArticleFixture {
     public static Article article() {
         return Article.builder()
                 .id(ARTICLE_ID)
+                .articleInfo(articleInfo())
                 .categoryId(CATEGORY_ID)
                 .build();
     }
