@@ -4,24 +4,17 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-@Entity
-public class Article {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private Long categoryId;
-
-    @Embedded
-    private ArticleInfo articleInfo;
-
-    public void updateInfo(String title, String content) {
-        this.articleInfo = articleInfo.update(title, content);
-    }
+    private String name;
 }
