@@ -1,10 +1,11 @@
 package me.jun.blog.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.time.Instant;
 
 @Embeddable
 @Getter
@@ -19,8 +20,8 @@ public class ArticleInfo {
     @Column
     private String content;
 
-    @CreatedDate
-    private String created;
+    @LastModifiedDate
+    private Instant modifiedAt;
 
     public ArticleInfo update(String title, String content) {
         return ArticleInfo.builder()

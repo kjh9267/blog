@@ -5,7 +5,7 @@ import me.jun.blog.domain.ArticleInfo;
 
 import static me.jun.blog.CategoryFixture.CATEGORY_ID;
 
-public class ArticleFixture {
+abstract public class ArticleFixture {
 
     public static final Long ARTICLE_ID = 1L;
 
