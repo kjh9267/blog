@@ -12,6 +12,7 @@ import java.time.Instant;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@EqualsAndHashCode
 public class ArticleInfo {
 
     @Column
@@ -19,9 +20,6 @@ public class ArticleInfo {
 
     @Column
     private String content;
-
-    @LastModifiedDate
-    private Instant modifiedAt;
 
     public ArticleInfo update(String title, String content) {
         return ArticleInfo.builder()
