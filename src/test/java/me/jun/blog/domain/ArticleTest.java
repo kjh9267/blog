@@ -36,6 +36,7 @@ public class ArticleTest {
     void constructorTest2() {
         Article expected = Article.builder()
                 .id(1L)
+                .categoryId(1L)
                 .build();
 
         assertAll(
