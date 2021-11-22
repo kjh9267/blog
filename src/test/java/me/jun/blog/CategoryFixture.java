@@ -2,7 +2,7 @@ package me.jun.blog;
 
 import me.jun.blog.domain.Category;
 
-public class CategoryFixture {
+abstract public class CategoryFixture {
 
     public static final Long CATEGORY_ID = 1L;
 
