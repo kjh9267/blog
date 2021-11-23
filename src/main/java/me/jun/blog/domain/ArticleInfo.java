@@ -1,27 +1,23 @@
 package me.jun.blog.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.time.Instant;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@EqualsAndHashCode
 public class ArticleInfo {
 
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String content;
-
-    @LastModifiedDate
-    private Instant modifiedAt;
 
     public ArticleInfo update(String title, String content) {
         return ArticleInfo.builder()
