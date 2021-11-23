@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @EqualsAndHashCode(of = "id")
 public class Category {
@@ -16,6 +16,23 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(nullable = false)
+    private Long mappedArticleCount;
+
+    public void plusMappedArticleCount() {
+        this.mappedArticleCount += 1;
+    }
+
+    public void minusMappedArticleCount() {
+        this.mappedArticleCount -= 1;
+    }
+
+    public static Category from(String name) {
+        return Category.builder()
+                .name(name)
+                .build();
+    }
 }
