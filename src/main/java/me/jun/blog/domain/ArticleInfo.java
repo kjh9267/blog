@@ -1,11 +1,9 @@
 package me.jun.blog.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.time.Instant;
 
 @Embeddable
 @Getter
