@@ -6,7 +6,9 @@ import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleUpdateRequest;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.blog.domain.Article;
+import me.jun.blog.domain.Category;
 import me.jun.blog.domain.repository.ArticleRepository;
+import me.jun.blog.domain.service.CategoryMatchingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +19,18 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
+    private final CategoryService categoryService;
+
+    private final CategoryMatchingService categoryMatchingService;
+
     public ArticleResponse createArticle(ArticleCreateRequest request) {
         Article article = request.toArticle();
+
+        String categoryName = request.getCategoryName();
+        Category category = categoryService.createCategoryOrElseGet(categoryName);
+
+        categoryMatchingService.newMatch(article, category);
+
         article = articleRepository.save(article);
 
         return ArticleResponse.from(article);
@@ -32,7 +44,7 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
-    public ArticleResponse updateArticle(ArticleUpdateRequest request) {
+    public ArticleResponse updateArticleInfo(ArticleUpdateRequest request) {
         Long requestId = request.getId();
 
         Article updatedArticle = articleRepository.findById(requestId)
@@ -43,5 +55,21 @@ public class ArticleService {
                 .orElseThrow(ArticleNotFoundException::new);
 
         return ArticleResponse.from(updatedArticle);
+    }
+
+    public ArticleResponse updateCategoryOfArticle(ArticleUpdateRequest request) {
+        Long articleId = request.getId();
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(ArticleNotFoundException::new);
+
+        String newCategoryName = request.getCategoryName();
+        Category newCategory = categoryService.createCategoryOrElseGet(newCategoryName);
+
+        Long oldCategoryId = article.getCategoryId();
+        Category oldCategory = categoryService.retrieveCategoryById(oldCategoryId);
+
+        categoryMatchingService.changeMatch(article, newCategory, oldCategory);
+
+        return ArticleResponse.from(article);
     }
 }
