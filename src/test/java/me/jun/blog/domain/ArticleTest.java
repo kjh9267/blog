@@ -36,7 +36,9 @@ public class ArticleTest {
     void constructorTest2() {
         Article expected = Article.builder()
                 .id(1L)
+                .writerId(1L)
                 .categoryId(1L)
+                .articleInfo(articleInfo())
                 .build();
 
         Article article = article();
@@ -49,17 +51,17 @@ public class ArticleTest {
 
     @Test
     void updateArticleContentTest() {
-        ArticleInfo newArticleInfo = articleInfo().toBuilder()
+        ArticleInfo updatedArticleInfo = articleInfo().toBuilder()
                 .title("new title")
                 .content("new content")
                 .build();
 
         given(articleInfo.update(any(), any()))
-                .willReturn(newArticleInfo);
+                .willReturn(updatedArticleInfo);
 
-        article.updateInfo(NEW_TITLE, NEW_CONTENT);
+        Article updatedArticle = article.updateInfo(NEW_TITLE, NEW_CONTENT);
 
-        assertThat(article.getArticleInfo())
-                .isEqualToComparingFieldByField(newArticleInfo);
+        assertThat(updatedArticle.getArticleInfo())
+                .isEqualToComparingFieldByField(updatedArticleInfo);
     }
 }
