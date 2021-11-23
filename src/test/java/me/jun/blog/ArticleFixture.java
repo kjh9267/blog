@@ -13,6 +13,8 @@ abstract public class ArticleFixture {
 
     public static final String CONTENT = "test content";
 
+    public static final Long ARTICLE_WRITER_ID = 1L;
+
     public static final String NEW_TITLE = "new title";
 
     public static final String NEW_CONTENT = "new content";
@@ -20,6 +22,7 @@ abstract public class ArticleFixture {
     public static Article article() {
         return Article.builder()
                 .id(ARTICLE_ID)
+                .writerId(ARTICLE_WRITER_ID)
                 .articleInfo(articleInfo())
                 .categoryId(CATEGORY_ID)
                 .build();
