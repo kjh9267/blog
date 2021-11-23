@@ -21,4 +21,7 @@ public class ArticleUpdateRequest {
 
     @NotBlank
     private String content;
+
+    @NotBlank
+    private String categoryName;
 }
