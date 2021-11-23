@@ -10,7 +10,7 @@ import java.time.Instant;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Entity
 @EqualsAndHashCode(of = "id")
@@ -21,10 +21,10 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Long categoryId;
 
-    @Column
+    @Column(nullable = false)
     private Long writerId;
 
     @Embedded
@@ -40,6 +40,11 @@ public class Article {
 
     public Article updateInfo(String title, String content) {
         this.articleInfo = articleInfo.update(title, content);
+        return this;
+    }
+
+    public Article updateCategory(Long categoryId) {
+        this.categoryId = categoryId;
         return this;
     }
 }

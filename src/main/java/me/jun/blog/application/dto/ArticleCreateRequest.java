@@ -18,6 +18,9 @@ public class ArticleCreateRequest {
     @NotBlank
     private String content;
 
+    @NotBlank
+    private String categoryName;
+
     public Article toArticle() {
         ArticleInfo articleInfo = ArticleInfo.builder()
                 .title(title)
