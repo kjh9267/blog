@@ -1,5 +1,8 @@
 package me.jun.blog;
 
+import me.jun.blog.application.dto.ArticleCreateRequest;
+import me.jun.blog.application.dto.ArticleResponse;
+import me.jun.blog.application.dto.ArticleUpdateRequest;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
 
@@ -32,6 +35,33 @@ abstract public class ArticleFixture {
         return ArticleInfo.builder()
                 .title(TITLE)
                 .content(CONTENT)
+                .build();
+    }
+
+    public static ArticleCreateRequest articleCreateRequest() {
+        return ArticleCreateRequest.builder()
+                .title(TITLE)
+                .content(CONTENT)
+                .build();
+    }
+
+    public static ArticleResponse articleResponse() {
+        return ArticleResponse.from(article());
+    }
+
+    public static ArticleUpdateRequest articleUpdateRequest() {
+        return ArticleUpdateRequest.builder()
+                .id(ARTICLE_ID)
+                .title(NEW_TITLE)
+                .content(NEW_CONTENT)
+                .build();
+    }
+
+    public static ArticleResponse updatedArticleResponse() {
+        return ArticleResponse.builder()
+                .articleId(ARTICLE_ID)
+                .title(NEW_TITLE)
+                .content(NEW_CONTENT)
                 .build();
     }
 }
