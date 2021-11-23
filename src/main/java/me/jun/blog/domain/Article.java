@@ -38,7 +38,8 @@ public class Article {
     @LastModifiedDate
     private Instant modifiedAt;
 
-    public void updateInfo(String title, String content) {
+    public Article updateInfo(String title, String content) {
         this.articleInfo = articleInfo.update(title, content);
+        return this;
     }
 }
