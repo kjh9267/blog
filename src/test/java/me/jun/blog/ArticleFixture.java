@@ -2,13 +2,12 @@ package me.jun.blog;
 
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
-import me.jun.blog.application.dto.ArticleUpdateRequest;
+import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleWriterInfo;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
 
-import static me.jun.blog.CategoryFixture.CATEGORY_ID;
-import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
+import static me.jun.blog.CategoryFixture.*;
 
 abstract public class ArticleFixture {
 
@@ -54,11 +53,12 @@ abstract public class ArticleFixture {
         return ArticleResponse.from(article());
     }
 
-    public static ArticleUpdateRequest articleUpdateRequest() {
-        return ArticleUpdateRequest.builder()
+    public static ArticleInfoUpdateRequest articleUpdateRequest() {
+        return ArticleInfoUpdateRequest.builder()
                 .id(ARTICLE_ID)
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
+                .categoryName(NEW_CATEGORY_NAME)
                 .build();
     }
 
