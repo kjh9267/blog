@@ -3,7 +3,7 @@ package me.jun.blog.application;
 import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
-import me.jun.blog.application.dto.ArticleUpdateRequest;
+import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleWriterInfo;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.blog.domain.Article;
@@ -46,7 +46,7 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
-    public ArticleResponse updateArticleInfo(ArticleUpdateRequest request) {
+    public ArticleResponse updateArticleInfo(ArticleInfoUpdateRequest request) {
         Long requestId = request.getId();
 
         Article updatedArticle = articleRepository.findById(requestId)
@@ -57,21 +57,5 @@ public class ArticleService {
                 .orElseThrow(ArticleNotFoundException::new);
 
         return ArticleResponse.from(updatedArticle);
-    }
-
-    public ArticleResponse updateCategoryOfArticle(ArticleUpdateRequest request) {
-        Long articleId = request.getId();
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(ArticleNotFoundException::new);
-
-        String newCategoryName = request.getCategoryName();
-        Category newCategory = categoryService.createCategoryOrElseGet(newCategoryName);
-
-        Long oldCategoryId = article.getCategoryId();
-        Category oldCategory = categoryService.retrieveCategoryById(oldCategoryId);
-
-        categoryMatchingService.changeMatch(article, newCategory, oldCategory);
-
-        return ArticleResponse.from(article);
     }
 }

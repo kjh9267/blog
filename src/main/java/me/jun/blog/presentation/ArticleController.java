@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.ArticleService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
+import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleWriterInfo;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -35,9 +33,21 @@ public class ArticleController {
                 .body(response);
     }
 
-//    @GetMapping("/aritcles/{articleId}")
-//    public ResponseEntity<ArticleResponse> retrieveArticle(@PathVariable @Valid Long articleId) {
-//
-//        return ResponseEntity.of()
-//    }
+    @GetMapping("/{articleId}")
+    public ResponseEntity<ArticleResponse> retrieveArticle(@PathVariable Long articleId) {
+
+        ArticleResponse response = articleService.retrieveArticle(articleId);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<ArticleResponse> updateArticle(@RequestBody @Valid ArticleInfoUpdateRequest request,
+                                                         @ArticleWriter ArticleWriterInfo articleWriterInfo) {
+        ArticleResponse response = articleService.updateArticleInfo(request);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
 }
