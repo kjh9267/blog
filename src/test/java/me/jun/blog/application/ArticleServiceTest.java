@@ -120,38 +120,4 @@ public class ArticleServiceTest {
                 () -> articleService.updateArticleInfo(articleUpdateRequest())
         );
     }
-
-    @Test
-    void updateCategoryOfArticleTest() {
-        // Given
-
-        Article article = article();
-        Category oldCategory = category();
-        Category newCategory = category()
-                .toBuilder()
-                .id(2L)
-                .name("spring")
-                .build();
-
-        given(articleRepository.findById(any()))
-                .willReturn(Optional.of(article));
-
-        given(categoryService.createCategoryOrElseGet(any()))
-                .willReturn(newCategory);
-
-        given(categoryService.retrieveCategoryById(any()))
-                .willReturn(oldCategory);
-
-        doNothing()
-                .when(categoryMatchingService)
-                .changeMatch(any(), any(), any());
-
-        // When
-
-        articleService.updateCategoryOfArticle(articleUpdateRequest());
-
-        // Then
-
-        verify(categoryMatchingService).changeMatch(article, newCategory, oldCategory);
-    }
 }
