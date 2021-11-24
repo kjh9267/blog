@@ -43,6 +43,11 @@ public class Article {
         return this;
     }
 
+    public Article updateWriterId(Long writerId) {
+        this.writerId = writerId;
+        return this;
+    }
+
     public Article updateCategory(Long categoryId) {
         this.categoryId = categoryId;
         return this;

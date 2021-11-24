@@ -3,10 +3,12 @@ package me.jun.blog;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleUpdateRequest;
+import me.jun.blog.application.dto.ArticleWriterInfo;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
 
 import static me.jun.blog.CategoryFixture.CATEGORY_ID;
+import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
 
 abstract public class ArticleFixture {
 
@@ -17,6 +19,8 @@ abstract public class ArticleFixture {
     public static final String CONTENT = "test content";
 
     public static final Long ARTICLE_WRITER_ID = 1L;
+
+    public static final String ARTICLE_WRITER_EMAIL = "testuser@email.com";
 
     public static final String NEW_TITLE = "new title";
 
@@ -42,6 +46,7 @@ abstract public class ArticleFixture {
         return ArticleCreateRequest.builder()
                 .title(TITLE)
                 .content(CONTENT)
+                .categoryName(CATEGORY_NAME)
                 .build();
     }
 
@@ -62,6 +67,12 @@ abstract public class ArticleFixture {
                 .articleId(ARTICLE_ID)
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
+                .build();
+    }
+
+    public static ArticleWriterInfo articleWriterInfo() {
+        return ArticleWriterInfo.builder()
+                .id(ARTICLE_WRITER_ID)
                 .build();
     }
 }
