@@ -13,8 +13,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,8 @@ public class PostService {
 
     private final PostCountService postCountService;
 
-    public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
+    @Async
+    public CompletableFuture<PostResponse> createPost(PostCreateRequest postCreateRequest, Long writerId) {
         Post post = postCreateRequest.toEntity();
 
         post.setPostWriter(new PostWriter(writerId));
@@ -36,36 +40,47 @@ public class PostService {
         Long postId = post.getId();
         postCountService.createPostCount(postId);
 
-        return PostResponse.of(post);
+        return CompletableFuture.completedFuture(
+                PostResponse.of(post)
+        );
     }
 
+
+    @Async
     @Transactional(readOnly = true)
-    public PostResponse retrievePost(Long postId) {
+    public CompletableFuture<PostResponse> retrievePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
         postCountService.updateHits(postId);
 
-        return PostResponse.of(post);
+        return CompletableFuture.completedFuture(
+                PostResponse.of(post)
+        );
     }
 
+    @Async
     @CachePut(cacheNames = "posts")
-    public PostResponse updatePost(PostUpdateRequest dto, Long writerId) {
+    public CompletableFuture<PostResponse> updatePost(PostUpdateRequest dto, Long writerId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
         post.validateWriter(writerId);
 
-        String title = requestPost.getTitle();
-        String content = requestPost.getContent();
-        post.updatePost(title, content);
+        post = post.updatePost(
+                requestPost.getTitle(),
+                requestPost.getContent()
+        );
 
-        return PostResponse.of(post);
+        return CompletableFuture.completedFuture(
+                PostResponse.of(post)
+        );
     }
 
+    @Async
     @CacheEvict(cacheNames = "posts", key = "#postId")
-    public Long deletePost(Long postId, Long writerId) {
+    public CompletableFuture<Long> deletePost(Long postId, Long writerId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -73,16 +88,21 @@ public class PostService {
 
         postRepository.deleteById(postId);
         commentService.deleteCommentByPostId(postId);
-        return postId;
+
+        return CompletableFuture.completedFuture(postId);
     }
 
-    public void deletePostByWriterId(Long writerId) {
+    @Async
+    public CompletableFuture<Void> deletePostByWriterId(Long writerId) {
         PostWriter postWriter = new PostWriter(writerId);
         postRepository.deleteAllByPostWriter(postWriter);
+
+        return CompletableFuture.completedFuture(null);
     }
 
-    public PagedPostsResponse queryPosts(PageRequest request) {
-        Page<Post> posts = postRepository.findAll(request);
-        return PagedPostsResponse.from(posts);
+    public CompletableFuture<Page<Post>> queryPosts(PageRequest request) {
+        return CompletableFuture.completedFuture(
+                postRepository.findAll(request)
+        );
     }
 }

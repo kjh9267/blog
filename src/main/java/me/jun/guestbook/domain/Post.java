@@ -27,9 +27,10 @@ public class Post {
     @Embedded
     private PostWriter postWriter;
 
-    public void updatePost(String title, String content) {
+    public Post updatePost(String title, String content) {
         this.title = title;
         this.content = content;
+        return this;
     }
 
     public void validateWriter(Long writerId) {

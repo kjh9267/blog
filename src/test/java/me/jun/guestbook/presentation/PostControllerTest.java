@@ -72,7 +72,9 @@ PostControllerTest {
         String expected = objectMapper.writeValueAsString(postResponse());
 
         given(postService.createPost(any(), any()))
-                .willReturn(postResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        postResponse()
+                ));
 
         given(postWriterService.retrievePostWriterBy(any()))
                 .willReturn(
@@ -90,7 +92,7 @@ PostControllerTest {
                 .body(Mono.just(postCreateRequest()), PostCreateRequest.class)
                 .exchange()
 
-                .expectStatus().isCreated()
+                .expectStatus().is2xxSuccessful()
                 .expectHeader().contentType(APPLICATION_JSON)
                 .expectBody().json(expected);
     }
@@ -119,7 +121,9 @@ PostControllerTest {
         String expected = objectMapper.writeValueAsString(postResponse());
 
         given(postService.retrievePost(any()))
-                .willReturn(postResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        postResponse()
+                ));
 
         webTestClient.get()
                 .uri("/api/posts/1")
@@ -147,7 +151,9 @@ PostControllerTest {
         String expected = objectMapper.writeValueAsString(updatedPostResponse());
 
         given(postService.updatePost(any(), any()))
-                .willReturn(updatedPostResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        updatedPostResponse()
+                ));
 
         given(postWriterService.retrievePostWriterBy(any()))
                 .willReturn(
@@ -236,7 +242,7 @@ PostControllerTest {
     @Test
     public void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
-                .willReturn(POST_ID);
+                .willReturn(CompletableFuture.completedFuture(POST_ID));
 
         given(postWriterService.retrievePostWriterBy(any()))
                 .willReturn(
