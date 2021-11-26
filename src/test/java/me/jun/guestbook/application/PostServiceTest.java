@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.PostCountFixture.postCount;
 import static me.jun.guestbook.PostFixture.*;
@@ -44,19 +45,19 @@ public class PostServiceTest {
     }
 
     @Test
-    void createPostTest() {
+    void createPostTest() throws ExecutionException, InterruptedException {
         given(postRepository.save(any()))
                 .willReturn(post());
 
         given(postCountService.createPostCount(any()))
                 .willReturn(postCount());
 
-        assertThat(postService.createPost(postCreateRequest(), WRITER_ID))
+        assertThat(postService.createPost(postCreateRequest(), WRITER_ID).get())
                 .isEqualToComparingFieldByField(postResponse());
     }
 
     @Test
-    void retrievePostTest() {
+    void retrievePostTest() throws ExecutionException, InterruptedException {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()
                         .toBuilder()
@@ -65,7 +66,7 @@ public class PostServiceTest {
         given(postCountService.updateHits(any()))
                 .willReturn(1L);
 
-        assertThat(postService.retrievePost(POST_ID))
+        assertThat(postService.retrievePost(POST_ID).get())
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -80,11 +81,11 @@ public class PostServiceTest {
     }
 
     @Test
-    void updatePostTest() {
+    void updatePostTest() throws ExecutionException, InterruptedException {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        assertThat(postService.updatePost(postUpdateRequest(), WRITER_ID))
+        assertThat(postService.updatePost(postUpdateRequest(), WRITER_ID).get())
                 .isEqualToComparingFieldByField(updatedPostResponse());
     }
 
