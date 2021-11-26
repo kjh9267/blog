@@ -20,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 import static me.jun.guestbook.CommentFixture.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,7 +66,11 @@ public class CommentControllerTest {
                 .willReturn(commentResponse());
 
         given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(commentWriterInfo());
+                .willReturn(
+                        CompletableFuture.completedFuture(
+                                commentWriterInfo()
+                        )
+                );
 
         mockMvc.perform(post("/api/comments")
                         .content(content)
@@ -107,7 +112,11 @@ public class CommentControllerTest {
     @Test
     void updateCommentTest() throws Exception {
         given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(commentWriterInfo());
+                .willReturn(
+                        CompletableFuture.completedFuture(
+                                commentWriterInfo()
+                        )
+                );
 
         String content = objectMapper.writeValueAsString(commentUpdateRequest());
 
@@ -137,7 +146,11 @@ public class CommentControllerTest {
                 .willReturn(COMMENT_ID);
 
         given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(commentWriterInfo());
+                .willReturn(
+                        CompletableFuture.completedFuture(
+                                commentWriterInfo()
+                        )
+                );
 
         mockMvc.perform(delete("/api/comments/1")
                     .header(HttpHeaders.AUTHORIZATION, jwt)

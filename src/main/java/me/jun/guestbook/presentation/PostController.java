@@ -3,19 +3,12 @@ package me.jun.guestbook.presentation;
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.dto.*;
-import me.jun.guestbook.presentation.hateoas.PostEntityModelCreator;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.net.URI;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,60 +17,49 @@ public class PostController {
 
     private final PostService postService;
 
-    private final PostEntityModelCreator entityModelCreator;
-
     @PostMapping
-    public ResponseEntity<EntityModel<PostResponse>>
-    createPost(@RequestBody @Valid PostCreateRequest request,
-               @PostWriter PostWriterInfo writer) {
+    public ResponseEntity<PostResponse> createPost(@RequestBody @Valid PostCreateRequest request,
+                                                   @PostWriter PostWriterInfo writer) {
         PostResponse postResponse = postService.createPost(request, writer.getId());
-        URI selfUri = createSelfUri(postResponse);
 
-        return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createEntityModel(postResponse));
+        URI location = URI.create("/api/posts" + postResponse.getId());
+
+        return ResponseEntity.created(location)
+                .body(postResponse);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<EntityModel<PostResponse>> retrievePost(@PathVariable Long postId) {
+    public ResponseEntity<PostResponse> retrievePost(@PathVariable Long postId) {
         PostResponse postResponse = postService.retrievePost(postId);
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(postResponse));
+                .body(postResponse);
     }
 
     @PutMapping
-    public ResponseEntity<EntityModel<PostResponse>>
+    public ResponseEntity<PostResponse>
     updatePost(@RequestBody @Valid PostUpdateRequest requestDto,
                @PostWriter PostWriterInfo writer) {
         PostResponse postResponse = postService.updatePost(requestDto, writer.getId());
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(postResponse));
+                .body(postResponse);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<RepresentationModel>
-    deletePost(@PathVariable Long postId,
-               @PostWriter PostWriterInfo writer) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId,
+                                           @PostWriter PostWriterInfo writer) {
         postService.deletePost(postId, writer.getId());
 
-        return ResponseEntity.ok()
-                .body(entityModelCreator.createHyperlinks());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/query")
-    ResponseEntity<CollectionModel<EntityModel<PostResponse>>>
-    queryPosts(@PathParam("page") Integer page,
-               @PathParam("size") Integer size) {
+    ResponseEntity<PagedPostsResponse> queryPosts(@RequestParam("page") Integer page,
+                                            @RequestParam("size") Integer size) {
         PagedPostsResponse response = postService.queryPosts(PageRequest.of(page, size));
-        return ResponseEntity.ok()
-                .body(entityModelCreator.createCollectionModel(response));
-    }
 
-    private URI createSelfUri(PostResponse postResponse) {
-        return linkTo(getClass())
-                .slash(postResponse.getId())
-                .withSelfRel()
-                .toUri();
+        return ResponseEntity.ok()
+                .body(response);
     }
 }
