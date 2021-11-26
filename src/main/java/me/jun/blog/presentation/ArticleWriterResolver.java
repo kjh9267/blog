@@ -1,14 +1,15 @@
 package me.jun.blog.presentation;
 
-import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.ArticleWriterService;
+import me.jun.blog.application.dto.ArticleWriterInfo;
 import me.jun.common.security.JwtProvider;
-import me.jun.support.WriterResolver;
+import me.jun.support.ResolverTemplate;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
-public class ArticleWriterResolver extends WriterResolver {
+public class ArticleWriterResolver extends ResolverTemplate {
 
     private final ArticleWriterService articleWriterService;
 
@@ -23,7 +24,9 @@ public class ArticleWriterResolver extends WriterResolver {
     }
 
     @Override
-    protected Object getWriter(String email) {
-        return articleWriterService.retrieveArticleWriter(email);
+    protected Mono<ArticleWriterInfo> getUser(String email) {
+        return Mono.fromCompletionStage(
+                articleWriterService.retrieveArticleWriter(email)
+        );
     }
 }

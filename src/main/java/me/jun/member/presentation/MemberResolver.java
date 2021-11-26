@@ -4,6 +4,7 @@ import me.jun.member.application.MemberService;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.common.security.InvalidTokenException;
 import me.jun.common.security.JwtProvider;
+import me.jun.support.ResolverTemplate;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -11,18 +12,18 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Component
-public class MemberResolver implements HandlerMethodArgumentResolver {
-
-    private final JwtProvider provider;
+public class MemberResolver extends ResolverTemplate {
 
     private final MemberService memberService;
 
     public MemberResolver(JwtProvider provider, MemberService memberService) {
-        this.provider = provider;
+        super(provider);
         this.memberService = memberService;
     }
 
@@ -32,21 +33,9 @@ public class MemberResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter methodParameter,
-                                  ModelAndViewContainer modelAndViewContainer,
-                                  NativeWebRequest nativeWebRequest,
-                                  WebDataBinderFactory webDataBinderFactory) {
-        String token = extractToken(nativeWebRequest)
-                .orElseThrow(() -> new InvalidTokenException("No token"));
-
-        provider.validateToken(token);
-        String email = provider.extractSubject(token);
-        MemberResponse memberResponse = memberService.retrieveMemberBy(email);
-        return me.jun.member.application.dto.MemberInfo.from(memberResponse);
-    }
-
-    private Optional<String> extractToken(NativeWebRequest nativeWebRequest) {
-        return Optional.ofNullable(nativeWebRequest
-                .getHeader(HttpHeaders.AUTHORIZATION));
+    protected Mono<MemberResponse> getUser(String email) {
+        return Mono.fromCompletionStage(
+                memberService.retrieveMemberBy(email)
+        );
     }
 }

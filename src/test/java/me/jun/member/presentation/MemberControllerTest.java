@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.concurrent.CompletableFuture;
+
 import static me.jun.member.MemberFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -111,7 +113,9 @@ public class MemberControllerTest {
                 .validateToken(any());
 
         given(memberService.retrieveMemberBy(any()))
-                .willReturn(memberResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        memberResponse()
+                ));
 
         doNothing().when(memberService)
                 .deleteMember(any());

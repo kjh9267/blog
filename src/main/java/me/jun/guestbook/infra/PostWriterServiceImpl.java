@@ -7,6 +7,9 @@ import me.jun.guestbook.application.PostWriterService;
 import me.jun.guestbook.application.dto.PostWriterInfo;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 @Service
 @RequiredArgsConstructor
 public class PostWriterServiceImpl implements PostWriterService {
@@ -14,8 +17,16 @@ public class PostWriterServiceImpl implements PostWriterService {
     private final MemberService memberService;
 
     @Override
-    public PostWriterInfo retrievePostWriterBy(String email) {
-        MemberResponse memberResponse = memberService.retrieveMemberBy(email);
-        return PostWriterInfo.from(memberResponse);
+    public CompletableFuture<PostWriterInfo> retrievePostWriterBy(String email) {
+        MemberResponse memberResponse = null;
+        try {
+            memberResponse = memberService.retrieveMemberBy(email)
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return CompletableFuture.completedFuture(
+                PostWriterInfo.from(memberResponse)
+        );
     }
 }
