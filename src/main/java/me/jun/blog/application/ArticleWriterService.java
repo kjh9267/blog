@@ -2,7 +2,9 @@ package me.jun.blog.application;
 
 import me.jun.blog.application.dto.ArticleWriterInfo;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface ArticleWriterService {
 
-    ArticleWriterInfo retrieveArticleWriter(String email);
+    CompletableFuture<ArticleWriterInfo> retrieveArticleWriter(String email);
 }

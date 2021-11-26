@@ -1,7 +1,6 @@
 package me.jun.guestbook.presentation.hateoas;
 
 import me.jun.guestbook.application.dto.PostResponse;
-import me.jun.guestbook.presentation.hateoas.PostEntityModelCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.EntityModel;

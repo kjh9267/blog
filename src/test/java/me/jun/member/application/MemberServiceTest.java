@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.member.MemberFixture.member;
 import static me.jun.member.MemberFixture.memberResponse;
@@ -39,11 +40,11 @@ class MemberServiceTest {
     }
 
     @Test
-    void retrieveMemberByEmailTest() {
+    void retrieveMemberByEmailTest() throws ExecutionException, InterruptedException {
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member()));
 
-        assertThat(memberService.retrieveMemberBy("testuser@email.com"))
+        assertThat(memberService.retrieveMemberBy("testuser@email.com").get())
                 .isEqualToComparingFieldByField(memberResponse());
     }
 
