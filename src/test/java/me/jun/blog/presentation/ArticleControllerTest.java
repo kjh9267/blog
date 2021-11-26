@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.concurrent.CompletableFuture;
+
 import static me.jun.blog.ArticleFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -48,7 +50,9 @@ public class ArticleControllerTest {
         jwt = jwtProvider.createJwt(ARTICLE_WRITER_EMAIL);
 
         given(articleWriterService.retrieveArticleWriter(any()))
-                .willReturn(articleWriterInfo());
+                .willReturn(CompletableFuture.completedFuture(
+                        articleWriterInfo()
+                ));
     }
 
     @Test

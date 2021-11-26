@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -70,8 +69,8 @@ public class CommentController {
     @GetMapping("/query/post-id/{postId}")
     ResponseEntity<CollectionModel<EntityModel<CommentResponse>>>
     queryCommentsByPostId(@PathVariable Long postId,
-                          @PathParam("page") Integer page,
-                          @PathParam("size") Integer size) {
+                          @RequestParam("page") Integer page,
+                          @RequestParam("size") Integer size) {
         PagedCommentsResponse response = commentService.queryCommentsByPostId(postId, PageRequest.of(page, size));
         return ResponseEntity.ok()
                 .body(entityModelCreator.createCollectionModel(response));
