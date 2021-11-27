@@ -1,8 +1,8 @@
 package me.jun.member.application;
 
 import me.jun.guestbook.application.CommentService;
-import me.jun.member.domain.repository.MemberRepository;
 import me.jun.guestbook.application.PostService;
+import me.jun.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

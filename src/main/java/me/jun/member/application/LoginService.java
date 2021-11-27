@@ -7,8 +7,11 @@ import me.jun.member.application.exception.EmailNotFoundException;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.repository.MemberRepository;
 import me.jun.common.security.JwtProvider;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +22,9 @@ public class LoginService {
 
     private final JwtProvider jwtProvider;
 
+    @Async
     @Transactional(readOnly = true)
-    public TokenResponse login(MemberRequest request) {
+    public CompletableFuture<TokenResponse> login(MemberRequest request) {
         String email = request.getEmail();
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(EmailNotFoundException::new);
@@ -28,6 +32,8 @@ public class LoginService {
         member.validate(request.getPassword());
         String jwt = jwtProvider.createJwt(email);
 
-        return TokenResponse.from(jwt);
+        return CompletableFuture.completedFuture(
+                TokenResponse.from(jwt)
+        );
     }
 }

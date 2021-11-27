@@ -1,15 +1,16 @@
 package me.jun.guestbook.presentation;
 
-import me.jun.guestbook.application.PostWriterService;
 import me.jun.common.security.JwtProvider;
+import me.jun.guestbook.application.PostWriterService;
 import me.jun.guestbook.application.dto.PostWriterInfo;
 import me.jun.support.ResolverTemplate;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
+
+import java.util.concurrent.CompletableFuture;
 
 @Component
-public class PostWriterResolver extends ResolverTemplate {
+public class PostWriterResolver extends ResolverTemplate<PostWriterInfo> {
 
     private final PostWriterService postWriterService;
 
@@ -24,9 +25,7 @@ public class PostWriterResolver extends ResolverTemplate {
     }
 
     @Override
-    protected Mono<PostWriterInfo> getUser(String email) {
-        return Mono.fromCompletionStage(
-                postWriterService.retrievePostWriterBy(email)
-        );
+    protected CompletableFuture<PostWriterInfo> getUser(String email) {
+        return postWriterService.retrievePostWriterBy(email);
     }
 }
