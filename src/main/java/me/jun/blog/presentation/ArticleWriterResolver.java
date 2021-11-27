@@ -6,10 +6,11 @@ import me.jun.common.security.JwtProvider;
 import me.jun.support.ResolverTemplate;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
+
+import java.util.concurrent.CompletableFuture;
 
 @Component
-public class ArticleWriterResolver extends ResolverTemplate {
+public class ArticleWriterResolver extends ResolverTemplate<ArticleWriterInfo> {
 
     private final ArticleWriterService articleWriterService;
 
@@ -24,9 +25,7 @@ public class ArticleWriterResolver extends ResolverTemplate {
     }
 
     @Override
-    protected Mono<ArticleWriterInfo> getUser(String email) {
-        return Mono.fromCompletionStage(
-                articleWriterService.retrieveArticleWriter(email)
-        );
+    protected CompletableFuture<ArticleWriterInfo> getUser(String email) {
+        return articleWriterService.retrieveArticleWriter(email);
     }
 }

@@ -34,9 +34,10 @@ public class MemberService {
                 .exceptionally(throwable -> new MemberResponse());
     }
 
-    public void deleteMember(Long memberId) {
+    public CompletableFuture<Long> deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);
         postService.deletePostByWriterId(memberId);
         commentService.deleteCommentByWriterId(memberId);
+        return CompletableFuture.completedFuture(null);
     }
 }

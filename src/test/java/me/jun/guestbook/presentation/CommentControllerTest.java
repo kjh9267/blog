@@ -1,28 +1,21 @@
 package me.jun.guestbook.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.application.CommentService;
 import me.jun.guestbook.application.CommentWriterService;
 import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.CommentUpdateRequest;
-import me.jun.guestbook.domain.Comment;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
-import me.jun.common.security.JwtProvider;
-import org.apache.http.auth.AUTH;
+import me.jun.guestbook.domain.Comment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -32,12 +25,8 @@ import static me.jun.guestbook.CommentFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureWebTestClient

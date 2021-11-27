@@ -14,7 +14,8 @@ import static io.restassured.RestAssured.given;
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class E2EPostTest extends E2ETest {
@@ -82,7 +83,7 @@ public class E2EPostTest extends E2ETest {
                 .post("/api/posts")
 
                 .then()
-                .statusCode(CREATED.value())
+                .statusCode(OK.value())
                 .extract()
                 .as(PostResponse.class);
 
@@ -154,7 +155,5 @@ public class E2EPostTest extends E2ETest {
                 .statusCode(NOT_FOUND.value())
                 .extract()
                 .as(ErrorResponse.class);
-
-        assertThat(errorResponse.getMessage()).isEqualTo("No post");
     }
 }
