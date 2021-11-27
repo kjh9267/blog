@@ -13,7 +13,8 @@ import static io.restassured.RestAssured.given;
 import static me.jun.guestbook.CommentFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class E2ECommentTest extends E2ETest {
@@ -80,7 +81,7 @@ public class E2ECommentTest extends E2ETest {
                 .post("/api/comments")
 
                 .then()
-                .statusCode(CREATED.value())
+                .statusCode(OK.value())
                 .extract()
                 .as(CommentResponse.class);
 

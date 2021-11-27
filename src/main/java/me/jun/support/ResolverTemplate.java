@@ -10,11 +10,12 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
-public abstract class ResolverTemplate implements HandlerMethodArgumentResolver {
+public abstract class ResolverTemplate<T> implements HandlerMethodArgumentResolver {
 
     private final JwtProvider provider;
 
@@ -31,7 +32,9 @@ public abstract class ResolverTemplate implements HandlerMethodArgumentResolver 
 
         provider.validateToken(token);
         String email = provider.extractSubject(token);
-        return getUser(email);
+        return Mono.fromCompletionStage(
+                getUser(email)
+        );
     }
 
     private Optional<String> extractToken(ServerWebExchange serverWebExchange) {
@@ -42,5 +45,5 @@ public abstract class ResolverTemplate implements HandlerMethodArgumentResolver 
         );
     }
 
-    abstract protected <T> Mono<T> getUser(String email);
+    abstract protected CompletableFuture<T> getUser(String email);
 }
