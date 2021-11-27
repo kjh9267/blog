@@ -1,15 +1,16 @@
 package me.jun.guestbook.presentation;
 
-import me.jun.guestbook.application.CommentWriterService;
 import me.jun.common.security.JwtProvider;
+import me.jun.guestbook.application.CommentWriterService;
 import me.jun.guestbook.application.dto.CommentWriterInfo;
 import me.jun.support.ResolverTemplate;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
+
+import java.util.concurrent.CompletableFuture;
 
 @Component
-public class CommentWriterResolver extends ResolverTemplate {
+public class CommentWriterResolver extends ResolverTemplate<CommentWriterInfo> {
 
     private final CommentWriterService commentWriterService;
 
@@ -24,9 +25,7 @@ public class CommentWriterResolver extends ResolverTemplate {
     }
 
     @Override
-    protected Mono<CommentWriterInfo> getUser(String email) {
-        return Mono.fromCompletionStage(
-                commentWriterService.retrieveCommentWriterBy(email)
-        );
+    protected CompletableFuture<CommentWriterInfo> getUser(String email) {
+        return commentWriterService.retrieveCommentWriterBy(email);
     }
 }

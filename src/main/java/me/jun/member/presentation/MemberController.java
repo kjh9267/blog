@@ -1,21 +1,18 @@
 package me.jun.member.presentation;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.member.application.MemberService;
 import me.jun.member.application.LoginService;
+import me.jun.member.application.MemberService;
 import me.jun.member.application.RegisterService;
+import me.jun.member.application.dto.MemberInfo;
 import me.jun.member.application.dto.MemberRequest;
+import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
-import me.jun.member.presentation.hateoas.MemberEntityModelCreator;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.net.URI;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,36 +25,33 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    private final MemberEntityModelCreator entityModelCreator;
-
     @PostMapping("/register")
-    public ResponseEntity<RepresentationModel> register(@RequestBody @Valid MemberRequest requestDto) {
-        registerService.register(requestDto);
-        URI selfUri = createSelfUri();
+    public ResponseEntity<Mono<MemberResponse>> register(@RequestBody @Valid MemberRequest request) {
+        Mono<MemberResponse> memberResponseMono = Mono.fromCompletionStage(
+                registerService.register(request)
+        ).log();
 
-        return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createHyperlinks());
+        return ResponseEntity.ok()
+                .body(memberResponseMono);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<EntityModel<TokenResponse>> login(@RequestBody @Valid MemberRequest requestDto) {
-        TokenResponse tokenResponse = loginService.login(requestDto);
-        URI selfUri = createSelfUri();
+    public ResponseEntity<Mono<TokenResponse>> login(@RequestBody @Valid MemberRequest request) {
+        Mono<TokenResponse> tokenResponseMono = Mono.fromCompletionStage(
+                loginService.login(request)
+        ).log();
 
-        return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createEntityModel(tokenResponse));
+        return ResponseEntity.ok()
+                .body(tokenResponseMono);
     }
 
     @DeleteMapping("/leave")
-    public ResponseEntity<RepresentationModel> leave(@MemberInfo me.jun.member.application.dto.MemberInfo memberInfo) {
-        memberService.deleteMember(memberInfo.getId());
-        return ResponseEntity.ok()
-                .body(entityModelCreator.createHyperlinks());
-    }
+    public ResponseEntity<Mono<Long>> leave(@Member MemberInfo memberInfo) {
+        Mono<Long> longMono = Mono.fromCompletionStage(
+                memberService.deleteMember(memberInfo.getId())
+        ).log();
 
-    private URI createSelfUri() {
-        return linkTo(MemberController.class).slash("login")
-                .withSelfRel()
-                .toUri();
+        return ResponseEntity.ok()
+                .body(longMono);
     }
 }

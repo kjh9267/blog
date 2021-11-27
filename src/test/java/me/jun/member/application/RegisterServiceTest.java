@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.concurrent.ExecutionException;
+
 import static me.jun.member.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,11 +30,11 @@ class RegisterServiceTest {
     }
 
     @Test
-    void registerTest() {
+    void registerTest() throws ExecutionException, InterruptedException {
         given(memberRepository.save(any()))
                 .willReturn(member());
 
-        assertThat(registerService.register(memberRequest()))
+        assertThat(registerService.register(memberRequest()).get())
                 .isEqualToComparingFieldByField(memberResponse());
     }
 
