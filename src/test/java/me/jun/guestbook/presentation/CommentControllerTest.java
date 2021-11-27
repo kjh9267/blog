@@ -3,13 +3,17 @@ package me.jun.guestbook.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.guestbook.application.CommentService;
 import me.jun.guestbook.application.CommentWriterService;
+import me.jun.guestbook.application.dto.CommentCreateRequest;
+import me.jun.guestbook.application.dto.CommentUpdateRequest;
 import me.jun.guestbook.domain.Comment;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.common.security.JwtProvider;
+import org.apache.http.auth.AUTH;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,7 +21,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
@@ -27,17 +33,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
+@AutoConfigureWebTestClient
 public class CommentControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     @MockBean
     private CommentService commentService;
@@ -55,15 +62,17 @@ public class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        jwt = jwtProvider.createJwt("testuser@email.com");
+        jwt = jwtProvider.createJwt(EMAIL);
     }
 
     @Test
     void createCommentTest() throws Exception {
-        String content = objectMapper.writeValueAsString(commentCreateRequest());
+        String expected = objectMapper.writeValueAsString(commentResponse());
 
         given(commentService.createComment(any(), any()))
-                .willReturn(commentResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        commentResponse()
+                ));
 
         given(commentWriterService.retrieveCommentWriterBy(any()))
                 .willReturn(
@@ -72,41 +81,35 @@ public class CommentControllerTest {
                         )
                 );
 
-        mockMvc.perform(post("/api/comments")
-                        .content(content)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(HAL_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(header().string("location", COMMENTS_SELF_URI + "/1"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(COMMENT_ID))
-                .andExpect(jsonPath("post_id").value(POST_ID))
-                .andExpect(jsonPath("content").value(CONTENT))
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"));
+        webTestClient.post()
+                .uri("/api/comments")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(Mono.just(commentCreateRequest()), CommentCreateRequest.class)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful()
+                .expectBody().json(expected);
     }
 
     @Test
     void retrieveCommentTest() throws Exception {
-        given(commentService.retrieveComment(any()))
-                .willReturn(commentResponse());
+        String expected = objectMapper.writeValueAsString(commentResponse());
 
-        mockMvc.perform(get("/api/comments/1")
-                    .accept(HAL_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(COMMENT_ID))
-                .andExpect(jsonPath("post_id").value(POST_ID))
-                .andExpect(jsonPath("content").value(CONTENT))
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andDo(print());
+        given(commentService.retrieveComment(any()))
+                .willReturn(CompletableFuture.completedFuture(
+                        commentResponse()
+                ));
+
+        webTestClient.get()
+                .uri("/api/comments/1")
+                .header(AUTHORIZATION, jwt)
+                .accept(APPLICATION_JSON)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful()
+                .expectBody().json(expected);
     }
 
     @Test
@@ -118,32 +121,29 @@ public class CommentControllerTest {
                         )
                 );
 
-        String content = objectMapper.writeValueAsString(commentUpdateRequest());
+        String expected = objectMapper.writeValueAsString(commentResponse());
 
         given(commentService.updateComment(any(), any()))
-                .willReturn(commentResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        commentResponse()
+                ));
 
-        mockMvc.perform(put("/api/comments")
-                    .content(content)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(HAL_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(COMMENT_ID))
-                .andExpect(jsonPath("post_id").value(POST_ID))
-                .andExpect(jsonPath("content").value(CONTENT))
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_GET_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_UPDATE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_DELETE_COMMENT_HREF).value(COMMENTS_SELF_URI + "/1"));
+        webTestClient.put()
+                .uri("/api/comments")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(Mono.just(commentUpdateRequest()), CommentUpdateRequest.class)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful()
+                .expectBody().json(expected);
     }
 
     @Test
     void deleteCommentTest() throws Exception {
         given(commentService.deleteComment(any(), any()))
-                .willReturn(COMMENT_ID);
+                .willReturn(CompletableFuture.completedFuture(COMMENT_ID));
 
         given(commentWriterService.retrieveCommentWriterBy(any()))
                 .willReturn(
@@ -152,13 +152,13 @@ public class CommentControllerTest {
                         )
                 );
 
-        mockMvc.perform(delete("/api/comments/1")
-                    .header(HttpHeaders.AUTHORIZATION, jwt)
-                    .accept(HAL_JSON))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(COMMENTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI));
+        webTestClient.delete()
+                .uri("/api/comments/1")
+                .header(AUTHORIZATION, jwt)
+                .accept(APPLICATION_JSON)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful();
 
         verify(commentService).deleteComment(any(), any());
     }
@@ -171,12 +171,11 @@ public class CommentControllerTest {
         given(commentService.queryCommentsByPostId(any(), any()))
                 .willReturn(response);
 
-        mockMvc.perform(get("/api/comments/query/post-id/1?page=1&size=10")
-                    .accept(HAL_JSON))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(QUERY_COMMENTS_BY_POST_URI))
-                .andExpect(jsonPath(LINKS_CREATE_COMMENT_HREF).value(COMMENTS_SELF_URI))
-                .andExpect(jsonPath(QUERY_COMMENTS_BY_POST_HREF).value(QUERY_COMMENTS_BY_POST_URI));
+        webTestClient.get()
+                .uri("/api/comments/query/post-id/1?page=1&size=10")
+                .accept(APPLICATION_JSON)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful();
     }
 }

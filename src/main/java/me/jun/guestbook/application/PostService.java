@@ -100,9 +100,8 @@ public class PostService {
         return CompletableFuture.completedFuture(null);
     }
 
-    public CompletableFuture<Page<Post>> queryPosts(PageRequest request) {
-        return CompletableFuture.completedFuture(
-                postRepository.findAll(request)
-        );
+    public PagedPostsResponse queryPosts(PageRequest request) {
+        Page<Post> posts = postRepository.findAll(request);
+        return PagedPostsResponse.from(posts);
     }
 }

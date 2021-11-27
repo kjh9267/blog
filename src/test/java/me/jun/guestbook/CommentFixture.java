@@ -39,7 +39,7 @@ public abstract class CommentFixture {
 
     public static final String NEW_CONTENT = "new content";
 
-    private static final String EMAIL = "testuser@email.com";
+    public static final String EMAIL = "testuser@email.com";
 
     public static CommentWriter commentWriter() {
         return new CommentWriter(WRITER_ID);

@@ -10,6 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,62 +25,54 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    private final CommentEntityModelCreator entityModelCreator;
-
     @PostMapping
-    public ResponseEntity<EntityModel<CommentResponse>>
-    createComment(@RequestBody @Valid CommentCreateRequest request,
-                  @CommentWriter CommentWriterInfo writer) {
-        CommentResponse commentResponse = commentService.createComment(request, writer.getId());
+    public ResponseEntity<Mono<CommentResponse>> createComment(@RequestBody @Valid CommentCreateRequest request,
+                                                               @CommentWriter CommentWriterInfo writer) {
+        Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
+                commentService.createComment(request, writer.getId())
+        ).log();
 
-        URI selfUri = createSelfUri(commentResponse);
-
-        return ResponseEntity.created(selfUri)
-                .body(entityModelCreator.createEntityModel(commentResponse));
+        return ResponseEntity.ok()
+                .body(commentResponseMono);
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<EntityModel<CommentResponse>>
-    retrieveComment(@PathVariable @Valid Long commentId) {
-        CommentResponse commentResponse = commentService.retrieveComment(commentId);
+    public ResponseEntity<Mono<CommentResponse>> retrieveComment(@PathVariable Long commentId) {
+        Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
+                commentService.retrieveComment(commentId)
+        ).log();
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(commentResponse));
+                .body(commentResponseMono);
     }
 
     @PutMapping
-    public ResponseEntity<EntityModel<CommentResponse>>
+    public ResponseEntity<Mono<CommentResponse>>
         updateComment(@RequestBody @Valid CommentUpdateRequest request,
                       @CommentWriter CommentWriterInfo writerInfo) {
-        CommentResponse commentResponse = commentService.updateComment(request, writerInfo.getId());
+        Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
+                commentService.updateComment(request, writerInfo.getId())
+        ).log();
 
         return ResponseEntity.ok()
-                .body(entityModelCreator.createEntityModel(commentResponse));
+                .body(commentResponseMono);
     }
 
     @DeleteMapping("/{commentId}")
-    ResponseEntity<RepresentationModel>
-    deleteComment(@PathVariable Long commentId,
-                  @CommentWriter CommentWriterInfo writerInfo) {
-        commentService.deleteComment(commentId, writerInfo.getId());
+    ResponseEntity<Mono<Long>> deleteComment(@PathVariable Long commentId,
+                                             @CommentWriter CommentWriterInfo writerInfo) {
+        Mono<Long> longMono = Mono.fromCompletionStage(
+                commentService.deleteComment(commentId, writerInfo.getId())
+        ).log();
         return ResponseEntity.ok()
-                .body(entityModelCreator.createHyperlinks());
+                .body(longMono);
     }
 
     @GetMapping("/query/post-id/{postId}")
-    ResponseEntity<CollectionModel<EntityModel<CommentResponse>>>
-    queryCommentsByPostId(@PathVariable Long postId,
-                          @RequestParam("page") Integer page,
-                          @RequestParam("size") Integer size) {
+    ResponseEntity<CommentResponse> queryCommentsByPostId(@PathVariable Long postId,
+                                                          @RequestParam("page") Integer page,
+                                                          @RequestParam("size") Integer size) {
         PagedCommentsResponse response = commentService.queryCommentsByPostId(postId, PageRequest.of(page, size));
-        return ResponseEntity.ok()
-                .body(entityModelCreator.createCollectionModel(response));
-    }
-
-    private URI createSelfUri(CommentResponse commentResponse) {
-        return linkTo(getClass())
-                .slash(commentResponse.getId())
-                .withSelfRel()
-                .toUri();
+        return null;
     }
 }

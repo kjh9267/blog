@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.CommentFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -38,11 +39,11 @@ class CommentServiceTest {
     }
 
     @Test
-    void createCommentTest() {
+    void createCommentTest() throws ExecutionException, InterruptedException {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.createComment(commentCreateRequest(), 1L))
+        assertThat(commentService.createComment(commentCreateRequest(), 1L).get())
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
@@ -51,9 +52,10 @@ class CommentServiceTest {
         given(commentRepository.findById(COMMENT_ID))
                 .willReturn(Optional.of(comment()));
 
-        assertAll(() -> assertThat(commentService.retrieveComment(COMMENT_ID))
+        assertAll(
+                () -> assertThat(commentService.retrieveComment(COMMENT_ID).get())
                 .isEqualToComparingFieldByField(commentResponse()),
-                () -> assertThat(commentService.retrieveComment(COMMENT_ID))
+                () -> assertThat(commentService.retrieveComment(COMMENT_ID).get())
                 .isInstanceOf(CommentResponse.class)
         );
     }
@@ -63,19 +65,21 @@ class CommentServiceTest {
         given(commentRepository.findById(COMMENT_ID))
                 .willReturn(Optional.empty());
 
-        assertThrows(CommentNotFoundException.class,
-                () -> assertThat(commentService.retrieveComment(COMMENT_ID)));
+        assertThrows(
+                CommentNotFoundException.class,
+                () -> assertThat(commentService.retrieveComment(COMMENT_ID))
+        );
     }
 
     @Test
-    void updateCommentTest() {
+    void updateCommentTest() throws ExecutionException, InterruptedException {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.of(comment()));
 
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.updateComment(commentUpdateRequest(), WRITER_ID))
+        assertThat(commentService.updateComment(commentUpdateRequest(), WRITER_ID).get())
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
