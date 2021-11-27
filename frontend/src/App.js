@@ -38,7 +38,7 @@ function App() {
         })
         .then((response) => {
           console.log(response.status);
-          if(response.status === 201) {
+          if(response.status === 200) {
             setCookie('access_token', response.data['access_token']);
           }
           console.log(response.data['access_token']);
