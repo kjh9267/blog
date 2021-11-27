@@ -27,8 +27,6 @@ public class PostController {
                 () -> postService.createPost(request, writer.getId())
         ).log();
 
-        log.info("end");
-
         return ResponseEntity.ok()
                 .body(postResponseMono);
     }
@@ -39,8 +37,6 @@ public class PostController {
         Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
                 () -> postService.retrievePost(postId)
         ).log();
-
-        log.info("end");
 
         return ResponseEntity.ok()
                 .body(postResponseMono);
@@ -54,8 +50,6 @@ public class PostController {
                 () -> postService.updatePost(requestDto, writer.getId())
         ).log();
 
-        log.info("end");
-
         return ResponseEntity.ok()
                 .body(postResponseMono);
     }
@@ -67,8 +61,6 @@ public class PostController {
                 () -> postService.deletePost(postId, writer.getId())
         ).log();
 
-        log.info("end");
-
         return ResponseEntity.ok()
                 .body(mono);
     }
@@ -78,8 +70,6 @@ public class PostController {
                                                         @RequestParam("size") Integer size) {
 
 //        PagedPostsResponse response = postService.queryPosts(PageRequest.of(page, size));
-
-        log.info("end");
 
         return null;
 

@@ -45,7 +45,6 @@ public class PostService {
         );
     }
 
-
     @Async
     @Transactional(readOnly = true)
     public CompletableFuture<PostResponse> retrievePost(Long postId) {
