@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jun.common.security.InvalidTokenException;
 import me.jun.common.security.JwtProvider;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.BindingContext;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.server.ServerWebExchange;
@@ -27,6 +28,14 @@ public abstract class ResolverTemplate<T> implements HandlerMethodArgumentResolv
     public Mono<Object> resolveArgument(MethodParameter methodParameter,
                                         BindingContext bindingContext,
                                         ServerWebExchange serverWebExchange) {
+
+        HttpHeaders headers = serverWebExchange.getRequest().getHeaders();
+
+        for (String key: headers.keySet()) {
+            log.info(key);
+            log.info(headers.get(key).toString());
+        }
+
         String token = extractToken(serverWebExchange)
                 .orElseThrow(() -> new InvalidTokenException("No token"));
 
