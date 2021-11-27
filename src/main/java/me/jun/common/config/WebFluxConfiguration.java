@@ -6,6 +6,7 @@ import me.jun.guestbook.presentation.CommentWriterResolver;
 import me.jun.guestbook.presentation.PostWriterResolver;
 import me.jun.member.presentation.MemberResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurationSupport;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
@@ -30,5 +31,10 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
         configurer.addCustomResolver(articleWriterResolver);
     }
 
-
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("*");
+    }
 }
