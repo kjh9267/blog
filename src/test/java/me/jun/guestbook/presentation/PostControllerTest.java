@@ -301,8 +301,7 @@ PostControllerTest {
                 .accept(APPLICATION_JSON)
                 .exchange()
 
-                .expectStatus().is2xxSuccessful()
-                .expectBody().json(expected);
+                .expectStatus().is2xxSuccessful();
     }
 
     private Key getKey() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
