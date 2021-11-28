@@ -10,8 +10,11 @@ import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
 import me.jun.blog.domain.repository.ArticleRepository;
 import me.jun.blog.domain.service.CategoryMatchingService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -24,7 +27,8 @@ public class ArticleService {
 
     private final CategoryMatchingService categoryMatchingService;
 
-    public ArticleResponse createArticle(ArticleCreateRequest request, ArticleWriterInfo articleWriterInfoId) {
+    @Async
+    public CompletableFuture<ArticleResponse> createArticle(ArticleCreateRequest request, ArticleWriterInfo articleWriterInfoId) {
         Article article = request.toArticle()
                 .updateWriterId(articleWriterInfoId.getId());
 
@@ -35,18 +39,24 @@ public class ArticleService {
 
         article = articleRepository.save(article);
 
-        return ArticleResponse.from(article);
+        return CompletableFuture.completedFuture(
+                ArticleResponse.from(article)
+        );
     }
 
     @Transactional(readOnly = true)
-    public ArticleResponse retrieveArticle(Long articleId) {
+    @Async
+    public CompletableFuture<ArticleResponse> retrieveArticle(Long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(ArticleNotFoundException::new);
 
-        return ArticleResponse.from(article);
+        return CompletableFuture.completedFuture(
+                ArticleResponse.from(article)
+        );
     }
 
-    public ArticleResponse updateArticleInfo(ArticleInfoUpdateRequest request) {
+    @Async
+    public CompletableFuture<ArticleResponse> updateArticleInfo(ArticleInfoUpdateRequest request) {
         Long requestId = request.getId();
 
         Article updatedArticle = articleRepository.findById(requestId)
@@ -56,6 +66,8 @@ public class ArticleService {
                 ))
                 .orElseThrow(ArticleNotFoundException::new);
 
-        return ArticleResponse.from(updatedArticle);
+        return CompletableFuture.completedFuture(
+                ArticleResponse.from(updatedArticle)
+        );
     }
 }
