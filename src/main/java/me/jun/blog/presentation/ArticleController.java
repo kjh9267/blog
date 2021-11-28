@@ -3,16 +3,14 @@ package me.jun.blog.presentation;
 import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.ArticleService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
-import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
+import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleWriterInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.net.URI;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/api/articles")
@@ -22,32 +20,36 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<ArticleResponse> createArticle(@RequestBody @Valid ArticleCreateRequest request,
-                                                         @ArticleWriter ArticleWriterInfo articleWriterInfo) {
+    public ResponseEntity<Mono<ArticleResponse>> createArticle(@RequestBody @Valid ArticleCreateRequest request,
+                                                               @ArticleWriter ArticleWriterInfo articleWriterInfo) {
 
-        ArticleResponse response = articleService.createArticle(request, articleWriterInfo);
+        Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
+                articleService.createArticle(request, articleWriterInfo)
+        ).log();
 
-        URI uri = linkTo(getClass()).slash(response.getArticleId()).toUri();
-
-        return ResponseEntity.created(uri)
-                .body(response);
+        return ResponseEntity.ok()
+                .body(articleResponseMono);
     }
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<ArticleResponse> retrieveArticle(@PathVariable Long articleId) {
+    public ResponseEntity<Mono<ArticleResponse>> retrieveArticle(@PathVariable Long articleId) {
 
-        ArticleResponse response = articleService.retrieveArticle(articleId);
+        Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
+                articleService.retrieveArticle(articleId)
+        ).log();
 
         return ResponseEntity.ok()
-                .body(response);
+                .body(articleResponseMono);
     }
 
     @PutMapping
-    public ResponseEntity<ArticleResponse> updateArticle(@RequestBody @Valid ArticleInfoUpdateRequest request,
+    public ResponseEntity<Mono<ArticleResponse>> updateArticle(@RequestBody @Valid ArticleInfoUpdateRequest request,
                                                          @ArticleWriter ArticleWriterInfo articleWriterInfo) {
-        ArticleResponse response = articleService.updateArticleInfo(request);
+        Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
+                articleService.updateArticleInfo(request)
+        ).log();
 
         return ResponseEntity.ok()
-                .body(response);
+                .body(articleResponseMono);
     }
 }
