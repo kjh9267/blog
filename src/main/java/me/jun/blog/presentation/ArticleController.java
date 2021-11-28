@@ -5,7 +5,8 @@ import me.jun.blog.application.ArticleService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
-import me.jun.blog.application.dto.ArticleWriterInfo;
+import me.jun.member.application.dto.MemberInfo;
+import me.jun.support.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -21,10 +22,10 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<Mono<ArticleResponse>> createArticle(@RequestBody @Valid ArticleCreateRequest request,
-                                                               @ArticleWriter ArticleWriterInfo articleWriterInfo) {
+                                                               @Member MemberInfo articleWriterInfo) {
 
         Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
-                articleService.createArticle(request, articleWriterInfo)
+                articleService.createArticle(request, articleWriterInfo.getEmail())
         ).log();
 
         return ResponseEntity.ok()
@@ -44,7 +45,7 @@ public class ArticleController {
 
     @PutMapping
     public ResponseEntity<Mono<ArticleResponse>> updateArticle(@RequestBody @Valid ArticleInfoUpdateRequest request,
-                                                         @ArticleWriter ArticleWriterInfo articleWriterInfo) {
+                                                         @Member MemberInfo articleWriterInfo) {
         Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
                 articleService.updateArticleInfo(request)
         ).log();

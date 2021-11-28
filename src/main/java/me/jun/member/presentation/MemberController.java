@@ -8,6 +8,8 @@ import me.jun.member.application.dto.MemberInfo;
 import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
+import me.jun.support.Member;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -35,6 +37,7 @@ public class MemberController {
                 .body(memberResponseMono);
     }
 
+    @Cacheable(cacheNames = "tokenStore", key = "#request.email")
     @PostMapping("/login")
     public ResponseEntity<Mono<TokenResponse>> login(@RequestBody @Valid MemberRequest request) {
         Mono<TokenResponse> tokenResponseMono = Mono.fromCompletionStage(

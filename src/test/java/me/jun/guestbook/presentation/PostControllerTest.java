@@ -5,7 +5,6 @@ import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.PostFixture;
 import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
-import me.jun.guestbook.application.PostWriterService;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
@@ -52,9 +51,6 @@ PostControllerTest {
     @MockBean
     private PostCountService postCountService;
 
-    @MockBean
-    private PostWriterService postWriterService;
-
     @Autowired
     private JwtProvider jwtProvider;
 
@@ -73,13 +69,6 @@ PostControllerTest {
                 .willReturn(CompletableFuture.completedFuture(
                         postResponse()
                 ));
-
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                postWriterInfo()
-                        )
-                );
 
         webTestClient.post()
                 .uri("/api/posts")
@@ -156,13 +145,6 @@ PostControllerTest {
                         updatedPostResponse()
                 ));
 
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                postWriterInfo()
-                        )
-                );
-
         webTestClient.put()
                 .uri("/api/posts")
                 .header(AUTHORIZATION, jwt)
@@ -180,13 +162,6 @@ PostControllerTest {
         doThrow(PostNotFoundException.class)
                 .when(postService)
                 .updatePost(any(), any());
-
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                postWriterInfo()
-                        )
-                );
 
         webTestClient.put()
                 .uri("/api/posts")
@@ -244,13 +219,6 @@ PostControllerTest {
     public void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
                 .willReturn(CompletableFuture.completedFuture(POST_ID));
-
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                postWriterInfo()
-                        )
-                );
 
         webTestClient.delete()
                 .uri("/api/posts/1")

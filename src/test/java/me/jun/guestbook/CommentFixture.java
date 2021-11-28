@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.CommentResponse;
 import me.jun.guestbook.application.dto.CommentUpdateRequest;
-import me.jun.guestbook.application.dto.CommentWriterInfo;
 import me.jun.guestbook.domain.Comment;
 import me.jun.guestbook.domain.CommentWriter;
 
@@ -63,12 +62,6 @@ public abstract class CommentFixture {
                 .id(COMMENT_ID)
                 .postId(POST_ID)
                 .content(NEW_CONTENT)
-                .build();
-    }
-
-    public static CommentWriterInfo commentWriterInfo() {
-        return CommentWriterInfo.builder()
-                .email(EMAIL)
                 .build();
     }
 }

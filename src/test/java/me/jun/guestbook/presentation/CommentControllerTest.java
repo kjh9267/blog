@@ -3,7 +3,6 @@ package me.jun.guestbook.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.application.CommentService;
-import me.jun.guestbook.application.CommentWriterService;
 import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.CommentUpdateRequest;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
@@ -38,9 +37,6 @@ public class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
-    @MockBean
-    private CommentWriterService commentWriterService;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -62,13 +58,6 @@ public class CommentControllerTest {
                 .willReturn(CompletableFuture.completedFuture(
                         commentResponse()
                 ));
-
-        given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                commentWriterInfo()
-                        )
-                );
 
         webTestClient.post()
                 .uri("/api/comments")
@@ -103,12 +92,6 @@ public class CommentControllerTest {
 
     @Test
     void updateCommentTest() throws Exception {
-        given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                commentWriterInfo()
-                        )
-                );
 
         String expected = objectMapper.writeValueAsString(commentResponse());
 
@@ -133,13 +116,6 @@ public class CommentControllerTest {
     void deleteCommentTest() throws Exception {
         given(commentService.deleteComment(any(), any()))
                 .willReturn(CompletableFuture.completedFuture(COMMENT_ID));
-
-        given(commentWriterService.retrieveCommentWriterBy(any()))
-                .willReturn(
-                        CompletableFuture.completedFuture(
-                                commentWriterInfo()
-                        )
-                );
 
         webTestClient.delete()
                 .uri("/api/comments/1")

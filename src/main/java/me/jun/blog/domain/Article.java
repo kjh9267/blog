@@ -25,7 +25,7 @@ public class Article {
     private Long categoryId;
 
     @Column(nullable = false)
-    private Long writerId;
+    private String writerEmail;
 
     @Embedded
     private ArticleInfo articleInfo;
@@ -43,8 +43,8 @@ public class Article {
         return this;
     }
 
-    public Article updateWriterId(Long writerId) {
-        this.writerId = writerId;
+    public Article updateWriterId(String writerEmail) {
+        this.writerEmail = writerEmail;
         return this;
     }
 
