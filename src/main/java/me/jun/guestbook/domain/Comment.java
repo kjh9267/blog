@@ -10,7 +10,6 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 @Getter
-@Setter
 @EqualsAndHashCode(of = "id")
 public class Comment {
 
@@ -26,9 +25,20 @@ public class Comment {
     @Column(length = 100, nullable = false)
     private String content;
 
-    public void validateWriter(Long writerId) {
-        if (!commentWriter.match(writerId)) {
+    public Comment validateWriter(String writerEmail) {
+        if (!commentWriter.match(writerEmail)) {
             throw new CommentWriterMismatchException();
         }
+        return this;
+    }
+
+    public Comment updateCommentWriter(CommentWriter commentWriter) {
+        this.commentWriter = commentWriter;
+        return this;
+    }
+
+    public Comment updateContent(String content) {
+        this.content = content;
+        return this;
     }
 }

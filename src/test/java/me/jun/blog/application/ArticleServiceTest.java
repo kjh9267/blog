@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
 import static me.jun.blog.CategoryFixture.category;
@@ -43,7 +44,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void createArticleTest() {
+    void createArticleTest() throws ExecutionException, InterruptedException {
         ArticleResponse expected = articleResponse().toBuilder()
                 .articleId(null)
                 .build();
@@ -67,7 +68,7 @@ public class ArticleServiceTest {
 
         // When
 
-        ArticleResponse response = articleService.createArticle(articleCreateRequest());
+        ArticleResponse response = articleService.createArticle(articleCreateRequest(), ARTICLE_WRITER_EMAIL).get();
 
         // Then
 
@@ -78,11 +79,11 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void retrieveArticleTest() {
+    void retrieveArticleTest() throws ExecutionException, InterruptedException {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
-        ArticleResponse response = articleService.retrieveArticle(ARTICLE_ID);
+        ArticleResponse response = articleService.retrieveArticle(ARTICLE_ID).get();
 
         assertThat(response)
                 .isEqualToComparingFieldByField(articleResponse());
@@ -100,11 +101,11 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void updateArticleInfoTest() {
+    void updateArticleInfoTest() throws ExecutionException, InterruptedException {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
-        ArticleResponse response = articleService.updateArticleInfo(articleUpdateRequest());
+        ArticleResponse response = articleService.updateArticleInfo(articleUpdateRequest()).get();
 
         assertThat(response)
                 .isEqualToComparingFieldByField(updatedArticleResponse());
@@ -119,39 +120,5 @@ public class ArticleServiceTest {
                 ArticleNotFoundException.class,
                 () -> articleService.updateArticleInfo(articleUpdateRequest())
         );
-    }
-
-    @Test
-    void updateCategoryOfArticleTest() {
-        // Given
-
-        Article article = article();
-        Category oldCategory = category();
-        Category newCategory = category()
-                .toBuilder()
-                .id(2L)
-                .name("spring")
-                .build();
-
-        given(articleRepository.findById(any()))
-                .willReturn(Optional.of(article));
-
-        given(categoryService.createCategoryOrElseGet(any()))
-                .willReturn(newCategory);
-
-        given(categoryService.retrieveCategoryById(any()))
-                .willReturn(oldCategory);
-
-        doNothing()
-                .when(categoryMatchingService)
-                .changeMatch(any(), any(), any());
-
-        // When
-
-        articleService.updateCategoryOfArticle(articleUpdateRequest());
-
-        // Then
-
-        verify(categoryMatchingService).changeMatch(article, newCategory, oldCategory);
     }
 }

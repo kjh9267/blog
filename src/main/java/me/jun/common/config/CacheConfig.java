@@ -6,9 +6,10 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
+import static java.util.Collections.unmodifiableList;
 
 @Configuration
 public class CacheConfig {
@@ -16,8 +17,13 @@ public class CacheConfig {
     @Bean
     CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        ConcurrentMapCache concurrentMapCache = new ConcurrentMapCache("posts");
-        List<ConcurrentMapCache> caches = singletonList(concurrentMapCache);
+        ConcurrentMapCache postsCache = new ConcurrentMapCache("postStore");
+        ConcurrentMapCache tokenCache = new ConcurrentMapCache("tokenStore");
+        List<ConcurrentMapCache> caches = unmodifiableList(
+                Arrays.asList(
+                        postsCache,
+                        tokenCache
+        ));
         simpleCacheManager.setCaches(caches);
         return simpleCacheManager;
     }
