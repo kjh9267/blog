@@ -63,9 +63,6 @@ public class PostServiceTest {
                         .toBuilder()
                         .build()));
 
-        given(postCountService.updateHits(any()))
-                .willReturn(1L);
-
         assertThat(postService.retrievePost(POST_ID).get())
                 .isEqualToComparingFieldByField(postResponse());
     }
@@ -115,8 +112,6 @@ public class PostServiceTest {
                 .willReturn(Optional.of(post()));
         doNothing().when(postRepository)
                 .deleteById(any());
-        doNothing().when(commentService)
-                .deleteCommentByPostId(any());
 
         postService.deletePost(POST_ID, WRITER_ID);
 
