@@ -24,7 +24,6 @@ public class LoginService {
     private final JwtProvider jwtProvider;
 
     @Async
-    @Cacheable(cacheNames = "tokenStore")
     @Transactional(readOnly = true)
     public CompletableFuture<TokenResponse> login(MemberRequest request) {
         String email = request.getEmail();

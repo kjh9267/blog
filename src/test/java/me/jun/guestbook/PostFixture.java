@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
-import me.jun.guestbook.application.dto.PostWriterInfo;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.PostWriter;
 import org.springframework.data.domain.PageRequest;
@@ -64,12 +63,6 @@ public abstract class PostFixture {
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
                 .build());
-    }
-
-    public static PostWriterInfo postWriterInfo() {
-        return PostWriterInfo.builder()
-                .email(WRITER_EMAIL)
-                .build();
     }
 
     public static PageRequest pageRequest() {

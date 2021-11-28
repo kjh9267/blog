@@ -1,27 +1,31 @@
 package me.jun.support;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jun.common.security.InvalidTokenException;
 import me.jun.common.security.JwtProvider;
+import me.jun.member.application.dto.MemberInfo;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.BindingContext;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
-public abstract class ResolverTemplate<T> implements HandlerMethodArgumentResolver {
+@Component
+@RequiredArgsConstructor
+public class JwtSubjectResolver implements HandlerMethodArgumentResolver {
 
     private final JwtProvider provider;
 
-    public ResolverTemplate(JwtProvider provider) {
-        this.provider = provider;
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter) {
+        return methodParameter.hasParameterAnnotation(Member.class);
     }
 
     @Override
@@ -29,20 +33,13 @@ public abstract class ResolverTemplate<T> implements HandlerMethodArgumentResolv
                                         BindingContext bindingContext,
                                         ServerWebExchange serverWebExchange) {
 
-        HttpHeaders headers = serverWebExchange.getRequest().getHeaders();
-
-        for (String key: headers.keySet()) {
-            log.info(key);
-            log.info(headers.get(key).toString());
-        }
-
         String token = extractToken(serverWebExchange)
                 .orElseThrow(() -> new InvalidTokenException("No token"));
 
         provider.validateToken(token);
         String email = provider.extractSubject(token);
-        return Mono.fromCompletionStage(
-                getUser(email)
+        return Mono.just(
+                MemberInfo.from(email)
         );
     }
 
@@ -53,6 +50,4 @@ public abstract class ResolverTemplate<T> implements HandlerMethodArgumentResolv
                         .getFirst(AUTHORIZATION)
         );
     }
-
-    abstract protected CompletableFuture<T> getUser(String email);
 }

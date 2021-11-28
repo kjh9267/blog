@@ -3,6 +3,8 @@ package me.jun.guestbook.presentation;
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.application.CommentService;
 import me.jun.guestbook.application.dto.*;
+import me.jun.member.application.dto.MemberInfo;
+import me.jun.support.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<Mono<CommentResponse>> createComment(@RequestBody @Valid CommentCreateRequest request,
-                                                               @CommentWriter CommentWriterInfo writer) {
+                                                               @Member MemberInfo writer) {
         Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
                 commentService.createComment(request, writer.getEmail())
         ).log();
@@ -42,7 +44,7 @@ public class CommentController {
     @PutMapping
     public ResponseEntity<Mono<CommentResponse>>
         updateComment(@RequestBody @Valid CommentUpdateRequest request,
-                      @CommentWriter CommentWriterInfo writerInfo) {
+                      @Member MemberInfo writerInfo) {
         Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
                 commentService.updateComment(request, writerInfo.getEmail())
         ).log();
@@ -53,7 +55,7 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     ResponseEntity<Mono<Long>> deleteComment(@PathVariable Long commentId,
-                                             @CommentWriter CommentWriterInfo writerInfo) {
+                                             @Member MemberInfo writerInfo) {
         Mono<Long> longMono = Mono.fromCompletionStage(
                 commentService.deleteComment(commentId, writerInfo.getEmail())
         ).log();

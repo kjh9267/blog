@@ -51,7 +51,7 @@ class MemberServiceTest {
     @Test
     void deleteMemberTest() {
         doNothing().when(memberRepository)
-                .deleteById(any());
+                .deleteByEmail(any());
 
         memberService.deleteMember(EMAIL);
 
