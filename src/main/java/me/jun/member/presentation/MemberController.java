@@ -48,7 +48,7 @@ public class MemberController {
     @DeleteMapping("/leave")
     public ResponseEntity<Mono<Long>> leave(@Member MemberInfo memberInfo) {
         Mono<Long> longMono = Mono.fromCompletionStage(
-                memberService.deleteMember(memberInfo.getId())
+                memberService.deleteMember(memberInfo.getEmail())
         ).log();
 
         return ResponseEntity.ok()

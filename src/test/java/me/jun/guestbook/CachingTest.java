@@ -55,10 +55,10 @@ public class CachingTest {
 
     @Test
     void updateCacheTest() throws ExecutionException, InterruptedException {
-        postService.createPost(postCreateRequest(), WRITER_ID).get();
+        postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
         postService.retrievePost(POST_ID).get();
 
-        postService.updatePost(postUpdateRequest(), WRITER_ID).get();
+        postService.updatePost(postUpdateRequest(), WRITER_EMAIL).get();
 
         Post afterUpdate = (Post) cacheManager.getCache("postStore")
                 .get(POST_ID)
@@ -69,10 +69,10 @@ public class CachingTest {
 
     @Test
     void deleteCacheTest() throws ExecutionException, InterruptedException {
-        postService.createPost(postCreateRequest(), WRITER_ID).get();
+        postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
         postService.retrievePost(POST_ID).get();
 
-        postService.deletePost(POST_ID, WRITER_ID).get();
+        postService.deletePost(POST_ID, WRITER_EMAIL).get();
 
         assertThrows(
                 NullPointerException.class,
@@ -85,11 +85,11 @@ public class CachingTest {
     @Test
     void deleteAllCacheTest() throws ExecutionException, InterruptedException {
         for (int request = 0; request < 10; request++) {
-            postService.createPost(postCreateRequest(), WRITER_ID).get();
+            postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
         }
         postService.retrievePost(POST_ID).get();
 
-        postService.deletePostByWriterId(WRITER_ID).get();
+        postService.deletePostByWriterEmail(WRITER_EMAIL).get();
 
         assertThrows(
                 NullPointerException.class,

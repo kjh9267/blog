@@ -7,6 +7,7 @@ import me.jun.member.application.exception.EmailNotFoundException;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.repository.MemberRepository;
 import me.jun.common.security.JwtProvider;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class LoginService {
     private final JwtProvider jwtProvider;
 
     @Async
+    @Cacheable(cacheNames = "tokenStore")
     @Transactional(readOnly = true)
     public CompletableFuture<TokenResponse> login(MemberRequest request) {
         String email = request.getEmail();

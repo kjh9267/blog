@@ -10,7 +10,7 @@ import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +32,7 @@ public class PostTest {
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
-                .postWriter(new PostWriter(WRITER_ID))
+                .postWriter(new PostWriter(WRITER_EMAIL))
                 .build();
 
         assertAll(() -> assertThat(expected).isEqualToComparingFieldByField(post()),
@@ -44,11 +44,11 @@ public class PostTest {
     void validateWriterTest() {
         Post post = post();
         post.setPostWriter(postWriter);
-        given(postWriter.match(anyLong()))
+        given(postWriter.match(any()))
                 .willReturn(false);
 
         assertThrows(PostWriterMismatchException.class,
-                () -> post.validateWriter(2L)
+                () -> post.validateWriter("user@email.com")
         );
     }
 }
