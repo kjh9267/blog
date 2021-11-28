@@ -3,6 +3,7 @@ package me.jun.guestbook.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.PostFixture;
+import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.PostWriterService;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
@@ -47,6 +48,9 @@ PostControllerTest {
 
     @MockBean
     private PostService postService;
+
+    @MockBean
+    private PostCountService postCountService;
 
     @MockBean
     private PostWriterService postWriterService;
@@ -118,6 +122,9 @@ PostControllerTest {
                 .willReturn(CompletableFuture.completedFuture(
                         postResponse()
                 ));
+
+        given(postCountService.updateHits(POST_ID))
+                .willReturn(1L);
 
         webTestClient.get()
                 .uri("/api/posts/1")
