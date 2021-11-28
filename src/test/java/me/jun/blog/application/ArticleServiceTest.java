@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
 import static me.jun.blog.CategoryFixture.category;
@@ -43,7 +44,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void createArticleTest() {
+    void createArticleTest() throws ExecutionException, InterruptedException {
         ArticleResponse expected = articleResponse().toBuilder()
                 .articleId(null)
                 .build();
@@ -67,7 +68,7 @@ public class ArticleServiceTest {
 
         // When
 
-        ArticleResponse response = articleService.createArticle(articleCreateRequest(), articleWriterInfo());
+        ArticleResponse response = articleService.createArticle(articleCreateRequest(), articleWriterInfo()).get();
 
         // Then
 
@@ -78,11 +79,11 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void retrieveArticleTest() {
+    void retrieveArticleTest() throws ExecutionException, InterruptedException {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
-        ArticleResponse response = articleService.retrieveArticle(ARTICLE_ID);
+        ArticleResponse response = articleService.retrieveArticle(ARTICLE_ID).get();
 
         assertThat(response)
                 .isEqualToComparingFieldByField(articleResponse());
@@ -100,11 +101,11 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void updateArticleInfoTest() {
+    void updateArticleInfoTest() throws ExecutionException, InterruptedException {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
-        ArticleResponse response = articleService.updateArticleInfo(articleUpdateRequest());
+        ArticleResponse response = articleService.updateArticleInfo(articleUpdateRequest()).get();
 
         assertThat(response)
                 .isEqualToComparingFieldByField(updatedArticleResponse());

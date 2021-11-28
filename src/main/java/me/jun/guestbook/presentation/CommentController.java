@@ -3,19 +3,12 @@ package me.jun.guestbook.presentation;
 import lombok.RequiredArgsConstructor;
 import me.jun.guestbook.application.CommentService;
 import me.jun.guestbook.application.dto.*;
-import me.jun.guestbook.presentation.hateoas.CommentEntityModelCreator;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.net.URI;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @RestController
