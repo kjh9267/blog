@@ -1,6 +1,7 @@
 package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -51,7 +53,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        postCountService.updateHits(postId);
+        log.info("post service");
 
         return CompletableFuture.completedFuture(
                 PostResponse.of(post)
