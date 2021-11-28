@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.PostCountFixture.postCount;
 import static me.jun.guestbook.PostFixture.*;
@@ -44,28 +45,25 @@ public class PostServiceTest {
     }
 
     @Test
-    void createPostTest() {
+    void createPostTest() throws ExecutionException, InterruptedException {
         given(postRepository.save(any()))
                 .willReturn(post());
 
         given(postCountService.createPostCount(any()))
                 .willReturn(postCount());
 
-        assertThat(postService.createPost(postCreateRequest(), WRITER_ID))
+        assertThat(postService.createPost(postCreateRequest(), WRITER_EMAIL).get())
                 .isEqualToComparingFieldByField(postResponse());
     }
 
     @Test
-    void retrievePostTest() {
+    void retrievePostTest() throws ExecutionException, InterruptedException {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()
                         .toBuilder()
                         .build()));
 
-        given(postCountService.updateHits(any()))
-                .willReturn(1L);
-
-        assertThat(postService.retrievePost(POST_ID))
+        assertThat(postService.retrievePost(POST_ID).get())
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -80,11 +78,11 @@ public class PostServiceTest {
     }
 
     @Test
-    void updatePostTest() {
+    void updatePostTest() throws ExecutionException, InterruptedException {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        assertThat(postService.updatePost(postUpdateRequest(), WRITER_ID))
+        assertThat(postService.updatePost(postUpdateRequest(), WRITER_EMAIL).get())
                 .isEqualToComparingFieldByField(updatedPostResponse());
     }
 
@@ -94,7 +92,7 @@ public class PostServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.updatePost(postUpdateRequest(), WRITER_ID)
+                () -> postService.updatePost(postUpdateRequest(), WRITER_EMAIL)
         );
     }
 
@@ -104,7 +102,7 @@ public class PostServiceTest {
                 .willReturn(Optional.of(post()));
 
         assertThrows(PostWriterMismatchException.class,
-                () -> postService.updatePost(postUpdateRequest(), 2L)
+                () -> postService.updatePost(postUpdateRequest(), "user@email.com")
         );
     }
 
@@ -114,10 +112,8 @@ public class PostServiceTest {
                 .willReturn(Optional.of(post()));
         doNothing().when(postRepository)
                 .deleteById(any());
-        doNothing().when(commentService)
-                .deleteCommentByPostId(any());
 
-        postService.deletePost(POST_ID, WRITER_ID);
+        postService.deletePost(POST_ID, WRITER_EMAIL);
 
         verify(postRepository).deleteById(POST_ID);
         verify(commentService).deleteCommentByPostId(POST_ID);
@@ -128,7 +124,7 @@ public class PostServiceTest {
         doNothing().when(postRepository)
                 .deleteAllByPostWriter(postWriter());
 
-        postService.deletePostByWriterId(WRITER_ID);
+        postService.deletePostByWriterEmail(WRITER_EMAIL);
 
         verify(postRepository).deleteAllByPostWriter(postWriter());
     }

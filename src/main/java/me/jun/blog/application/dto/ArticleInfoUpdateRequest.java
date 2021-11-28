@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class ArticleUpdateRequest {
+public class ArticleInfoUpdateRequest {
 
     @NotNull
     private Long id;

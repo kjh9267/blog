@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,16 +45,22 @@ public class CachingTest {
 
         assertThat(delay)
                 .isCloseTo(2L, Offset.offset(1L));
+
+        assertThat(
+                cacheManager.getCache("postStore")
+                        .get(POST_ID)
+                        .get()
+        ).isEqualTo(post());
     }
 
     @Test
-    void updateCacheTest() {
-        postService.createPost(postCreateRequest(), WRITER_ID);
-        postService.retrievePost(POST_ID);
+    void updateCacheTest() throws ExecutionException, InterruptedException {
+        postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
+        postService.retrievePost(POST_ID).get();
 
-        postService.updatePost(postUpdateRequest(), WRITER_ID);
+        postService.updatePost(postUpdateRequest(), WRITER_EMAIL).get();
 
-        Post afterUpdate = (Post) cacheManager.getCache("posts")
+        Post afterUpdate = (Post) cacheManager.getCache("postStore")
                 .get(POST_ID)
                 .get();
 
@@ -61,32 +68,32 @@ public class CachingTest {
     }
 
     @Test
-    void deleteCacheTest() {
-        postService.createPost(postCreateRequest(), WRITER_ID);
-        postService.retrievePost(POST_ID);
+    void deleteCacheTest() throws ExecutionException, InterruptedException {
+        postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
+        postService.retrievePost(POST_ID).get();
 
-        postService.deletePost(POST_ID, WRITER_ID);
+        postService.deletePost(POST_ID, WRITER_EMAIL).get();
 
         assertThrows(
                 NullPointerException.class,
-                () -> cacheManager.getCache("posts")
+                () -> cacheManager.getCache("postStore")
                         .get(POST_ID)
                         .get()
         );
     }
 
     @Test
-    void deleteAllCacheTest() {
+    void deleteAllCacheTest() throws ExecutionException, InterruptedException {
         for (int request = 0; request < 10; request++) {
-            postService.createPost(postCreateRequest(), WRITER_ID);
+            postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
         }
-        postService.retrievePost(POST_ID);
+        postService.retrievePost(POST_ID).get();
 
-        postService.deletePostByWriterId(WRITER_ID);
+        postService.deletePostByWriterEmail(WRITER_EMAIL).get();
 
         assertThrows(
                 NullPointerException.class,
-                () -> cacheManager.getCache("posts")
+                () -> cacheManager.getCache("postStore")
                         .get(POST_ID)
                         .get()
         );

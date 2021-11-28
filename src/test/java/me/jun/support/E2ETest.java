@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 import static me.jun.member.MemberFixture.ACCESS_TOKEN;
 import static me.jun.member.MemberFixture.memberRequest;
 import static org.hamcrest.Matchers.hasKey;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,7 +30,7 @@ public abstract class E2ETest {
                 .post("/api/register")
 
                 .then()
-                .statusCode(CREATED.value());
+                .statusCode(OK.value());
     }
 
     protected String login() {
@@ -43,7 +43,7 @@ public abstract class E2ETest {
                 .post("/api/login")
 
                 .then()
-                .statusCode(CREATED.value())
+                .statusCode(OK.value())
                 .assertThat().body("$", hasKey(ACCESS_TOKEN))
                 .extract()
                 .path(ACCESS_TOKEN);

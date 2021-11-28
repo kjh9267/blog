@@ -12,7 +12,7 @@ class PostWriterTest {
     void constructorTest() {
         PostWriter postWriter = postWriter();
 
-        PostWriter expected = new PostWriter(1L);
+        PostWriter expected = new PostWriter("testuser@email.com");
 
         assertAll(
                 () -> assertThat(postWriter).isInstanceOf(PostWriter.class),
@@ -25,8 +25,8 @@ class PostWriterTest {
         PostWriter postWriter = postWriter();
 
         assertAll(
-                () -> assertThat(postWriter.match(1L)).isTrue(),
-                () -> assertThat(postWriter.match(2L)).isFalse()
+                () -> assertThat(postWriter.match("testuser@email.com")).isTrue(),
+                () -> assertThat(postWriter.match("user@email.com")).isFalse()
         );
     }
 }

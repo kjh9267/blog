@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static me.jun.member.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -34,11 +35,14 @@ public class LoginServiceTest {
     }
 
     @Test
-    void loginTest() {
-        given(jwtProvider.createJwt(any())).willReturn(JWT);
-        given(memberRepository.findByEmail(any())).willReturn(Optional.of(member()));
+    void loginTest() throws ExecutionException, InterruptedException {
+        given(jwtProvider.createJwt(any()))
+                .willReturn(JWT);
 
-        assertThat(loginService.login(memberRequest()))
+        given(memberRepository.findByEmail(any()))
+                .willReturn(Optional.of(member()));
+
+        assertThat(loginService.login(memberRequest()).get())
                 .isEqualTo(tokenResponse());
     }
 

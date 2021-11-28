@@ -8,6 +8,8 @@ abstract public class CategoryFixture {
 
     public static final String CATEGORY_NAME = "java";
 
+    public static final String NEW_CATEGORY_NAME = "spring";
+
     public static final Long MAPPED_ARTICLE_COUNT = 1L;
 
     public static Category category() {

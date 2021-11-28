@@ -1,4 +1,4 @@
-package me.jun.member.presentation;
+package me.jun.support;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MemberInfo {
+public @interface Member {
 }

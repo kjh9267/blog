@@ -2,28 +2,15 @@ package me.jun.member;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.jun.member.domain.Member;
 import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
+import me.jun.member.domain.Member;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class MemberFixture {
-    public static final String LINKS_SELF_HREF = "_links.self.href";
 
     public static final String ACCESS_TOKEN = "access_token";
-
-    public static final String LINKS_LOGIN_HREF = "_links.login.href";
-
-    public static final String LINKS_REGISTER_HREF = "_links.register.href";
-
-    public static final String LINKS_LEAVE_HREF = "_links.leave.href";
-
-    public static final String LOGIN_SELF_URI = "http://localhost/api/login";
-
-    public static final String REGISTER_SELF_URI = "http://localhost/api/register";
-
-    public static final String LEAVE_SELF_URI = "http://localhost/api/leave";
 
     public static final Long MEMBER_ID = 1L;
 
