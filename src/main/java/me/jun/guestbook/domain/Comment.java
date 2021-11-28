@@ -25,8 +25,8 @@ public class Comment {
     @Column(length = 100, nullable = false)
     private String content;
 
-    public Comment validateWriter(Long writerId) {
-        if (!commentWriter.match(writerId)) {
+    public Comment validateWriter(String writerEmail) {
+        if (!commentWriter.match(writerEmail)) {
             throw new CommentWriterMismatchException();
         }
         return this;

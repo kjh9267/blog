@@ -33,10 +33,10 @@ public class PostService {
     private final PostCountService postCountService;
 
     @Async
-    public CompletableFuture<PostResponse> createPost(PostCreateRequest postCreateRequest, Long writerId) {
+    public CompletableFuture<PostResponse> createPost(PostCreateRequest postCreateRequest, String writerEmail) {
         Post post = postCreateRequest.toEntity();
 
-        post.setPostWriter(new PostWriter(writerId));
+        post.setPostWriter(new PostWriter(writerEmail));
         post = postRepository.save(post);
 
         Long postId = post.getId();
@@ -62,12 +62,12 @@ public class PostService {
 
     @Async
     @CachePut(cacheNames = "postStore")
-    public CompletableFuture<PostResponse> updatePost(PostUpdateRequest dto, Long writerId) {
+    public CompletableFuture<PostResponse> updatePost(PostUpdateRequest dto, String writerEmail) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
-        post.validateWriter(writerId);
+        post.validateWriter(writerEmail);
 
         post = post.updatePost(
                 requestPost.getTitle(),
@@ -81,11 +81,11 @@ public class PostService {
 
     @Async
     @CacheEvict(cacheNames = "postStore", key = "#postId")
-    public CompletableFuture<Long> deletePost(Long postId, Long writerId) {
+    public CompletableFuture<Long> deletePost(Long postId, String writerEmail) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        post.validateWriter(writerId);
+        post.validateWriter(writerEmail);
 
         postRepository.deleteById(postId);
         commentService.deleteCommentByPostId(postId);
@@ -94,8 +94,8 @@ public class PostService {
     }
 
     @Async
-    public CompletableFuture<Void> deletePostByWriterId(Long writerId) {
-        PostWriter postWriter = new PostWriter(writerId);
+    public CompletableFuture<Void> deletePostByWriterEmail(String writerEmail) {
+        PostWriter postWriter = new PostWriter(writerEmail);
         postRepository.deleteAllByPostWriter(postWriter);
 
         return CompletableFuture.completedFuture(null);

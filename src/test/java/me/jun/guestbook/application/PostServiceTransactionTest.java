@@ -23,7 +23,7 @@ public class PostServiceTransactionTest extends E2ETest {
     void setUp() {
         register();
         token = login();
-        postService.createPost(postCreateRequest(), WRITER_ID);
+        postService.createPost(postCreateRequest(), WRITER_EMAIL);
     }
 
     @Test

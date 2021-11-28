@@ -22,7 +22,7 @@ public class CommentController {
     public ResponseEntity<Mono<CommentResponse>> createComment(@RequestBody @Valid CommentCreateRequest request,
                                                                @CommentWriter CommentWriterInfo writer) {
         Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
-                commentService.createComment(request, writer.getId())
+                commentService.createComment(request, writer.getEmail())
         ).log();
 
         return ResponseEntity.ok()
@@ -44,7 +44,7 @@ public class CommentController {
         updateComment(@RequestBody @Valid CommentUpdateRequest request,
                       @CommentWriter CommentWriterInfo writerInfo) {
         Mono<CommentResponse> commentResponseMono = Mono.fromCompletionStage(
-                commentService.updateComment(request, writerInfo.getId())
+                commentService.updateComment(request, writerInfo.getEmail())
         ).log();
 
         return ResponseEntity.ok()
@@ -55,7 +55,7 @@ public class CommentController {
     ResponseEntity<Mono<Long>> deleteComment(@PathVariable Long commentId,
                                              @CommentWriter CommentWriterInfo writerInfo) {
         Mono<Long> longMono = Mono.fromCompletionStage(
-                commentService.deleteComment(commentId, writerInfo.getId())
+                commentService.deleteComment(commentId, writerInfo.getEmail())
         ).log();
         return ResponseEntity.ok()
                 .body(longMono);

@@ -37,14 +37,14 @@ public class CommentTest {
         comment.updateCommentWriter(commentWriter);
 
         assertThrows(CommentWriterMismatchException.class,
-                () -> comment.validateWriter(2L)
+                () -> comment.validateWriter("user@email.com")
         );
     }
 
     @Test
     void updateCommentWriterTest() {
         Comment comment = comment();
-        CommentWriter newCommentWriter = new CommentWriter(2L);
+        CommentWriter newCommentWriter = new CommentWriter("user@email.com");
 
         Comment newComment = comment.updateCommentWriter(newCommentWriter);
 
