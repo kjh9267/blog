@@ -5,32 +5,12 @@ import lombok.NoArgsConstructor;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
-import me.jun.guestbook.application.dto.PostWriterInfo;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.PostWriter;
 import org.springframework.data.domain.PageRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class PostFixture {
-    public static final String LINKS_SELF_HREF = "_links.self.href";
-
-    public static final String LINKS_CREATE_POST_HREF = "_links.create_post.href";
-
-    public static final String LINKS_GET_POST_HREF = "_links.get_post.href";
-
-    public static final String LINKS_UPDATE_POST_HREF = "_links.update_post.href";
-
-    public static final String LINKS_DELETE_POST_HREF = "_links.delete_post.href";
-
-    public static final String QUERY_POSTS_URI = "http://localhost/api/posts/query";
-
-    public static final String POSTS_SELF_URI = "http://localhost/api/posts";
-
-    public static final String LINKS_HOME_HREF = "_links.home.href";
-
-    public static final String STATUS_CODE = "status_code";
-
-    public static final String MESSAGE = "message";
 
     public static final String TITLE = "test title";
 
@@ -42,14 +22,10 @@ public abstract class PostFixture {
 
     public static final Long POST_ID = 1L;
 
-    public static final Long WRITER_ID = 1L;
-
-    public static final String WRITER_NAME = "test user";
-
-    public static final String EMAIL = "testuser@email.com";
+    public static final String WRITER_EMAIL = "testuser@email.com";
 
     public static PostWriter postWriter() {
-        return new PostWriter(WRITER_ID);
+        return new PostWriter(WRITER_EMAIL);
     }
 
 
@@ -87,14 +63,6 @@ public abstract class PostFixture {
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
                 .build());
-    }
-
-    public static PostWriterInfo postWriterInfo() {
-        return PostWriterInfo.builder()
-                .id(WRITER_ID)
-                .name(WRITER_NAME)
-                .email(EMAIL)
-                .build();
     }
 
     public static PageRequest pageRequest() {

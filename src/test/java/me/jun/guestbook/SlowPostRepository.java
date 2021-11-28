@@ -11,7 +11,7 @@ import static me.jun.guestbook.PostFixture.post;
 @Component
 public class SlowPostRepository {
 
-    @Cacheable(cacheNames = "posts", key = "#postId")
+    @Cacheable(cacheNames = "postStore", key = "#postId")
     public Optional<Post> findById(Long postId) {
         try {
             Thread.sleep(2_000);

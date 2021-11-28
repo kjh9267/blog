@@ -2,6 +2,7 @@ package me.jun.guestbook.domain;
 
 import org.junit.jupiter.api.Test;
 
+import static me.jun.guestbook.CommentFixture.EMAIL;
 import static me.jun.guestbook.CommentFixture.commentWriter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,7 +13,7 @@ class CommentWriterTest {
     void constructorTest() {
         CommentWriter commentWriter = commentWriter();
 
-        CommentWriter expected = new CommentWriter(1L);
+        CommentWriter expected = new CommentWriter(EMAIL);
 
         assertAll(
                 () -> assertThat(commentWriter).isInstanceOf(CommentWriter.class),
@@ -25,8 +26,8 @@ class CommentWriterTest {
         CommentWriter commentWriter = commentWriter();
 
         assertAll(
-                () -> assertThat(commentWriter.match(1L)).isTrue(),
-                () -> assertThat(commentWriter.match(2L)).isFalse()
+                () -> assertThat(commentWriter.match("testuser@email.com")).isTrue(),
+                () -> assertThat(commentWriter.match("user@email.com")).isFalse()
         );
     }
 }

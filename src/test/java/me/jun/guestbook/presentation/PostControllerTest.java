@@ -1,50 +1,46 @@
 package me.jun.guestbook.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.PostFixture;
+import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
-import me.jun.guestbook.application.PostWriterService;
-import me.jun.guestbook.application.exception.PostNotFoundException;
-import me.jun.guestbook.domain.exception.PostWriterMismatchException;
-import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
-import me.jun.common.security.JwtProvider;
+import me.jun.guestbook.application.exception.PostNotFoundException;
+import me.jun.guestbook.domain.Post;
+import me.jun.guestbook.domain.exception.PostWriterMismatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.security.Key;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 import static me.jun.guestbook.PostFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
+@AutoConfigureWebTestClient
 @SpringBootTest
-public class PostControllerTest {
+public class
+
+PostControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -53,7 +49,7 @@ public class PostControllerTest {
     private PostService postService;
 
     @MockBean
-    private PostWriterService postWriterService;
+    private PostCountService postCountService;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -62,34 +58,31 @@ public class PostControllerTest {
 
     @BeforeEach
     public void setUp() {
-        jwt = jwtProvider.createJwt(EMAIL);
+        jwt = jwtProvider.createJwt(WRITER_EMAIL);
     }
 
     @Test
     public void createPostTest() throws Exception {
-        String content = objectMapper.writeValueAsString(postCreateRequest());
+        String expected = objectMapper.writeValueAsString(postResponse());
 
         given(postService.createPost(any(), any()))
-                .willReturn(postResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        postResponse()
+                ));
 
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(postWriterInfo());
+        webTestClient.post()
+                .uri("/api/posts")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .header(AUTHORIZATION, jwt)
 
-        mockMvc.perform(post("/api/posts")
-                    .content(content)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(HAL_JSON)
-                    .header(AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(header().string("location", POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"));
+                .body(Mono.just(postCreateRequest()), PostCreateRequest.class)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody().json(expected);
     }
-
 
     @Test
     void invalidInput_createPostFailTest() throws Exception {
@@ -98,38 +91,37 @@ public class PostControllerTest {
                 .content(" ")
                 .build();
 
-        String content = objectMapper.writeValueAsString(request);
-
-        mockMvc.perform(post("/api/posts")
+        webTestClient.post()
+                .uri("/api/posts")
                 .header(AUTHORIZATION, jwt)
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(HAL_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath(STATUS_CODE).exists())
-                .andExpect(jsonPath(MESSAGE).exists())
-                .andExpect(jsonPath(LINKS_HOME_HREF).exists());
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+
+                .body(Mono.just(request), PostCreateRequest.class)
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
     public void retrievePostTest() throws Exception {
-        given(postService.retrievePost(any()))
-                .willReturn(postResponse());
+        String expected = objectMapper.writeValueAsString(postResponse());
 
-        mockMvc.perform(get("/api/posts/1")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(HAL_JSON))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath("id").value("1"))
-                .andExpect(jsonPath("title").value(TITLE))
-                .andExpect(jsonPath("content").value(CONTENT));
+        given(postService.retrievePost(any()))
+                .willReturn(CompletableFuture.completedFuture(
+                        postResponse()
+                ));
+
+        given(postCountService.updateHits(POST_ID))
+                .willReturn(1L);
+
+        webTestClient.get()
+                .uri("/api/posts/1")
+                .accept(APPLICATION_JSON)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful()
+                .expectBody().json(expected);
     }
 
     @Test
@@ -137,51 +129,49 @@ public class PostControllerTest {
         given(postService.retrievePost(any()))
                 .willThrow(new PostNotFoundException());
 
-        mockMvc.perform(get("/api/posts/1"))
-                .andExpect(status().is4xxClientError())
-                .andDo(print());
+        webTestClient.get()
+                .uri("/api/posts/1")
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
     public void updatePostTest() throws Exception {
-        String content = objectMapper.writeValueAsString(postUpdateRequest());
+        String expected = objectMapper.writeValueAsString(updatedPostResponse());
 
         given(postService.updatePost(any(), any()))
-                .willReturn(postResponse());
+                .willReturn(CompletableFuture.completedFuture(
+                        updatedPostResponse()
+                ));
 
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(postWriterInfo());
+        webTestClient.put()
+                .uri("/api/posts")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(Mono.just(postUpdateRequest()), PostUpdateRequest.class)
+                .exchange()
 
-        mockMvc.perform(put("/api/posts")
-                    .content(content)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(HAL_JSON)
-                    .header(AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_GET_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_UPDATE_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath(LINKS_DELETE_POST_HREF).value(POSTS_SELF_URI + "/1"))
-                .andExpect(jsonPath("id").value("1"))
-                .andExpect(jsonPath("title").value(TITLE))
-                .andExpect(jsonPath("content").value(CONTENT));
+                .expectStatus().is2xxSuccessful()
+                .expectBody().json(expected);
     }
 
     @Test
     void noPost_updatePostFailTest() throws Exception {
-        String content = objectMapper.writeValueAsString(postUpdateRequest());
-
         doThrow(PostNotFoundException.class)
                 .when(postService)
                 .updatePost(any(), any());
 
-        mockMvc.perform(put("/api/posts")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
+        webTestClient.put()
+                .uri("/api/posts")
+                .header(AUTHORIZATION, jwt)
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .body(Mono.just(postUpdateRequest()), PostUpdateRequest.class)
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
@@ -192,17 +182,18 @@ public class PostControllerTest {
                 .content("new content")
                 .build();
 
-        String content = objectMapper.writeValueAsString(request);
-
         doThrow(PostWriterMismatchException.class)
                 .when(postService)
                 .updatePost(any(), any());
 
-        mockMvc.perform(put("/api/posts")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
+        webTestClient.put()
+                .uri("/api/posts")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(Mono.just(request), PostUpdateRequest.class)
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
@@ -213,36 +204,29 @@ public class PostControllerTest {
                 .content(" ")
                 .build();
 
-        String content = objectMapper.writeValueAsString(request);
-
-        mockMvc.perform(put("/api/posts")
+        webTestClient.put()
+                .uri("/api/posts")
                 .header(AUTHORIZATION, jwt)
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(HAL_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError())
-                    .andExpect(jsonPath(STATUS_CODE).exists())
-                .andExpect(jsonPath(MESSAGE).exists())
-                .andExpect(jsonPath(LINKS_HOME_HREF).exists());
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(Mono.just(request), PostUpdateRequest.class)
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
     public void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
-                .willReturn(POST_ID);
+                .willReturn(CompletableFuture.completedFuture(POST_ID));
 
-        given(postWriterService.retrievePostWriterBy(any()))
-                .willReturn(postWriterInfo());
+        webTestClient.delete()
+                .uri("/api/posts/1")
+                .header(AUTHORIZATION, jwt)
+                .accept(APPLICATION_JSON)
+                .exchange()
 
-        mockMvc.perform(delete("/api/posts/1")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(HAL_JSON)
-                .header(AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(POSTS_SELF_URI))
-                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI));
+                .expectStatus().is2xxSuccessful();
     }
 
     @Test
@@ -251,9 +235,11 @@ public class PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/api/posts/2"))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
+        webTestClient.delete()
+                .uri("/api/posts/2")
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
@@ -262,9 +248,11 @@ public class PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/api/posts/1"))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
+        webTestClient.delete()
+                .uri("/api/posts/1")
+                .exchange()
+
+                .expectStatus().is4xxClientError();
     }
 
     @Test
@@ -272,15 +260,17 @@ public class PostControllerTest {
         PagedPostsResponse response = PagedPostsResponse.from(new PageImpl<Post>(
                 Arrays.asList(PostFixture.post())));
 
+        String expected = objectMapper.writeValueAsString(response);
+
         given(postService.queryPosts(any()))
                 .willReturn(response);
 
-        mockMvc.perform(get("/api/posts/query/?page=1&size=10")
-                .accept(HAL_JSON))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath(LINKS_SELF_HREF).value(QUERY_POSTS_URI))
-                .andExpect(jsonPath(LINKS_CREATE_POST_HREF).value(POSTS_SELF_URI));
+        webTestClient.get()
+                .uri("/api/posts/query/?page=1&size=10")
+                .accept(APPLICATION_JSON)
+                .exchange()
+
+                .expectStatus().is2xxSuccessful();
     }
 
     private Key getKey() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {

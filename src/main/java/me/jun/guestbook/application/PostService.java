@@ -1,6 +1,7 @@
 package me.jun.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
@@ -13,9 +14,13 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.CompletableFuture;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,58 +32,73 @@ public class PostService {
 
     private final PostCountService postCountService;
 
-    public PostResponse createPost(PostCreateRequest postCreateRequest, Long writerId) {
+    @Async
+    public CompletableFuture<PostResponse> createPost(PostCreateRequest postCreateRequest, String writerEmail) {
         Post post = postCreateRequest.toEntity();
 
-        post.setPostWriter(new PostWriter(writerId));
+        post.setPostWriter(new PostWriter(writerEmail));
         post = postRepository.save(post);
 
         Long postId = post.getId();
         postCountService.createPostCount(postId);
 
-        return PostResponse.of(post);
+        return CompletableFuture.completedFuture(
+                PostResponse.of(post)
+        );
     }
 
+    @Async
     @Transactional(readOnly = true)
-    public PostResponse retrievePost(Long postId) {
+    public CompletableFuture<PostResponse> retrievePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        postCountService.updateHits(postId);
+        log.info("post service");
 
-        return PostResponse.of(post);
+        return CompletableFuture.completedFuture(
+                PostResponse.of(post)
+        );
     }
 
-    @CachePut(cacheNames = "posts")
-    public PostResponse updatePost(PostUpdateRequest dto, Long writerId) {
+    @Async
+    @CachePut(cacheNames = "postStore")
+    public CompletableFuture<PostResponse> updatePost(PostUpdateRequest dto, String writerEmail) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
                 .orElseThrow(PostNotFoundException::new);
 
-        post.validateWriter(writerId);
+        post.validateWriter(writerEmail);
 
-        String title = requestPost.getTitle();
-        String content = requestPost.getContent();
-        post.updatePost(title, content);
+        post = post.updatePost(
+                requestPost.getTitle(),
+                requestPost.getContent()
+        );
 
-        return PostResponse.of(post);
+        return CompletableFuture.completedFuture(
+                PostResponse.of(post)
+        );
     }
 
-    @CacheEvict(cacheNames = "posts", key = "#postId")
-    public Long deletePost(Long postId, Long writerId) {
+    @Async
+    @CacheEvict(cacheNames = "postStore", key = "#postId")
+    public CompletableFuture<Long> deletePost(Long postId, String writerEmail) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        post.validateWriter(writerId);
+        post.validateWriter(writerEmail);
 
         postRepository.deleteById(postId);
         commentService.deleteCommentByPostId(postId);
-        return postId;
+
+        return CompletableFuture.completedFuture(postId);
     }
 
-    public void deletePostByWriterId(Long writerId) {
-        PostWriter postWriter = new PostWriter(writerId);
+    @Async
+    public CompletableFuture<Void> deletePostByWriterEmail(String writerEmail) {
+        PostWriter postWriter = new PostWriter(writerEmail);
         postRepository.deleteAllByPostWriter(postWriter);
+
+        return CompletableFuture.completedFuture(null);
     }
 
     public PagedPostsResponse queryPosts(PageRequest request) {
