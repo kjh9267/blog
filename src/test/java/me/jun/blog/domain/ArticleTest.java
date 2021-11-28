@@ -36,7 +36,7 @@ public class ArticleTest {
     void constructorTest2() {
         Article expected = Article.builder()
                 .id(1L)
-                .writerId(1L)
+                .writerEmail("testuser@email.com")
                 .categoryId(1L)
                 .articleInfo(articleInfo())
                 .build();

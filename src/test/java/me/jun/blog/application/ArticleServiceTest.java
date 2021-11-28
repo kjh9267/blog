@@ -68,7 +68,7 @@ public class ArticleServiceTest {
 
         // When
 
-        ArticleResponse response = articleService.createArticle(articleCreateRequest(), articleWriterInfo()).get();
+        ArticleResponse response = articleService.createArticle(articleCreateRequest(), ARTICLE_WRITER_EMAIL).get();
 
         // Then
 
