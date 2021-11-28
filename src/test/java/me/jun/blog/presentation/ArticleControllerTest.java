@@ -2,7 +2,6 @@ package me.jun.blog.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.blog.application.ArticleService;
-import me.jun.blog.application.ArticleWriterService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.common.security.JwtProvider;
@@ -10,12 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CompletableFuture;
@@ -24,10 +21,7 @@ import static me.jun.blog.ArticleFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
@@ -45,19 +39,11 @@ public class ArticleControllerTest {
     @MockBean
     private ArticleService articleService;
 
-    @MockBean
-    private ArticleWriterService articleWriterService;
-
     private String jwt;
 
     @BeforeEach
     void setUp() {
         jwt = jwtProvider.createJwt(ARTICLE_WRITER_EMAIL);
-
-        given(articleWriterService.retrieveArticleWriter(any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        articleWriterInfo()
-                ));
     }
 
     @Test

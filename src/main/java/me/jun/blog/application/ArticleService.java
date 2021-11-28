@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
-import me.jun.blog.application.dto.ArticleWriterInfo;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
@@ -28,9 +27,9 @@ public class ArticleService {
     private final CategoryMatchingService categoryMatchingService;
 
     @Async
-    public CompletableFuture<ArticleResponse> createArticle(ArticleCreateRequest request, ArticleWriterInfo articleWriterInfoId) {
+    public CompletableFuture<ArticleResponse> createArticle(ArticleCreateRequest request, String writerEmail) {
         Article article = request.toArticle()
-                .updateWriterId(articleWriterInfoId.getId());
+                .updateWriterId(writerEmail);
 
         String categoryName = request.getCategoryName();
         Category category = categoryService.createCategoryOrElseGet(categoryName);

@@ -1,9 +1,8 @@
 package me.jun.blog;
 
 import me.jun.blog.application.dto.ArticleCreateRequest;
-import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
-import me.jun.blog.application.dto.ArticleWriterInfo;
+import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
 
@@ -28,7 +27,7 @@ abstract public class ArticleFixture {
     public static Article article() {
         return Article.builder()
                 .id(ARTICLE_ID)
-                .writerId(ARTICLE_WRITER_ID)
+                .writerEmail(ARTICLE_WRITER_EMAIL)
                 .articleInfo(articleInfo())
                 .categoryId(CATEGORY_ID)
                 .build();
@@ -67,12 +66,6 @@ abstract public class ArticleFixture {
                 .articleId(ARTICLE_ID)
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
-                .build();
-    }
-
-    public static ArticleWriterInfo articleWriterInfo() {
-        return ArticleWriterInfo.builder()
-                .id(ARTICLE_WRITER_ID)
                 .build();
     }
 }

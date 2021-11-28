@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.dto.*;
+import me.jun.member.application.dto.MemberInfo;
+import me.jun.support.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -26,7 +28,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Mono<PostResponse>> createPost(@RequestBody @Valid PostCreateRequest request,
-                                                        @PostWriter PostWriterInfo writer) {
+                                                         @Member MemberInfo writer) {
 
         Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
                 () -> postService.createPost(request, writer.getEmail())
@@ -58,7 +60,7 @@ public class PostController {
 
     @PutMapping
     public ResponseEntity<Mono<PostResponse>> updatePost(@RequestBody @Valid PostUpdateRequest requestDto,
-                                                         @PostWriter PostWriterInfo writer) {
+                                                         @Member MemberInfo writer) {
 
         Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
                 () -> postService.updatePost(requestDto, writer.getEmail())
@@ -70,7 +72,7 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Mono<Long>> deletePost(@PathVariable Long postId,
-                                                 @PostWriter PostWriterInfo writer) {
+                                                 @Member MemberInfo writer) {
         Mono<Long> mono = Mono.fromCompletionStage(
                 () -> postService.deletePost(postId, writer.getEmail())
         ).log();
