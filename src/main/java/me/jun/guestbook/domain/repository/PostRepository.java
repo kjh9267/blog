@@ -14,10 +14,10 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Override
-    @Cacheable(cacheNames = "posts", key = "#postId")
+    @Cacheable(cacheNames = "postStore", key = "#postId")
     Optional<Post> findById(Long postId);
 
-    @CacheEvict(cacheNames = "posts", allEntries = true)
+    @CacheEvict(cacheNames = "postStore", allEntries = true)
     @Modifying(clearAutomatically = true)
     @Query("delete from Post p where p.postWriter = :postWriter")
     void deleteAllByPostWriter(PostWriter postWriter);

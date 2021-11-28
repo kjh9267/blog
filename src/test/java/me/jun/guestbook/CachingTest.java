@@ -45,6 +45,12 @@ public class CachingTest {
 
         assertThat(delay)
                 .isCloseTo(2L, Offset.offset(1L));
+
+        assertThat(
+                cacheManager.getCache("postStore")
+                        .get(POST_ID)
+                        .get()
+        ).isEqualTo(post());
     }
 
     @Test
@@ -54,7 +60,7 @@ public class CachingTest {
 
         postService.updatePost(postUpdateRequest(), WRITER_ID).get();
 
-        Post afterUpdate = (Post) cacheManager.getCache("posts")
+        Post afterUpdate = (Post) cacheManager.getCache("postStore")
                 .get(POST_ID)
                 .get();
 
@@ -70,7 +76,7 @@ public class CachingTest {
 
         assertThrows(
                 NullPointerException.class,
-                () -> cacheManager.getCache("posts")
+                () -> cacheManager.getCache("postStore")
                         .get(POST_ID)
                         .get()
         );
@@ -87,7 +93,7 @@ public class CachingTest {
 
         assertThrows(
                 NullPointerException.class,
-                () -> cacheManager.getCache("posts")
+                () -> cacheManager.getCache("postStore")
                         .get(POST_ID)
                         .get()
         );
