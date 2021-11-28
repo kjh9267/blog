@@ -16,8 +16,8 @@ public class CacheConfig {
     @Bean
     CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        ConcurrentMapCache concurrentMapCache = new ConcurrentMapCache("posts");
-        List<ConcurrentMapCache> caches = singletonList(concurrentMapCache);
+        ConcurrentMapCache postsCache = new ConcurrentMapCache("postStore");
+        List<ConcurrentMapCache> caches = singletonList(postsCache);
         simpleCacheManager.setCaches(caches);
         return simpleCacheManager;
     }

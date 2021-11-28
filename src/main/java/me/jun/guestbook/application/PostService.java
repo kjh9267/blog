@@ -61,7 +61,7 @@ public class PostService {
     }
 
     @Async
-    @CachePut(cacheNames = "posts")
+    @CachePut(cacheNames = "postStore")
     public CompletableFuture<PostResponse> updatePost(PostUpdateRequest dto, Long writerId) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
@@ -80,7 +80,7 @@ public class PostService {
     }
 
     @Async
-    @CacheEvict(cacheNames = "posts", key = "#postId")
+    @CacheEvict(cacheNames = "postStore", key = "#postId")
     public CompletableFuture<Long> deletePost(Long postId, Long writerId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
