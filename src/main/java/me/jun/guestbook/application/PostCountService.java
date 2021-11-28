@@ -32,7 +32,10 @@ public class PostCountService {
         return postCount;
     }
 
-    @Retryable(maxAttempts = Integer.MAX_VALUE)
+    @Retryable(
+            maxAttempts = Integer.MAX_VALUE,
+            value = OptimisticLockingFailureException.class
+    )
     public Long updateHits(Long postId) {
         PostCount postCount = postCountRepository.findByPostId(postId)
                 .orElseThrow(() -> new PostCountNotFoundException("post count not found"));
