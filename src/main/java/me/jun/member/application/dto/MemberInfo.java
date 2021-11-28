@@ -8,11 +8,11 @@ import lombok.*;
 @Getter
 public class MemberInfo {
 
-    private Long id;
+    private String email;
 
-    public static MemberInfo from(MemberResponse memberResponse) {
+    public static MemberInfo from(String email) {
         return MemberInfo.builder()
-                .id(memberResponse.getId())
+                .email(email)
                 .build();
     }
 }

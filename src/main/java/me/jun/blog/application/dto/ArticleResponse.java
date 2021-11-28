@@ -15,6 +15,8 @@ public class ArticleResponse {
 
     private String content;
 
+    private String categoryName;
+
     public static ArticleResponse from(Article article) {
         return ArticleResponse.builder()
                 .articleId(article.getId())

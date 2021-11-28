@@ -10,6 +10,8 @@ import me.jun.guestbook.application.PostService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,16 +24,19 @@ public class MemberService {
     private final CommentService commentService;
 
     @Transactional(readOnly = true)
-    public MemberResponse retrieveMemberBy(String email) {
+    public CompletableFuture<MemberResponse> retrieveMemberBy(String email) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException());
+                .orElseThrow(MemberNotFoundException::new);
 
-        return MemberResponse.from(member);
+        return CompletableFuture.completedFuture(
+                MemberResponse.from(member)
+        );
     }
 
-    public void deleteMember(Long memberId) {
-        memberRepository.deleteById(memberId);
-        postService.deletePostByWriterId(memberId);
-        commentService.deleteCommentByWriterId(memberId);
+    public CompletableFuture<Long> deleteMember(String email) {
+        memberRepository.deleteByEmail(email);
+        postService.deletePostByWriterEmail(email);
+        commentService.deleteCommentByWriterEmail(email);
+        return CompletableFuture.completedFuture(null);
     }
 }
