@@ -2,6 +2,7 @@ package me.jun.guestbook.presentation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.dto.*;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
+import static reactor.core.scheduler.Schedulers.elastic;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +21,8 @@ import javax.validation.Valid;
 public class PostController {
 
     private final PostService postService;
+
+    private final PostCountService postCountService;
 
     @PostMapping
     public ResponseEntity<Mono<PostResponse>> createPost(@RequestBody @Valid PostCreateRequest request,
@@ -36,7 +41,16 @@ public class PostController {
 
         Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
                 () -> postService.retrievePost(postId)
-        ).log();
+                )
+                .log()
+                .publishOn(elastic())
+                .map(postResponse -> {
+                    postCountService.updateHits(postId);
+                    return postResponse;
+                })
+                .log();
+
+        log.info("before subscribe");
 
         return ResponseEntity.ok()
                 .body(postResponseMono);

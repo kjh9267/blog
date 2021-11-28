@@ -52,10 +52,6 @@ class MemberServiceTest {
     void deleteMemberTest() {
         doNothing().when(memberRepository)
                 .deleteById(any());
-        doNothing().when(postService)
-                .deletePostByWriterId(any());
-        doNothing().when(commentService)
-                .deleteCommentByWriterId(any());
 
         memberService.deleteMember(1L);
 
