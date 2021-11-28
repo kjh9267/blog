@@ -25,9 +25,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Async
-    public CompletableFuture<CommentResponse> createComment(CommentCreateRequest request, Long writerId) {
+    public CompletableFuture<CommentResponse> createComment(CommentCreateRequest request, String writerEmail) {
         Comment comment = request.toEntity()
-                .updateCommentWriter(new CommentWriter(writerId));
+                .updateCommentWriter(new CommentWriter(writerEmail));
 
         comment = commentRepository.save(comment);
 
@@ -48,11 +48,11 @@ public class CommentService {
     }
 
     @Async
-    public CompletableFuture<CommentResponse> updateComment(CommentUpdateRequest request, Long writerId) {
+    public CompletableFuture<CommentResponse> updateComment(CommentUpdateRequest request, String writerEmail) {
         Comment comment = commentRepository.findById(request.getId())
                 .orElseThrow(CommentNotFoundException::new);
 
-        comment = comment.validateWriter(writerId)
+        comment = comment.validateWriter(writerEmail)
                 .updateContent(request.getContent());
 
         comment = commentRepository.save(comment);
@@ -63,11 +63,11 @@ public class CommentService {
     }
 
     @Async
-    public CompletableFuture<Long> deleteComment(Long id, Long writerId) {
+    public CompletableFuture<Long> deleteComment(Long id, String writerEmail) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
-        comment.validateWriter(writerId);
+        comment.validateWriter(writerEmail);
 
         commentRepository.deleteById(id);
 
@@ -81,8 +81,8 @@ public class CommentService {
     }
 
     @Async
-    public CompletableFuture<Void> deleteCommentByWriterId(Long writerId) {
-        commentRepository.deleteAllByCommentWriter(new CommentWriter(writerId));
+    public CompletableFuture<Void> deleteCommentByWriterEmail(String writerEmail) {
+        commentRepository.deleteAllByCommentWriter(new CommentWriter(writerEmail));
         return CompletableFuture.completedFuture(null);
     }
 

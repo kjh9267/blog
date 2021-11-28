@@ -43,7 +43,7 @@ class CommentServiceTest {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.createComment(commentCreateRequest(), 1L).get())
+        assertThat(commentService.createComment(commentCreateRequest(), EMAIL).get())
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
@@ -79,7 +79,7 @@ class CommentServiceTest {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.updateComment(commentUpdateRequest(), WRITER_ID).get())
+        assertThat(commentService.updateComment(commentUpdateRequest(), EMAIL).get())
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
@@ -89,7 +89,7 @@ class CommentServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(CommentNotFoundException.class,
-                () -> commentService.updateComment(commentUpdateRequest(), WRITER_ID));
+                () -> commentService.updateComment(commentUpdateRequest(), EMAIL));
     }
 
     @Test
@@ -98,7 +98,7 @@ class CommentServiceTest {
                 .willReturn(Optional.of(comment()));
 
         assertThrows(CommentWriterMismatchException.class,
-                () -> commentService.updateComment(commentUpdateRequest(), 2L));
+                () -> commentService.updateComment(commentUpdateRequest(), "user@email.com"));
     }
 
     @Test
@@ -106,7 +106,7 @@ class CommentServiceTest {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.of(comment()));
 
-        commentService.deleteComment(COMMENT_ID, WRITER_ID);
+        commentService.deleteComment(COMMENT_ID, EMAIL);
 
         verify(commentRepository).deleteById(any());
     }
@@ -117,7 +117,7 @@ class CommentServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(CommentNotFoundException.class,
-                () -> commentService.deleteComment(COMMENT_ID, WRITER_ID));
+                () -> commentService.deleteComment(COMMENT_ID, EMAIL));
     }
 
     @Test
@@ -126,7 +126,7 @@ class CommentServiceTest {
                 .willReturn(Optional.of(comment()));
 
         assertThrows(CommentWriterMismatchException.class,
-                () -> commentService.deleteComment(COMMENT_ID, 2L));
+                () -> commentService.deleteComment(COMMENT_ID, "user@email.com"));
     }
 
     @Test
@@ -144,7 +144,7 @@ class CommentServiceTest {
         doNothing().when(commentRepository)
                 .deleteAllByCommentWriter(any());
 
-        commentService.deleteCommentByWriterId(WRITER_ID);
+        commentService.deleteCommentByWriterEmail(EMAIL);
 
         verify(commentRepository).deleteAllByCommentWriter(commentWriter());
     }

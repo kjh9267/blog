@@ -30,14 +30,13 @@ public class MemberService {
 
         return CompletableFuture.completedFuture(
                 MemberResponse.from(member)
-        )
-                .exceptionally(throwable -> new MemberResponse());
+        );
     }
 
-    public CompletableFuture<Long> deleteMember(Long memberId) {
-        memberRepository.deleteById(memberId);
-        postService.deletePostByWriterId(memberId);
-        commentService.deleteCommentByWriterId(memberId);
+    public CompletableFuture<Long> deleteMember(String email) {
+        memberRepository.deleteByEmail(email);
+        postService.deletePostByWriterEmail(email);
+        commentService.deleteCommentByWriterEmail(email);
         return CompletableFuture.completedFuture(null);
     }
 }
