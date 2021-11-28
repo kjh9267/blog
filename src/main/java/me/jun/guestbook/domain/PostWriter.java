@@ -12,10 +12,10 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode
 public class PostWriter {
 
-    @Column(name = "writerId")
-    private Long id;
+    @Column(name = "writerEmail")
+    private String email;
 
-    public boolean match(Long writerId) {
-        return writerId.equals(id);
+    public boolean match(String writerEmail) {
+        return writerEmail.equals(email);
     }
 }

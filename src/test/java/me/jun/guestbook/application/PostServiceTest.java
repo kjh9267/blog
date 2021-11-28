@@ -52,7 +52,7 @@ public class PostServiceTest {
         given(postCountService.createPostCount(any()))
                 .willReturn(postCount());
 
-        assertThat(postService.createPost(postCreateRequest(), WRITER_ID).get())
+        assertThat(postService.createPost(postCreateRequest(), WRITER_EMAIL).get())
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -82,7 +82,7 @@ public class PostServiceTest {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        assertThat(postService.updatePost(postUpdateRequest(), WRITER_ID).get())
+        assertThat(postService.updatePost(postUpdateRequest(), WRITER_EMAIL).get())
                 .isEqualToComparingFieldByField(updatedPostResponse());
     }
 
@@ -92,7 +92,7 @@ public class PostServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.updatePost(postUpdateRequest(), WRITER_ID)
+                () -> postService.updatePost(postUpdateRequest(), WRITER_EMAIL)
         );
     }
 
@@ -102,7 +102,7 @@ public class PostServiceTest {
                 .willReturn(Optional.of(post()));
 
         assertThrows(PostWriterMismatchException.class,
-                () -> postService.updatePost(postUpdateRequest(), 2L)
+                () -> postService.updatePost(postUpdateRequest(), "user@email.com")
         );
     }
 
@@ -113,7 +113,7 @@ public class PostServiceTest {
         doNothing().when(postRepository)
                 .deleteById(any());
 
-        postService.deletePost(POST_ID, WRITER_ID);
+        postService.deletePost(POST_ID, WRITER_EMAIL);
 
         verify(postRepository).deleteById(POST_ID);
         verify(commentService).deleteCommentByPostId(POST_ID);
@@ -124,7 +124,7 @@ public class PostServiceTest {
         doNothing().when(postRepository)
                 .deleteAllByPostWriter(postWriter());
 
-        postService.deletePostByWriterId(WRITER_ID);
+        postService.deletePostByWriterEmail(WRITER_EMAIL);
 
         verify(postRepository).deleteAllByPostWriter(postWriter());
     }

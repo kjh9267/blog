@@ -29,7 +29,7 @@ public class PostController {
                                                         @PostWriter PostWriterInfo writer) {
 
         Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
-                () -> postService.createPost(request, writer.getId())
+                () -> postService.createPost(request, writer.getEmail())
         ).log();
 
         return ResponseEntity.ok()
@@ -61,7 +61,7 @@ public class PostController {
                                                          @PostWriter PostWriterInfo writer) {
 
         Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
-                () -> postService.updatePost(requestDto, writer.getId())
+                () -> postService.updatePost(requestDto, writer.getEmail())
         ).log();
 
         return ResponseEntity.ok()
@@ -72,7 +72,7 @@ public class PostController {
     public ResponseEntity<Mono<Long>> deletePost(@PathVariable Long postId,
                                                  @PostWriter PostWriterInfo writer) {
         Mono<Long> mono = Mono.fromCompletionStage(
-                () -> postService.deletePost(postId, writer.getId())
+                () -> postService.deletePost(postId, writer.getEmail())
         ).log();
 
         return ResponseEntity.ok()

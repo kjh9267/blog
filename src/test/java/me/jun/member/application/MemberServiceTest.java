@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import static me.jun.member.MemberFixture.member;
-import static me.jun.member.MemberFixture.memberResponse;
+import static me.jun.guestbook.PostFixture.WRITER_EMAIL;
+import static me.jun.member.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -53,10 +53,10 @@ class MemberServiceTest {
         doNothing().when(memberRepository)
                 .deleteById(any());
 
-        memberService.deleteMember(1L);
+        memberService.deleteMember(EMAIL);
 
-        verify(memberRepository).deleteById(1L);
-        verify(postService).deletePostByWriterId(1L);
-        verify(commentService).deleteCommentByWriterId(1L);
+        verify(memberRepository).deleteByEmail(EMAIL);
+        verify(postService).deletePostByWriterEmail(WRITER_EMAIL);
+        verify(commentService).deleteCommentByWriterEmail(EMAIL);
     }
 }

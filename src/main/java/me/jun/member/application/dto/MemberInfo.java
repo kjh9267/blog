@@ -10,9 +10,12 @@ public class MemberInfo {
 
     private Long id;
 
+    private String email;
+
     public static MemberInfo from(MemberResponse memberResponse) {
         return MemberInfo.builder()
                 .id(memberResponse.getId())
+                .email(memberResponse.getEmail())
                 .build();
     }
 }

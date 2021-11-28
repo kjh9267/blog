@@ -62,7 +62,7 @@ PostControllerTest {
 
     @BeforeEach
     public void setUp() {
-        jwt = jwtProvider.createJwt(EMAIL);
+        jwt = jwtProvider.createJwt(WRITER_EMAIL);
     }
 
     @Test
