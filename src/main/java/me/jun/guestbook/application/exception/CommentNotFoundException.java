@@ -1,7 +1,9 @@
 package me.jun.guestbook.application.exception;
 
-public class CommentNotFoundException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
+
+public class CommentNotFoundException extends BusinessException {
     public CommentNotFoundException() {
-        super();
+        super("no comment");
     }
 }
