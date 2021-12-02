@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @EqualsAndHashCode(of = "id")
 public class Tag {
@@ -18,4 +18,15 @@ public class Tag {
 
     @Column
     private String name;
+
+    public Tag updateName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public static Tag from(String tagName) {
+        return Tag.builder()
+                .name(tagName)
+                .build();
+    }
 }
