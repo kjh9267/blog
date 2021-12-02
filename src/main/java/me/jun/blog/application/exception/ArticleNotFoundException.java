@@ -1,4 +1,9 @@
 package me.jun.blog.application.exception;
 
-public class ArticleNotFoundException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
+
+public class ArticleNotFoundException extends BusinessException {
+    public ArticleNotFoundException() {
+        super("no article");
+    }
 }

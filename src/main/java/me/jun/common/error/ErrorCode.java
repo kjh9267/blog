@@ -13,6 +13,7 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(404, "No comment");
 
     private final int statusCode;
+
     private final String message;
 
     ErrorCode(final int statusCode, final String message) {
