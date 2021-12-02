@@ -1,14 +1,13 @@
 package me.jun.common;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.application.exception.CommentNotFoundException;
 import me.jun.common.error.ErrorCode;
 import me.jun.common.error.ErrorResponse;
-import me.jun.member.application.exception.DuplicatedEmailException;
+import me.jun.common.security.InvalidTokenException;
+import me.jun.guestbook.application.exception.CommentNotFoundException;
 import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
-import me.jun.common.security.InvalidTokenException;
-import org.springframework.hateoas.EntityModel;
+import me.jun.member.application.exception.DuplicatedEmailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

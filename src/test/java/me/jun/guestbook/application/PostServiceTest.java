@@ -52,7 +52,7 @@ public class PostServiceTest {
         given(postCountService.createPostCount(any()))
                 .willReturn(postCount());
 
-        assertThat(postService.createPost(postCreateRequest(), WRITER_EMAIL).get())
+        assertThat(postService.createPost(postCreateRequest(), WRITER_EMAIL))
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -63,7 +63,7 @@ public class PostServiceTest {
                         .toBuilder()
                         .build()));
 
-        assertThat(postService.retrievePost(POST_ID).get())
+        assertThat(postService.retrievePost(POST_ID))
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -82,7 +82,7 @@ public class PostServiceTest {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        assertThat(postService.updatePost(postUpdateRequest(), WRITER_EMAIL).get())
+        assertThat(postService.updatePost(postUpdateRequest(), WRITER_EMAIL))
                 .isEqualToComparingFieldByField(updatedPostResponse());
     }
 

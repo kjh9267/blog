@@ -9,16 +9,14 @@ import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
 import me.jun.support.Member;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/member")
 public class MemberController {
 
     private final LoginService loginService;
@@ -28,33 +26,28 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<Mono<MemberResponse>> register(@RequestBody @Valid MemberRequest request) {
-        Mono<MemberResponse> memberResponseMono = Mono.fromCompletionStage(
-                registerService.register(request)
-        ).log();
+    public ResponseEntity<MemberResponse> register(@RequestBody @Valid MemberRequest request) {
+        MemberResponse response = registerService.register(request);
 
         return ResponseEntity.ok()
-                .body(memberResponseMono);
+                .body(response);
     }
 
-    @Cacheable(cacheNames = "tokenStore", key = "#request.email")
+//    @Cacheable(cacheNames = "tokenStore", key = "#request.email")
     @PostMapping("/login")
-    public ResponseEntity<Mono<TokenResponse>> login(@RequestBody @Valid MemberRequest request) {
-        Mono<TokenResponse> tokenResponseMono = Mono.fromCompletionStage(
-                loginService.login(request)
-        ).log();
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid MemberRequest request) {
+
+        TokenResponse response = loginService.login(request);
 
         return ResponseEntity.ok()
-                .body(tokenResponseMono);
+                .body(response);
     }
 
     @DeleteMapping("/leave")
-    public ResponseEntity<Mono<Long>> leave(@Member MemberInfo memberInfo) {
-        Mono<Long> longMono = Mono.fromCompletionStage(
-                memberService.deleteMember(memberInfo.getEmail())
-        ).log();
+    public ResponseEntity<Void> leave(@Member MemberInfo memberInfo) {
+        memberService.deleteMember(memberInfo.getEmail());
 
         return ResponseEntity.ok()
-                .body(longMono);
+                .build();
     }
 }

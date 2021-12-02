@@ -26,8 +26,7 @@ public class ArticleService {
 
     private final CategoryMatchingService categoryMatchingService;
 
-    @Async
-    public CompletableFuture<ArticleResponse> createArticle(ArticleCreateRequest request, String writerEmail) {
+    public ArticleResponse createArticle(ArticleCreateRequest request, String writerEmail) {
         Article article = request.toArticle()
                 .updateWriterId(writerEmail);
 
@@ -38,24 +37,18 @@ public class ArticleService {
 
         article = articleRepository.save(article);
 
-        return CompletableFuture.completedFuture(
-                ArticleResponse.from(article)
-        );
+        return ArticleResponse.from(article);
     }
 
     @Transactional(readOnly = true)
-    @Async
-    public CompletableFuture<ArticleResponse> retrieveArticle(Long articleId) {
+    public ArticleResponse retrieveArticle(Long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(ArticleNotFoundException::new);
 
-        return CompletableFuture.completedFuture(
-                ArticleResponse.from(article)
-        );
+        return ArticleResponse.from(article);
     }
 
-    @Async
-    public CompletableFuture<ArticleResponse> updateArticleInfo(ArticleInfoUpdateRequest request) {
+    public ArticleResponse updateArticleInfo(ArticleInfoUpdateRequest request) {
         Long requestId = request.getId();
 
         Article updatedArticle = articleRepository.findById(requestId)
@@ -65,8 +58,6 @@ public class ArticleService {
                 ))
                 .orElseThrow(ArticleNotFoundException::new);
 
-        return CompletableFuture.completedFuture(
-                ArticleResponse.from(updatedArticle)
-        );
+        return ArticleResponse.from(updatedArticle);
     }
 }

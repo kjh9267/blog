@@ -24,31 +24,24 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    @Async
-    public CompletableFuture<CommentResponse> createComment(CommentCreateRequest request, String writerEmail) {
+    public CommentResponse createComment(CommentCreateRequest request, String writerEmail) {
         Comment comment = request.toEntity()
                 .updateCommentWriter(new CommentWriter(writerEmail));
 
         comment = commentRepository.save(comment);
 
-        return CompletableFuture.completedFuture(
-                CommentResponse.from(comment)
-        );
+        return CommentResponse.from(comment);
     }
 
-    @Async
     @Transactional(readOnly = true)
-    public CompletableFuture<CommentResponse> retrieveComment(Long id) {
+    public CommentResponse retrieveComment(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
-        return CompletableFuture.completedFuture(
-                CommentResponse.from(comment)
-        );
+        return CommentResponse.from(comment);
     }
 
-    @Async
-    public CompletableFuture<CommentResponse> updateComment(CommentUpdateRequest request, String writerEmail) {
+    public CommentResponse updateComment(CommentUpdateRequest request, String writerEmail) {
         Comment comment = commentRepository.findById(request.getId())
                 .orElseThrow(CommentNotFoundException::new);
 
@@ -57,13 +50,10 @@ public class CommentService {
 
         comment = commentRepository.save(comment);
 
-        return CompletableFuture.completedFuture(
-                CommentResponse.from(comment)
-        );
+        return CommentResponse.from(comment);
     }
 
-    @Async
-    public CompletableFuture<Long> deleteComment(Long id, String writerEmail) {
+    public Long deleteComment(Long id, String writerEmail) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
@@ -71,19 +61,15 @@ public class CommentService {
 
         commentRepository.deleteById(id);
 
-        return CompletableFuture.completedFuture(id);
+        return id;
     }
 
-    @Async
-    public CompletableFuture<Void> deleteCommentByPostId(Long postId) {
+    public void deleteCommentByPostId(Long postId) {
         commentRepository.deleteByPostId(postId);
-        return CompletableFuture.completedFuture(null);
     }
 
-    @Async
-    public CompletableFuture<Void> deleteCommentByWriterEmail(String writerEmail) {
+    public void deleteCommentByWriterEmail(String writerEmail) {
         commentRepository.deleteAllByCommentWriter(new CommentWriter(writerEmail));
-        return CompletableFuture.completedFuture(null);
     }
 
     public PagedCommentsResponse queryCommentsByPostId(Long postId, PageRequest pageRequest) {

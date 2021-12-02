@@ -9,48 +9,42 @@ import me.jun.member.application.dto.MemberInfo;
 import me.jun.support.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/articles")
+@RequestMapping("/api/blog/articles")
 @RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<Mono<ArticleResponse>> createArticle(@RequestBody @Valid ArticleCreateRequest request,
+    public ResponseEntity<ArticleResponse> createArticle(@RequestBody @Valid ArticleCreateRequest request,
                                                                @Member MemberInfo articleWriterInfo) {
 
-        Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
-                articleService.createArticle(request, articleWriterInfo.getEmail())
-        ).log();
+        ArticleResponse response = articleService.createArticle(request, articleWriterInfo.getEmail());
 
         return ResponseEntity.ok()
-                .body(articleResponseMono);
+                .body(response);
     }
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<Mono<ArticleResponse>> retrieveArticle(@PathVariable Long articleId) {
+    public ResponseEntity<ArticleResponse> retrieveArticle(@PathVariable Long articleId) {
 
-        Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
-                articleService.retrieveArticle(articleId)
-        ).log();
+        ArticleResponse response = articleService.retrieveArticle(articleId);
 
         return ResponseEntity.ok()
-                .body(articleResponseMono);
+                .body(response);
     }
 
     @PutMapping
-    public ResponseEntity<Mono<ArticleResponse>> updateArticle(@RequestBody @Valid ArticleInfoUpdateRequest request,
+    public ResponseEntity<ArticleResponse> updateArticle(@RequestBody @Valid ArticleInfoUpdateRequest request,
                                                          @Member MemberInfo articleWriterInfo) {
-        Mono<ArticleResponse> articleResponseMono = Mono.fromCompletionStage(
-                articleService.updateArticleInfo(request)
-        ).log();
+
+        ArticleResponse response = articleService.updateArticleInfo(request);
 
         return ResponseEntity.ok()
-                .body(articleResponseMono);
+                .body(response);
     }
 }

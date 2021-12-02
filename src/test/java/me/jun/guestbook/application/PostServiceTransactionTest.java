@@ -1,17 +1,20 @@
 package me.jun.guestbook.application;
 
+import me.jun.guestbook.domain.PostCount;
 import me.jun.guestbook.domain.repository.PostCountRepository;
-import me.jun.support.E2ETest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static io.restassured.RestAssured.given;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class PostServiceTransactionTest extends E2ETest {
+@SpringBootTest
+public class PostServiceTransactionTest {
 
     @Autowired
     private PostService postService;
@@ -19,30 +22,29 @@ public class PostServiceTransactionTest extends E2ETest {
     @Autowired
     private PostCountRepository postCountRepository;
 
-    @BeforeEach
-    void setUp() {
-        register();
-        token = login();
-        postService.createPost(postCreateRequest(), WRITER_EMAIL);
-    }
-
     @Test
-    void hitsTransactionTest() {
-        for (int request = 0; request < 100; request++) {
-            given()
-                    .log().all()
-                    .port(port)
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .when()
-                    .get("/api/posts/1");
+    void concurrent_updatePostCountTest() throws InterruptedException {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        postService.createPost(postCreateRequest(), WRITER_EMAIL);
+
+        for (int thread = 0; thread < 9; thread++) {
+            executorService.execute(
+                    () -> {
+                        for (int request = 0; request < 10; request++) {
+                            postService.retrievePost(POST_ID);
+                        }
+                    }
+            );
         }
 
-        assertThat(
-                postCountRepository.findByPostId(POST_ID)
-                        .get()
-                        .getHits()
-                        .getValue()
-        )
-                .isEqualTo(100L);
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.MINUTES);
+
+        PostCount postCount = postCountRepository.findByPostId(POST_ID)
+                .get();
+
+        assertThat(postCount.getHits().getValue())
+                .isEqualTo(90L);
     }
 }
