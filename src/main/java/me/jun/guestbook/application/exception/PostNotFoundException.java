@@ -1,9 +1,10 @@
 package me.jun.guestbook.application.exception;
 
 
-public class PostNotFoundException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
 
+public class PostNotFoundException extends BusinessException {
     public PostNotFoundException() {
-        super("No Post");
+        super("no post");
     }
 }

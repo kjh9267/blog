@@ -37,7 +37,7 @@ public class PostCountService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long updateHits(Long postId) {
         PostCount postCount = postCountRepository.findByPostId(postId)
-                .orElseThrow(() -> new PostCountNotFoundException("post count not found"));
+                .orElseThrow(PostCountNotFoundException::new);
 
         postCount.updateHits();
 

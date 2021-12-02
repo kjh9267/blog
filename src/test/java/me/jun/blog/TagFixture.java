@@ -8,6 +8,8 @@ abstract public class TagFixture {
 
     public static final String TAG_NAME = "java";
 
+    public static final String NEW_TAG_NAME = "spring";
+
     public static Tag tag() {
         return Tag.builder()
                 .id(TAG_ID)
