@@ -22,12 +22,14 @@ public class Category {
     @Column(nullable = false)
     private Long mappedArticleCount;
 
-    public void plusMappedArticleCount() {
+    public Category plusMappedArticleCount() {
         this.mappedArticleCount += 1;
+        return this;
     }
 
-    public void minusMappedArticleCount() {
+    public Category minusMappedArticleCount() {
         this.mappedArticleCount -= 1;
+        return this;
     }
 
     public static Category from(String name) {
