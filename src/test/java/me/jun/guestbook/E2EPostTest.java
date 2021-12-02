@@ -58,7 +58,7 @@ public class E2EPostTest extends E2ETest {
                 .queryParam("size", 10)
 
                 .when()
-                .get("api/posts/query")
+                .get("api/guestbook/posts/query")
 
                 .then()
                 .statusCode(OK.value())
@@ -80,7 +80,7 @@ public class E2EPostTest extends E2ETest {
                 .body(postCreateRequest())
 
                 .when()
-                .post("/api/posts")
+                .post("/api/guestbook/posts")
 
                 .then()
                 .statusCode(OK.value())
@@ -102,7 +102,7 @@ public class E2EPostTest extends E2ETest {
                 .contentType(APPLICATION_JSON_VALUE)
 
                 .when()
-                .get("/api/posts/1")
+                .get("/api/guestbook/posts/1")
 
                 .then()
                 .statusCode(OK.value())
@@ -121,7 +121,7 @@ public class E2EPostTest extends E2ETest {
                 .body(postUpdateRequest())
 
                 .when()
-                .put("/api/posts")
+                .put("/api/guestbook/posts")
 
                 .then()
                 .extract()
@@ -138,7 +138,7 @@ public class E2EPostTest extends E2ETest {
                 .header(AUTHORIZATION, token)
 
                 .when()
-                .delete("/api/posts/1")
+                .delete("/api/guestbook/posts/1")
 
                 .then()
                 .statusCode(OK.value());
@@ -149,7 +149,7 @@ public class E2EPostTest extends E2ETest {
                 .contentType(APPLICATION_JSON_VALUE)
 
                 .when()
-                .get("api/posts/1")
+                .get("api/guestbook/posts/1")
 
                 .then()
                 .statusCode(NOT_FOUND.value())

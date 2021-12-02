@@ -20,15 +20,12 @@ public class RegisterService {
 
     private final MemberRepository memberRepository;
 
-    @Async
-    public CompletableFuture<MemberResponse> register(MemberRequest request) {
+    public MemberResponse register(MemberRequest request) {
         Member member = request.toEntity();
 
         try {
             member = memberRepository.save(member);
-            return CompletableFuture.completedFuture(
-                    MemberResponse.from(member)
-            );
+            return MemberResponse.from(member);
         }
         catch (DataIntegrityViolationException e) {
             throw new DuplicatedEmailException(e);
