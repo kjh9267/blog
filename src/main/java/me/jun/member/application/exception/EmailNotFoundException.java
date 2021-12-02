@@ -1,8 +1,9 @@
 package me.jun.member.application.exception;
 
-public class EmailNotFoundException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
 
+public class EmailNotFoundException extends BusinessException {
     public EmailNotFoundException() {
-        super("No Email");
+        super("no email");
     }
 }

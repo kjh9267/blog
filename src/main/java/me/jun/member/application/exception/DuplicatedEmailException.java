@@ -1,8 +1,10 @@
 package me.jun.member.application.exception;
 
-public class DuplicatedEmailException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
+
+public class DuplicatedEmailException extends BusinessException {
 
     public DuplicatedEmailException(Throwable cause) {
-        super("Email already exists", cause);
+        super("email already exists", cause);
     }
 }

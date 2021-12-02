@@ -1,8 +1,9 @@
 package me.jun.guestbook.application.exception;
 
-public class PostCountNotFoundException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
 
-    public PostCountNotFoundException(String message) {
-        super(message);
+public class PostCountNotFoundException extends BusinessException {
+    public PostCountNotFoundException() {
+        super("no post count");
     }
 }
