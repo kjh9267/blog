@@ -21,4 +21,17 @@ public class TaggedArticle {
 
     @Column
     private Long tagId;
+
+    public TaggedArticle match(Long articleId, Long tagId) {
+        this.articleId = articleId;
+        this.tagId = tagId;
+        return this;
+    }
+
+    public static TaggedArticle from(Long articleId, Long tagId) {
+        return TaggedArticle.builder()
+                .articleId(articleId)
+                .tagId(tagId)
+                .build();
+    }
 }
