@@ -43,7 +43,7 @@ class CommentServiceTest {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.createComment(commentCreateRequest(), EMAIL).get())
+        assertThat(commentService.createComment(commentCreateRequest(), EMAIL))
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
@@ -53,9 +53,9 @@ class CommentServiceTest {
                 .willReturn(Optional.of(comment()));
 
         assertAll(
-                () -> assertThat(commentService.retrieveComment(COMMENT_ID).get())
+                () -> assertThat(commentService.retrieveComment(COMMENT_ID))
                 .isEqualToComparingFieldByField(commentResponse()),
-                () -> assertThat(commentService.retrieveComment(COMMENT_ID).get())
+                () -> assertThat(commentService.retrieveComment(COMMENT_ID))
                 .isInstanceOf(CommentResponse.class)
         );
     }
@@ -79,7 +79,7 @@ class CommentServiceTest {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.updateComment(commentUpdateRequest(), EMAIL).get())
+        assertThat(commentService.updateComment(commentUpdateRequest(), EMAIL))
                 .isEqualToComparingFieldByField(commentResponse());
     }
 

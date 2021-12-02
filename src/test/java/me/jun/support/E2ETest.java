@@ -27,7 +27,7 @@ public abstract class E2ETest {
                 .body(memberRequest())
 
                 .when()
-                .post("/api/register")
+                .post("/api/member/register")
 
                 .then()
                 .statusCode(OK.value());
@@ -40,7 +40,7 @@ public abstract class E2ETest {
                 .body(memberRequest())
 
                 .when()
-                .post("/api/login")
+                .post("/api/member/login")
 
                 .then()
                 .statusCode(OK.value())

@@ -3,7 +3,6 @@ package me.jun.guestbook.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.PostFixture;
-import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
@@ -13,18 +12,18 @@ import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.lang.reflect.Field;
 import java.security.Key;
 import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
 
 import static me.jun.guestbook.PostFixture.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,24 +31,24 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureWebTestClient
+@AutoConfigureMockMvc
 @SpringBootTest
-public class
-
-PostControllerTest {
+public class PostControllerTest {
 
     @Autowired
-    private WebTestClient webTestClient;
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @MockBean
     private PostService postService;
-
-    @MockBean
-    private PostCountService postCountService;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -63,26 +62,20 @@ PostControllerTest {
 
     @Test
     public void createPostTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(postResponse());
+        String content = objectMapper.writeValueAsString(postCreateRequest());
 
         given(postService.createPost(any(), any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        postResponse()
-                ));
+                .willReturn(postResponse());
 
-        webTestClient.post()
-                .uri("/api/posts")
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .header(AUTHORIZATION, jwt)
-
-                .body(Mono.just(postCreateRequest()), PostCreateRequest.class)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful()
-                .expectHeader().contentType(APPLICATION_JSON)
-                .expectBody().json(expected);
+        mockMvc.perform(post("/api/guestbook/posts")
+                        .content(content)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .header(AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
+
 
     @Test
     void invalidInput_createPostFailTest() throws Exception {
@@ -91,37 +84,30 @@ PostControllerTest {
                 .content(" ")
                 .build();
 
-        webTestClient.post()
-                .uri("/api/posts")
-                .header(AUTHORIZATION, jwt)
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
+        String content = objectMapper.writeValueAsString(request);
 
-                .body(Mono.just(request), PostCreateRequest.class)
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(post("/api/guestbook/posts")
+                        .header(AUTHORIZATION, jwt)
+                        .content(content)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void retrievePostTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(postResponse());
-
         given(postService.retrievePost(any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        postResponse()
-                ));
+                .willReturn(postResponse());
 
-        given(postCountService.updateHits(POST_ID))
-                .willReturn(1L);
-
-        webTestClient.get()
-                .uri("/api/posts/1")
-                .accept(APPLICATION_JSON)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful()
-                .expectBody().json(expected);
+        mockMvc.perform(get("/api/guestbook/posts/1")
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("id").value("1"))
+                .andExpect(jsonPath("title").value(TITLE))
+                .andExpect(jsonPath("content").value(CONTENT));
     }
 
     @Test
@@ -129,49 +115,43 @@ PostControllerTest {
         given(postService.retrievePost(any()))
                 .willThrow(new PostNotFoundException());
 
-        webTestClient.get()
-                .uri("/api/posts/1")
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(get("/api/guestbook/posts/1"))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
     }
 
     @Test
     public void updatePostTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(updatedPostResponse());
+        String content = objectMapper.writeValueAsString(postUpdateRequest());
 
         given(postService.updatePost(any(), any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        updatedPostResponse()
-                ));
+                .willReturn(postResponse());
 
-        webTestClient.put()
-                .uri("/api/posts")
-                .header(AUTHORIZATION, jwt)
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .body(Mono.just(postUpdateRequest()), PostUpdateRequest.class)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful()
-                .expectBody().json(expected);
+        mockMvc.perform(put("/api/guestbook/posts")
+                        .content(content)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .header(AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("id").value("1"))
+                .andExpect(jsonPath("title").value(TITLE))
+                .andExpect(jsonPath("content").value(CONTENT));
     }
 
     @Test
     void noPost_updatePostFailTest() throws Exception {
+        String content = objectMapper.writeValueAsString(postUpdateRequest());
+
         doThrow(PostNotFoundException.class)
                 .when(postService)
                 .updatePost(any(), any());
 
-        webTestClient.put()
-                .uri("/api/posts")
-                .header(AUTHORIZATION, jwt)
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(postUpdateRequest()), PostUpdateRequest.class)
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(put("/api/guestbook/posts")
+                        .content(content)
+                        .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -182,18 +162,17 @@ PostControllerTest {
                 .content("new content")
                 .build();
 
+        String content = objectMapper.writeValueAsString(request);
+
         doThrow(PostWriterMismatchException.class)
                 .when(postService)
                 .updatePost(any(), any());
 
-        webTestClient.put()
-                .uri("/api/posts")
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .body(Mono.just(request), PostUpdateRequest.class)
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(put("/api/guestbook/posts")
+                        .content(content)
+                        .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -204,29 +183,28 @@ PostControllerTest {
                 .content(" ")
                 .build();
 
-        webTestClient.put()
-                .uri("/api/posts")
-                .header(AUTHORIZATION, jwt)
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .body(Mono.just(request), PostUpdateRequest.class)
-                .exchange()
+        String content = objectMapper.writeValueAsString(request);
 
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(put("/api/guestbook/posts")
+                        .header(AUTHORIZATION, jwt)
+                        .content(content)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
-                .willReturn(CompletableFuture.completedFuture(POST_ID));
+                .willReturn(POST_ID);
 
-        webTestClient.delete()
-                .uri("/api/posts/1")
-                .header(AUTHORIZATION, jwt)
-                .accept(APPLICATION_JSON)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful();
+        mockMvc.perform(delete("/api/guestbook/posts/1")
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .header(AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -235,11 +213,9 @@ PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        webTestClient.delete()
-                .uri("/api/posts/2")
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(delete("/api/guestbook/posts/2"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -248,11 +224,9 @@ PostControllerTest {
                 .when(postService)
                 .deletePost(any(), any());
 
-        webTestClient.delete()
-                .uri("/api/posts/1")
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(delete("/api/guestbook/posts/1"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -260,17 +234,13 @@ PostControllerTest {
         PagedPostsResponse response = PagedPostsResponse.from(new PageImpl<Post>(
                 Arrays.asList(PostFixture.post())));
 
-        String expected = objectMapper.writeValueAsString(response);
-
         given(postService.queryPosts(any()))
                 .willReturn(response);
 
-        webTestClient.get()
-                .uri("/api/posts/query/?page=1&size=10")
-                .accept(APPLICATION_JSON)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful();
+        mockMvc.perform(get("/api/guestbook/posts/query/?page=1&size=10")
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
 
     private Key getKey() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {

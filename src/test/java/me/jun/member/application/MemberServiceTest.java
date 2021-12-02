@@ -44,7 +44,7 @@ class MemberServiceTest {
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member()));
 
-        assertThat(memberService.retrieveMemberBy("testuser@email.com").get())
+        assertThat(memberService.retrieveMemberBy("testuser@email.com"))
                 .isEqualToComparingFieldByField(memberResponse());
     }
 

@@ -68,7 +68,7 @@ public class ArticleServiceTest {
 
         // When
 
-        ArticleResponse response = articleService.createArticle(articleCreateRequest(), ARTICLE_WRITER_EMAIL).get();
+        ArticleResponse response = articleService.createArticle(articleCreateRequest(), ARTICLE_WRITER_EMAIL);
 
         // Then
 
@@ -83,7 +83,7 @@ public class ArticleServiceTest {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
-        ArticleResponse response = articleService.retrieveArticle(ARTICLE_ID).get();
+        ArticleResponse response = articleService.retrieveArticle(ARTICLE_ID);
 
         assertThat(response)
                 .isEqualToComparingFieldByField(articleResponse());
@@ -105,7 +105,7 @@ public class ArticleServiceTest {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
-        ArticleResponse response = articleService.updateArticleInfo(articleUpdateRequest()).get();
+        ArticleResponse response = articleService.updateArticleInfo(articleUpdateRequest());
 
         assertThat(response)
                 .isEqualToComparingFieldByField(updatedArticleResponse());

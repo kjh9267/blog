@@ -34,7 +34,7 @@ class RegisterServiceTest {
         given(memberRepository.save(any()))
                 .willReturn(member());
 
-        assertThat(registerService.register(memberRequest()).get())
+        assertThat(registerService.register(memberRequest()))
                 .isEqualToComparingFieldByField(memberResponse());
     }
 
