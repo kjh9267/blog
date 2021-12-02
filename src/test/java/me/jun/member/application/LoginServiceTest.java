@@ -1,8 +1,8 @@
 package me.jun.member.application;
 
+import me.jun.common.security.JwtProvider;
 import me.jun.member.application.exception.EmailNotFoundException;
 import me.jun.member.domain.repository.MemberRepository;
-import me.jun.common.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public class LoginServiceTest {
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member()));
 
-        assertThat(loginService.login(memberRequest()).get())
+        assertThat(loginService.login(memberRequest()))
                 .isEqualTo(tokenResponse());
     }
 

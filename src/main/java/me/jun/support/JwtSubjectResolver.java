@@ -7,10 +7,10 @@ import me.jun.common.security.JwtProvider;
 import me.jun.member.application.dto.MemberInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.BindingContext;
-import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Optional;
 
@@ -29,25 +29,22 @@ public class JwtSubjectResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Mono<Object> resolveArgument(MethodParameter methodParameter,
-                                        BindingContext bindingContext,
-                                        ServerWebExchange serverWebExchange) {
+    public Object resolveArgument(MethodParameter parameter,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) throws Exception {
 
-        String token = extractToken(serverWebExchange)
+        String token = extractToken(webRequest)
                 .orElseThrow(() -> new InvalidTokenException("No token"));
 
         provider.validateToken(token);
         String email = provider.extractSubject(token);
-        return Mono.just(
-                MemberInfo.from(email)
-        );
+
+        return MemberInfo.from(email);
     }
 
-    private Optional<String> extractToken(ServerWebExchange serverWebExchange) {
-        return Optional.ofNullable(
-                serverWebExchange.getRequest()
-                        .getHeaders()
-                        .getFirst(AUTHORIZATION)
-        );
+    private Optional<String> extractToken(NativeWebRequest nativeWebRequest) {
+        return Optional.ofNullable(nativeWebRequest
+                .getHeader(AUTHORIZATION));
     }
 }

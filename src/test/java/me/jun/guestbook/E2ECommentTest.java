@@ -56,7 +56,7 @@ public class E2ECommentTest extends E2ETest {
                 .queryParam("size", 10)
 
                 .when()
-                .get("/api/comments/query/post-id/1")
+                .get("/api/guestbook/comments/query/post-id/1")
 
                 .then()
                 .statusCode(OK.value())
@@ -78,7 +78,7 @@ public class E2ECommentTest extends E2ETest {
                 .body(commentCreateRequest())
 
                 .when()
-                .post("/api/comments")
+                .post("/api/guestbook/comments")
 
                 .then()
                 .statusCode(OK.value())
@@ -100,7 +100,7 @@ public class E2ECommentTest extends E2ETest {
                 .contentType(APPLICATION_JSON_VALUE)
 
                 .when()
-                .get("/api/comments/1")
+                .get("/api/guestbook/comments/1")
 
                 .then()
                 .statusCode(OK.value())
@@ -120,7 +120,7 @@ public class E2ECommentTest extends E2ETest {
                 .body(commentUpdateRequest())
 
                 .when()
-                .put("/api/comments")
+                .put("/api/guestbook/comments")
 
                 .then()
                 .statusCode(OK.value())
@@ -139,7 +139,7 @@ public class E2ECommentTest extends E2ETest {
                 .header(AUTHORIZATION, token)
 
                 .when()
-                .delete("/api/comments/1")
+                .delete("/api/guestbook/comments/1")
 
                 .then()
                 .statusCode(OK.value());
@@ -151,7 +151,7 @@ public class E2ECommentTest extends E2ETest {
                 .header(AUTHORIZATION, token)
 
                 .when()
-                .get("/api/comments/1")
+                .get("/api/guestbook/comments/1")
 
                 .then()
                 .statusCode(NOT_FOUND.value());

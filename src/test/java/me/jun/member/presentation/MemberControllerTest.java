@@ -5,40 +5,34 @@ import me.jun.common.security.JwtProvider;
 import me.jun.member.application.LoginService;
 import me.jun.member.application.MemberService;
 import me.jun.member.application.RegisterService;
-import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.TokenResponse;
 import me.jun.member.application.exception.DuplicatedEmailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
-import reactor.core.publisher.Mono;
-
-import java.util.concurrent.CompletableFuture;
 
 import static me.jun.member.MemberFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureWebTestClient
+@AutoConfigureMockMvc
 @SpringBootTest
 public class MemberControllerTest {
 
     @Autowired
-    private WebTestClient webTestClient;
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -64,18 +58,17 @@ public class MemberControllerTest {
 
     @Test
     public void registerTest() throws Exception {
+        String content = objectMapper.writeValueAsString(memberRequest());
+
         given(registerService.register(any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        memberResponse()
-                ));
+                .willReturn(memberResponse());
 
-        webTestClient.post()
-                .uri("/api/register")
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(memberRequest()), MemberRequest.class)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful();
+        mockMvc.perform(post("/api/member/register")
+                        .contentType(APPLICATION_JSON)
+                        .content(content)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -85,53 +78,41 @@ public class MemberControllerTest {
 
         String content = objectMapper.writeValueAsString(memberRequest());
 
-        webTestClient.post()
-                .uri("/api/register")
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(memberRequest()), MemberRequest.class)
-                .exchange()
-
-                .expectStatus().is4xxClientError();
+        mockMvc.perform(post("/api/member/register")
+                        .content(content)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void loginTest() throws Exception {
         given(loginService.login(any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        TokenResponse.from(jwt)
-                ));
+                .willReturn(TokenResponse.from(jwt));
 
-        String expected = objectMapper.writeValueAsString(
-                TokenResponse.from(jwt)
-        );
+        String content = objectMapper.writeValueAsString(memberRequest());
 
-        webTestClient.post()
-                .uri("/api/login")
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .body(Mono.just(memberRequest()), MemberRequest.class)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful()
-                .expectBody().json(expected);
+        mockMvc.perform(post("/api/member/login")
+                        .content(content)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath(ACCESS_TOKEN).value(jwt));
     }
 
     @Test
     void leaveTest() throws Exception {
         given(memberService.retrieveMemberBy(any()))
-                .willReturn(CompletableFuture.completedFuture(
-                        memberResponse()
-                ));
+                .willReturn(memberResponse());
 
-        given(memberService.deleteMember(any()))
-                .willReturn(CompletableFuture.completedFuture(MEMBER_ID));
+        doNothing().when(memberService)
+                .deleteMember(any());
 
-        webTestClient.delete()
-                .uri("/api/leave")
-                .header(AUTHORIZATION, jwt)
-                .accept(APPLICATION_JSON)
-                .exchange()
-
-                .expectStatus().is2xxSuccessful();
+        mockMvc.perform(delete("/api/member/leave")
+                        .accept(APPLICATION_JSON)
+                        .header(AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
 }

@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
       <button onClick={() => {
-        axios.get("http://localhost:8080/api/posts/query?page=0&size=10")
+        axios.get("http://localhost:8080/api/guestbook/posts/query?page=0&size=10")
         .then((response) => console.log(response.data));
       }}>
       get posts list
@@ -17,7 +17,7 @@ function App() {
 
       <div>
       <button onClick={() => {
-        axios.post("http://localhost:8080/api/register",
+        axios.post("http://localhost:8080/api/member/register",
           {'email': 'testuser@email.com',
           'name': 'testuser',
           'password': 'pass'
@@ -31,7 +31,7 @@ function App() {
 
       <div>
       <button onClick={() => {
-        axios.post("http://localhost:8080/api/login",
+        axios.post("http://localhost:8080/api/member/login",
           {'email': 'testuser@email.com',
           'name': 'testuser',
           'password': 'pass'
@@ -52,7 +52,7 @@ function App() {
       <div>
       <button onClick={() => {
         console.log(cookies['access_token']);
-        axios.post("http://localhost:8080/api/posts",
+        axios.post("http://localhost:8080/api/guestbook/posts",
           {'title': 'test title',
           'content': 'test content'
         },
@@ -67,7 +67,7 @@ function App() {
       <div>
       <button onClick={() => {
         console.log(cookies['access_token']);
-        axios.get("http://localhost:8080/api/posts/1",
+        axios.get("http://localhost:8080/api/guestbook/posts/1",
         )
         .then((response) => console.log(response.data));
       }}>
@@ -78,7 +78,7 @@ function App() {
       <div>
       <button onClick={() => {
         console.log(cookies['access_token']);
-        axios.put("http://localhost:8080/api/posts",
+        axios.put("http://localhost:8080/api/guestbook/posts",
           {'id': 1,
             'title': 'new title',
             'content': 'new content'
@@ -94,7 +94,7 @@ function App() {
       <div>
       <button onClick={() => {
         console.log(cookies['access_token']);
-        axios.delete("http://localhost:8080/api/posts/1",
+        axios.delete("http://localhost:8080/api/guestbook/posts/1",
         {headers: {'Authorization': cookies['access_token']}}
         )
         .then((response) => console.log(response.data));
@@ -105,7 +105,7 @@ function App() {
 
       <div>
       <button onClick={() => {
-        axios.get("http://localhost:8080/api/comments/query/post-id/1?page=0&size=10",
+        axios.get("http://localhost:8080/api/guestbook/comments/query/post-id/1?page=0&size=10",
         )
         .then((response) => console.log(response.data));
       }}>
@@ -116,7 +116,7 @@ function App() {
       <div>
       <button onClick={() => {
         console.log(cookies['access_token']);
-        axios.post("http://localhost:8080/api/comments",
+        axios.post("http://localhost:8080/api/guestbook/comments",
           {'postId': 1,
             'content': 'test content'
         },

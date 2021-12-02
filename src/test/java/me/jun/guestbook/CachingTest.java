@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -45,20 +44,14 @@ public class CachingTest {
 
         assertThat(delay)
                 .isCloseTo(2L, Offset.offset(1L));
-
-        assertThat(
-                cacheManager.getCache("postStore")
-                        .get(POST_ID)
-                        .get()
-        ).isEqualTo(post());
     }
 
     @Test
-    void updateCacheTest() throws ExecutionException, InterruptedException {
-        postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
-        postService.retrievePost(POST_ID).get();
+    void updateCacheTest() {
+        postService.createPost(postCreateRequest(), WRITER_EMAIL);
+        postService.retrievePost(POST_ID);
 
-        postService.updatePost(postUpdateRequest(), WRITER_EMAIL).get();
+        postService.updatePost(postUpdateRequest(), WRITER_EMAIL);
 
         Post afterUpdate = (Post) cacheManager.getCache("postStore")
                 .get(POST_ID)
@@ -68,11 +61,11 @@ public class CachingTest {
     }
 
     @Test
-    void deleteCacheTest() throws ExecutionException, InterruptedException {
-        postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
-        postService.retrievePost(POST_ID).get();
+    void deleteCacheTest() {
+        postService.createPost(postCreateRequest(), WRITER_EMAIL);
+        postService.retrievePost(POST_ID);
 
-        postService.deletePost(POST_ID, WRITER_EMAIL).get();
+        postService.deletePost(POST_ID, WRITER_EMAIL);
 
         assertThrows(
                 NullPointerException.class,
@@ -83,13 +76,13 @@ public class CachingTest {
     }
 
     @Test
-    void deleteAllCacheTest() throws ExecutionException, InterruptedException {
+    void deleteAllCacheTest() {
         for (int request = 0; request < 10; request++) {
-            postService.createPost(postCreateRequest(), WRITER_EMAIL).get();
+            postService.createPost(postCreateRequest(), WRITER_EMAIL);
         }
-        postService.retrievePost(POST_ID).get();
+        postService.retrievePost(POST_ID);
 
-        postService.deletePostByWriterEmail(WRITER_EMAIL).get();
+        postService.deletePostByWriterEmail(WRITER_EMAIL);
 
         assertThrows(
                 NullPointerException.class,

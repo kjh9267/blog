@@ -4,93 +4,72 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jun.guestbook.application.PostCountService;
 import me.jun.guestbook.application.PostService;
-import me.jun.guestbook.application.dto.*;
+import me.jun.guestbook.application.dto.PagedPostsResponse;
+import me.jun.guestbook.application.dto.PostCreateRequest;
+import me.jun.guestbook.application.dto.PostResponse;
+import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.member.application.dto.MemberInfo;
 import me.jun.support.Member;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-
-import static reactor.core.scheduler.Schedulers.elastic;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/posts")
+@RequestMapping(value = "/api/guestbook/posts")
 public class PostController {
 
     private final PostService postService;
 
-    private final PostCountService postCountService;
-
     @PostMapping
-    public ResponseEntity<Mono<PostResponse>> createPost(@RequestBody @Valid PostCreateRequest request,
+    public ResponseEntity<PostResponse> createPost(@RequestBody @Valid PostCreateRequest request,
                                                          @Member MemberInfo writer) {
 
-        Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
-                () -> postService.createPost(request, writer.getEmail())
-        ).log();
+        PostResponse response = postService.createPost(request, writer.getEmail());
 
         return ResponseEntity.ok()
-                .body(postResponseMono);
+                .body(response);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Mono<PostResponse>> retrievePost(@PathVariable Long postId) {
+    public ResponseEntity<PostResponse> retrievePost(@PathVariable Long postId) {
 
-        Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
-                () -> postService.retrievePost(postId)
-                )
-                .log()
-                .publishOn(elastic())
-                .map(postResponse -> {
-                    postCountService.updateHits(postId);
-                    return postResponse;
-                })
-                .log();
-
-        log.info("before subscribe");
+        PostResponse response = postService.retrievePost(postId);
 
         return ResponseEntity.ok()
-                .body(postResponseMono);
+                .body(response);
     }
 
     @PutMapping
-    public ResponseEntity<Mono<PostResponse>> updatePost(@RequestBody @Valid PostUpdateRequest requestDto,
+    public ResponseEntity<PostResponse> updatePost(@RequestBody @Valid PostUpdateRequest requestDto,
                                                          @Member MemberInfo writer) {
 
-        Mono<PostResponse> postResponseMono = Mono.fromCompletionStage(
-                () -> postService.updatePost(requestDto, writer.getEmail())
-        ).log();
+        PostResponse response = postService.updatePost(requestDto, writer.getEmail());
 
         return ResponseEntity.ok()
-                .body(postResponseMono);
+                .body(response);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Mono<Long>> deletePost(@PathVariable Long postId,
+    public ResponseEntity<Long> deletePost(@PathVariable Long postId,
                                                  @Member MemberInfo writer) {
-        Mono<Long> mono = Mono.fromCompletionStage(
-                () -> postService.deletePost(postId, writer.getEmail())
-        ).log();
+
+        Long response = postService.deletePost(postId, writer.getEmail());
 
         return ResponseEntity.ok()
-                .body(mono);
+                .body(response);
     }
 
     @GetMapping("/query")
-    ResponseEntity<Flux<PagedPostsResponse>> queryPosts(@RequestParam("page") Integer page,
-                                                        @RequestParam("size") Integer size) {
+    ResponseEntity<PagedPostsResponse> queryPosts(@RequestParam("page") Integer page,
+                                                  @RequestParam("size") Integer size) {
 
-//        PagedPostsResponse response = postService.queryPosts(PageRequest.of(page, size));
+        PagedPostsResponse response = postService.queryPosts(PageRequest.of(page, size));
 
-        return null;
-
-
-//        return ResponseEntity.ok()
-//                .body(postFlux);
+        return ResponseEntity.ok()
+                .body(response);
     }
 }

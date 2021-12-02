@@ -24,7 +24,7 @@ public class E2EMemberTest extends E2ETest {
                 .header(AUTHORIZATION, token)
 
                 .when()
-                .delete("/api/leave")
+                .delete("/api/member/leave")
 
                 .then()
                 .statusCode(OK.value());
