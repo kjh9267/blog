@@ -1,8 +1,9 @@
 package me.jun.member.application.exception;
 
-public class MemberNotFoundException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
 
+public class MemberNotFoundException extends BusinessException {
     public MemberNotFoundException() {
-        super("There is no account");
+        super("no member");
     }
 }
