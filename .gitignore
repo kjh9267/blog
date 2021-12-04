@@ -1,7 +1,9 @@
+src/main/resources/application-prod.properties
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**
+#!**/src/main/**
 !**/src/test/**
 logs/
 .mvn

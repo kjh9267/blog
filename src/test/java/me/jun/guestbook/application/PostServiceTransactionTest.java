@@ -5,6 +5,7 @@ import me.jun.guestbook.domain.repository.PostCountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public class PostServiceTransactionTest {
 
