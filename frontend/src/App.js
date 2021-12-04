@@ -1,6 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import {connect} from 'react-redux';
 
 function App() {
 
