@@ -17,6 +17,7 @@ import static me.jun.blog.ArticleFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -59,7 +60,7 @@ public class ArticleControllerTest {
                         post("/api/blog/articles")
                                 .content(content)
                                 .header(AUTHORIZATION, jwt)
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
@@ -90,10 +91,26 @@ public class ArticleControllerTest {
 
         mockMvc.perform(
                         put("/api/blog/articles")
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
                                 .content(content)
                                 .header(AUTHORIZATION, jwt)
                 )
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(expected));
+    }
+
+    @Test
+    void queryPostsTest() throws Exception {
+        String expected = objectMapper.writeValueAsString(pagedArticleResponse());
+
+        given(articleService.queryArticles(any()))
+                .willReturn(pagedArticleResponse());
+
+        mockMvc.perform(get("/api/blog/articles/query?page=0&size=10")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(expected));

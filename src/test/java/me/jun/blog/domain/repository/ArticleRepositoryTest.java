@@ -1,13 +1,11 @@
 package me.jun.blog.domain.repository;
 
 import me.jun.blog.domain.Article;
-import org.assertj.core.data.TemporalOffset;
-import org.assertj.core.data.TemporalUnitLessThanOffset;
-import org.assertj.core.data.TemporalUnitOffset;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -50,5 +48,21 @@ public class ArticleRepositoryTest {
         Instant modifiedAt = article.getModifiedAt();
 
         assertThat(createdAt).isBefore(modifiedAt);
+    }
+
+    @Test
+    void findAllTest() {
+        Article article = article().toBuilder()
+                .id(null)
+                .build();
+
+        for (int count = 0; count < 10; count++) {
+            articleRepository.save(article);
+        }
+
+        Page<Article> all = articleRepository.findAll(PageRequest.of(0, 10));
+
+        assertThat(all.getSize())
+                .isEqualTo(10);
     }
 }
