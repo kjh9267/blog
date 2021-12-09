@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
+import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
 import static me.jun.blog.CategoryFixture.category;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +48,7 @@ public class ArticleServiceTest {
     void createArticleTest() throws ExecutionException, InterruptedException {
         ArticleResponse expected = articleResponse().toBuilder()
                 .articleId(null)
+                .categoryName(CATEGORY_NAME)
                 .build();
 
         // Given

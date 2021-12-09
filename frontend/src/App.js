@@ -1,7 +1,8 @@
 import './App.css';
+import { useCookies } from 'react-cookie';
 import Register from './components/Register';
 import Login from './components/Login';
-import { useCookies } from 'react-cookie';
+import Write from './components/Write';
 
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
     <div className="App">
       <Register></Register>
       <Login cookie={cookie} setCookie={setCookie}></Login>
+      <Write cookie={cookie} setCookie={setCookie}></Write>
     </div>
   );
 }
