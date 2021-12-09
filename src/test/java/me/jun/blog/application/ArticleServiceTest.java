@@ -1,6 +1,7 @@
 package me.jun.blog.application;
 
 import me.jun.blog.application.dto.ArticleResponse;
+import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
@@ -11,11 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
+import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
 import static me.jun.blog.CategoryFixture.category;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +52,7 @@ public class ArticleServiceTest {
     void createArticleTest() throws ExecutionException, InterruptedException {
         ArticleResponse expected = articleResponse().toBuilder()
                 .articleId(null)
+                .categoryName(CATEGORY_NAME)
                 .build();
 
         // Given
@@ -120,5 +126,16 @@ public class ArticleServiceTest {
                 ArticleNotFoundException.class,
                 () -> articleService.updateArticleInfo(articleUpdateRequest())
         );
+    }
+
+    @Test
+    void queryArticlesTest() {
+        given(articleRepository.findAll((Pageable) any()))
+                .willReturn(pagedArticle());
+
+        PagedArticleResponse response = articleService.queryArticles(PageRequest.of(0, 10));
+
+        assertThat(response.getArticleResponses().getSize())
+                .isEqualTo(10);
     }
 }
