@@ -48,6 +48,7 @@ function Write(props) {
 
             <label htmlFor='input_categoryName'>Category :</label>
             <input type='text' name='input_categoryName' value={categoryName} onChange={handleInputCategoryName} />
+            <br/>
 
             <button onClick={handleSubmit}>Submit</button>
         </div>
