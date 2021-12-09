@@ -37,7 +37,7 @@ public class ArticleService {
 
         article = articleRepository.save(article);
 
-        return ArticleResponse.from(article);
+        return ArticleResponse.from(article, category);
     }
 
     @Transactional(readOnly = true)

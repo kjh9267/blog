@@ -4,7 +4,7 @@ import axios from "axios";
 
 function TestComponent() {
 
-    let [cookies, setCookie] = useCookies(['access_token']);
+    let [cookie, setCookie] = useCookies(['access_token']);
 
     return(
         <div>
@@ -43,7 +43,7 @@ function TestComponent() {
             setCookie('access_token', response.data['access_token']);
           }
           console.log(response.data['access_token']);
-          console.log(cookies);
+          console.log(cookie);
         });
       }}>
       login
@@ -52,12 +52,12 @@ function TestComponent() {
 
       <div>
       <button onClick={() => {
-        console.log(cookies['access_token']);
+        console.log(cookie['access_token']);
         axios.post("http://localhost:8080/api/guestbook/posts",
           {'title': 'test title',
           'content': 'test content'
         },
-        {headers: {'Authorization': cookies['access_token']}}
+        {headers: {'Authorization': cookie['access_token']}}
         )
         .then((response) => console.log(response.data));
       }}>
@@ -67,7 +67,7 @@ function TestComponent() {
 
       <div>
       <button onClick={() => {
-        console.log(cookies['access_token']);
+        console.log(cookie['access_token']);
         axios.get("http://localhost:8080/api/guestbook/posts/1",
         )
         .then((response) => console.log(response.data));
@@ -78,13 +78,13 @@ function TestComponent() {
 
       <div>
       <button onClick={() => {
-        console.log(cookies['access_token']);
+        console.log(cookie['access_token']);
         axios.put("http://localhost:8080/api/guestbook/posts",
           {'id': 1,
             'title': 'new title',
             'content': 'new content'
         },
-        {headers: {'Authorization': cookies['access_token']}}
+        {headers: {'Authorization': cookie['access_token']}}
         )
         .then((response) => console.log(response.data));
       }}>
@@ -94,9 +94,9 @@ function TestComponent() {
 
       <div>
       <button onClick={() => {
-        console.log(cookies['access_token']);
+        console.log(cookie['access_token']);
         axios.delete("http://localhost:8080/api/guestbook/posts/1",
-        {headers: {'Authorization': cookies['access_token']}}
+        {headers: {'Authorization': cookie['access_token']}}
         )
         .then((response) => console.log(response.data));
       }}>
@@ -116,12 +116,12 @@ function TestComponent() {
 
       <div>
       <button onClick={() => {
-        console.log(cookies['access_token']);
+        console.log(cookie['access_token']);
         axios.post("http://localhost:8080/api/guestbook/comments",
           {'postId': 1,
             'content': 'test content'
         },
-        {headers: {'Authorization': cookies['access_token']}}
+        {headers: {'Authorization': cookie['access_token']}}
         )
         .then((response) => console.log(response.data));
       }}>
