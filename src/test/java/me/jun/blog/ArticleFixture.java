@@ -3,9 +3,22 @@ package me.jun.blog;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
+import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.LongUnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static me.jun.blog.CategoryFixture.*;
 
 abstract public class ArticleFixture {
@@ -67,5 +80,17 @@ abstract public class ArticleFixture {
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
                 .build();
+    }
+
+    public static Page<Article> pagedArticle() {
+        return new PageImpl<Article>(
+                LongStream.range(0, 10)
+                        .mapToObj(id -> article().toBuilder().id(id).build())
+                        .collect(toList())
+        );
+    }
+
+    public static PagedArticleResponse pagedArticleResponse() {
+        return PagedArticleResponse.from(pagedArticle());
     }
 }
