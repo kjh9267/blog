@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
+import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
 import me.jun.blog.domain.repository.ArticleRepository;
 import me.jun.blog.domain.service.CategoryMatchingService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +40,7 @@ public class ArticleService {
 
         article = articleRepository.save(article);
 
-        return ArticleResponse.from(article);
+        return ArticleResponse.from(article, category);
     }
 
     @Transactional(readOnly = true)
@@ -59,5 +62,11 @@ public class ArticleService {
                 .orElseThrow(ArticleNotFoundException::new);
 
         return ArticleResponse.from(updatedArticle);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedArticleResponse queryArticles(PageRequest request) {
+        Page<Article> articles = articleRepository.findAll(request);
+        return PagedArticleResponse.from(articles);
     }
 }
