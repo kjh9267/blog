@@ -5,8 +5,11 @@ import me.jun.blog.application.ArticleService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
+import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.member.application.dto.MemberInfo;
 import me.jun.support.Member;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +46,15 @@ public class ArticleController {
                                                          @Member MemberInfo articleWriterInfo) {
 
         ArticleResponse response = articleService.updateArticleInfo(request);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @GetMapping("/query")
+    public HttpEntity<PagedArticleResponse> queryArticles(@RequestParam("page") int page,
+                                                          @RequestParam("size") int size) {
+        PagedArticleResponse response = articleService.queryArticles(PageRequest.of(page, size));
 
         return ResponseEntity.ok()
                 .body(response);
