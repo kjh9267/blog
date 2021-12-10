@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
+import { BLOG_ARTICLE } from '../support/UrlUtils';
 
 function Write(props) {
 
@@ -23,7 +24,7 @@ function Write(props) {
     }
 
     const handleSubmit = () => {
-        axios.post("http://localhost:8080/api/blog/articles",
+        axios.post(BLOG_ARTICLE,
                     {
                         'title': title,
                         'content': content,
