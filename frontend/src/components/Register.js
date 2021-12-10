@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 import { useState } from 'react';
+import { REGISTER } from '../support/UrlUtils';
 
 
 function Register() {
@@ -24,7 +25,7 @@ function Register() {
     }
 
     const handleSubmit = () => {
-        axios.post("http://localhost:8080/api/member/register",
+        axios.post(REGISTER,
                     {
                         'email': email,
                         'name': userName,
