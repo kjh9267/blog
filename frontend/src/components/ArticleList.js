@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
@@ -8,6 +7,8 @@ function ArticleList(props) {
 
     const [articleList, setArticleList] = useState([]);
 
+    const [isShow, setIsShow] = useState([]);
+
     const getArticleList = async () => {
         const queryString = qs.stringify(
             {
@@ -15,40 +16,53 @@ function ArticleList(props) {
                 size: props.size
             }
         )
-        console.log(queryString);
         const response = await axios.get("http://localhost:8080/api/blog/articles/query?" + queryString)
             .then(response => response)
             .catch(reason => console.log(reason));
 
-        console.log(response);
-
-        const newArray = [];
+        const articleArray = [];
+        const isShowArray = [];
 
         Object.values(response.data.articleResponses.content).map(
             article => {
-                newArray.push(article);
+                articleArray.push(article);
+                isShowArray.push(false);
             }
         )
-        
-        setArticleList(newArray);
 
-        console.log(articleList);
+        setArticleList(articleArray);
+        setIsShow(isShowArray);
+    }
+
+    const showList = () => {
+        return articleList.map(
+            (article, index) => {
+                return (
+                    <div key={index}>
+                        <h4 onClick={ChangeVisible} index={index}>{article.title}</h4>
+                        <p>{isShow[index] === true ? article.content : null}</p>
+                    </div>
+                )
+            }
+        )
+    }
+
+    const ChangeVisible = (event) => {
+        const isShowArray = [...isShow];
+        const index = event.target.getAttribute('index');
+
+        const changeState = isShow[index] === true ? false: true
+
+        isShowArray[index] = changeState;
+
+        setIsShow(isShowArray);
     }
 
     return (
         <div>
             <button onClick={getArticleList}>page</button>
             <div>
-                {articleList.map(
-                    (article, index) => {
-                        return (
-                            <div key={index}>
-                                <p>{article.title}</p>
-                                <p>{article.content}</p>
-                            </div>
-                        )
-                    }
-                )}
+                {showList()}
             </div>
         </div>
     )
