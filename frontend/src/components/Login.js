@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
+import { LOGIN } from "../support/UrlUtils";
 
 function Login(props) {
 
@@ -23,7 +24,7 @@ function Login(props) {
     }
 
     const handleSubmit = () => {
-        axios.post("http://localhost:8080/api/member/login",
+        axios.post(LOGIN,
                     {
                         'email': email,
                         'name': userName,
