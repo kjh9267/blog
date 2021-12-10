@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import qs from "qs";
+import { QUERY_BLOG_ARTICLES } from "../support/UrlUtils";
 
 function ArticleList(props) {
 
@@ -16,7 +17,7 @@ function ArticleList(props) {
                 size: props.size
             }
         )
-        const response = await axios.get("http://localhost:8080/api/blog/articles/query?" + queryString)
+        const response = await axios.get(QUERY_BLOG_ARTICLES + queryString)
             .then(response => response)
             .catch(reason => console.log(reason));
 
