@@ -23,6 +23,6 @@ public class CategoryService {
 
     public Category retrieveCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(CategoryNotFoundException::new);
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 }
