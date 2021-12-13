@@ -1,12 +1,17 @@
 package me.jun.support.exception;
 
+import lombok.Getter;
+import me.jun.common.error.ErrorCode;
+
+@Getter
 public class BusinessException extends RuntimeException {
 
-    public BusinessException(String message) {
-        super(message);
-    }
+    private final ErrorCode errorCode;
 
-    public BusinessException(String message, Throwable cause) {
-        super(message, cause);
+    private final String message;
+
+    public BusinessException(ErrorCode errorCode, String message) {
+        this.errorCode = errorCode;
+        this.message = message;
     }
 }
