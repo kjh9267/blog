@@ -23,7 +23,7 @@ public class ArticleCategoryService {
     public ArticleResponse updateCategoryOfArticle(ArticleInfoUpdateRequest request) {
         Long articleId = request.getId();
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(ArticleNotFoundException::new);
+                .orElseThrow(() -> new ArticleNotFoundException(articleId));
 
         String newCategoryName = request.getCategoryName();
         Category newCategory = categoryService.createCategoryOrElseGet(newCategoryName);

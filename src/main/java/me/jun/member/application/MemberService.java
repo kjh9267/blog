@@ -24,7 +24,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberResponse retrieveMemberBy(String email) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(email));
 
         return MemberResponse.from(member);
     }

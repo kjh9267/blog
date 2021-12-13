@@ -46,7 +46,7 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public ArticleResponse retrieveArticle(Long articleId) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(ArticleNotFoundException::new);
+                .orElseThrow(() -> new ArticleNotFoundException(articleId));
 
         return ArticleResponse.from(article);
     }
@@ -59,7 +59,7 @@ public class ArticleService {
                         request.getTitle(),
                         request.getContent()
                 ))
-                .orElseThrow(ArticleNotFoundException::new);
+                .orElseThrow(() -> new ArticleNotFoundException(requestId));
 
         return ArticleResponse.from(updatedArticle);
     }

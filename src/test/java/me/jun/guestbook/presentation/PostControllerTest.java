@@ -10,6 +10,7 @@ import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
+import org.apache.http.auth.AUTH;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -115,7 +116,7 @@ public class PostControllerTest {
     @Test
     void retrieveNoPostFailTest() throws Exception {
         given(postService.retrievePost(any()))
-                .willThrow(new PostNotFoundException());
+                .willThrow(new PostNotFoundException(POST_ID));
 
         mockMvc.perform(get("/api/guestbook/posts/1"))
                 .andExpect(status().is4xxClientError())
@@ -145,11 +146,12 @@ public class PostControllerTest {
     void noPost_updatePostFailTest() throws Exception {
         String content = objectMapper.writeValueAsString(postUpdateRequest());
 
-        doThrow(PostNotFoundException.class)
+        doThrow(new PostNotFoundException(POST_ID))
                 .when(postService)
                 .updatePost(any(), any());
 
         mockMvc.perform(put("/api/guestbook/posts")
+                        .header(AUTHORIZATION, jwt)
                         .content(content)
                         .contentType(APPLICATION_JSON))
                 .andDo(print())
@@ -166,11 +168,12 @@ public class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        doThrow(PostWriterMismatchException.class)
+        doThrow(new PostWriterMismatchException(WRITER_EMAIL))
                 .when(postService)
                 .updatePost(any(), any());
 
         mockMvc.perform(put("/api/guestbook/posts")
+                        .header(AUTHORIZATION, jwt)
                         .content(content)
                         .contentType(APPLICATION_JSON))
                 .andDo(print())
@@ -211,22 +214,24 @@ public class PostControllerTest {
 
     @Test
     void noPost_deletePostFailTest() throws Exception {
-        doThrow(PostNotFoundException.class)
+        doThrow(new PostNotFoundException(2L))
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/api/guestbook/posts/2"))
+        mockMvc.perform(delete("/api/guestbook/posts/2")
+                        .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     void memberMisMatch_deletePostFailTest() throws Exception {
-        doThrow(PostWriterMismatchException.class)
+        doThrow(new PostWriterMismatchException(WRITER_EMAIL))
                 .when(postService)
                 .deletePost(any(), any());
 
-        mockMvc.perform(delete("/api/guestbook/posts/1"))
+        mockMvc.perform(delete("/api/guestbook/posts/1")
+                        .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
