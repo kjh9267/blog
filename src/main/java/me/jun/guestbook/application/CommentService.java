@@ -36,14 +36,14 @@ public class CommentService {
     @Transactional(readOnly = true)
     public CommentResponse retrieveComment(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> new CommentNotFoundException(id));
 
         return CommentResponse.from(comment);
     }
 
     public CommentResponse updateComment(CommentUpdateRequest request, String writerEmail) {
         Comment comment = commentRepository.findById(request.getId())
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> new CommentNotFoundException(request.getId()));
 
         comment = comment.validateWriter(writerEmail)
                 .updateContent(request.getContent());
@@ -55,7 +55,7 @@ public class CommentService {
 
     public Long deleteComment(Long id, String writerEmail) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> new CommentNotFoundException(id));
 
         comment.validateWriter(writerEmail);
 
