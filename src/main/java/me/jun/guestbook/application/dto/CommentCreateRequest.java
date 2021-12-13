@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 public class CommentCreateRequest {
 
     @NotNull
+    @Positive
     private Long postId;
 
     @NotBlank
