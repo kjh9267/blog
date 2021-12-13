@@ -2,6 +2,7 @@ package me.jun.blog.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.blog.application.ArticleService;
+import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.common.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,6 +79,16 @@ public class ArticleControllerTest {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(expected));
+    }
+
+    @Test
+    void noArticle_retrieveArticleFailTest() throws Exception {
+        given(articleService.retrieveArticle(any()))
+                .willThrow(new ArticleNotFoundException(ARTICLE_ID));
+
+        mockMvc.perform(get("/api/blog/articles/2"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
