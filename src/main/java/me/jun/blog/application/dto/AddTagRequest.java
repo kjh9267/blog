@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 public class AddTagRequest {
 
     @NotNull
+    @Positive
     private Long articleId;
 
     @NotBlank
