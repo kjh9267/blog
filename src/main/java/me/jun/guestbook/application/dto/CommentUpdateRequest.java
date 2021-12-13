@@ -5,6 +5,7 @@ import me.jun.guestbook.domain.Comment;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -13,9 +14,11 @@ import javax.validation.constraints.NotNull;
 public class CommentUpdateRequest {
 
     @NotNull
+    @Positive
     private Long id;
 
     @NotNull
+    @Positive
     private Long postId;
 
     @NotBlank
