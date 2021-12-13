@@ -1,7 +1,7 @@
 package me.jun.member.application;
 
 import me.jun.common.security.JwtProvider;
-import me.jun.member.application.exception.EmailNotFoundException;
+import me.jun.member.application.exception.MemberNotFoundException;
 import me.jun.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public class LoginServiceTest {
     void noMember_loginFailTest() {
         given(memberRepository.findByEmail(EMAIL)).willReturn(Optional.empty());
 
-        assertThrows(EmailNotFoundException.class,
+        assertThrows(MemberNotFoundException.class,
                 () -> loginService.login(memberRequest())
         );
     }

@@ -1,8 +1,13 @@
 package me.jun.member.domain.exception;
 
-public class WrongPasswordException extends RuntimeException {
+import me.jun.common.error.ErrorCode;
+import me.jun.support.exception.BusinessException;
+
+import static me.jun.common.error.ErrorCode.INVALID_PASSWORD;
+
+public class WrongPasswordException extends BusinessException {
 
     public WrongPasswordException() {
-        super("wrong password");
+        super(INVALID_PASSWORD, INVALID_PASSWORD.getMessage());
     }
 }
