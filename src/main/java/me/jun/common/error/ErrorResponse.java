@@ -3,14 +3,12 @@ package me.jun.common.error;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorResponse {
@@ -19,8 +17,17 @@ public class ErrorResponse {
 
     private String message;
 
-    public static ErrorResponse from(ErrorCode errorCode) {
-        return new ErrorResponse(errorCode.getStatusCode(), errorCode.getMessage());
+    public static ErrorResponse from(Throwable throwable, ErrorCode errorCode) {
+        return ErrorResponse.builder()
+                .statusCode(errorCode.getStatusCode())
+                .message(throwable.getMessage())
+                .build();
     }
 
+    public static ErrorResponse from(Throwable throwable, int statusCode) {
+        return ErrorResponse.builder()
+                .statusCode(statusCode)
+                .message(throwable.getMessage())
+                .build();
+    }
 }

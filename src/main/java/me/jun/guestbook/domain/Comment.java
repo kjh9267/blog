@@ -27,7 +27,7 @@ public class Comment {
 
     public Comment validateWriter(String writerEmail) {
         if (!commentWriter.match(writerEmail)) {
-            throw new CommentWriterMismatchException();
+            throw new CommentWriterMismatchException(writerEmail);
         }
         return this;
     }

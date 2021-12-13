@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jun.common.security.JwtProvider;
 import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.TokenResponse;
-import me.jun.member.application.exception.EmailNotFoundException;
+import me.jun.member.application.exception.MemberNotFoundException;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class LoginService {
     public TokenResponse login(MemberRequest request) {
         String email = request.getEmail();
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(EmailNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(email));
 
         member.validate(request.getPassword());
         String jwt = jwtProvider.createJwt(email);
