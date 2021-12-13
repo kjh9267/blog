@@ -44,7 +44,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponse retrievePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new PostNotFoundException(postId));
 
         postCountService.updateHits(postId);
 
@@ -55,7 +55,7 @@ public class PostService {
     public PostResponse updatePost(PostUpdateRequest dto, String writerEmail) {
         Post requestPost = dto.toEntity();
         Post post = postRepository.findById(requestPost.getId())
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new PostNotFoundException(requestPost.getId()));
 
         post.validateWriter(writerEmail);
 
@@ -70,7 +70,7 @@ public class PostService {
     @CacheEvict(cacheNames = "postStore", key = "#postId")
     public Long deletePost(Long postId, String writerEmail) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new PostNotFoundException(postId));
 
         post.validateWriter(writerEmail);
 

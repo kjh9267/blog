@@ -1,8 +1,12 @@
 package me.jun.guestbook.domain.exception;
 
-public class PostWriterMismatchException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
 
-    public PostWriterMismatchException(String message) {
-        super(message);
+import static me.jun.common.error.ErrorCode.MEMBER_MISMATCH;
+
+public class PostWriterMismatchException extends BusinessException {
+
+    public PostWriterMismatchException(String email) {
+        super(MEMBER_MISMATCH, MEMBER_MISMATCH.errorMessageOf(email));
     }
 }
