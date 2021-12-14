@@ -7,6 +7,7 @@ import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.guestbook.application.exception.CommentNotFoundException;
 import me.jun.guestbook.domain.Comment;
+import me.jun.member.application.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 
 import static me.jun.guestbook.CommentFixture.*;
+import static me.jun.member.MemberFixture.memberResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -47,11 +49,17 @@ public class CommentControllerTest {
     @Autowired
     private JwtProvider jwtProvider;
 
+    @MockBean
+    private MemberService memberService;
+
     private String jwt;
 
     @BeforeEach
     void setUp() {
         jwt = jwtProvider.createJwt("testuser@email.com");
+
+        given(memberService.retrieveMemberBy(any()))
+                .willReturn(memberResponse());
     }
 
     @Test
