@@ -7,6 +7,7 @@ import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.exception.MemberNotFoundException;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.repository.MemberRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class MemberService {
 
     private final CommentService commentService;
 
+    @Cacheable(cacheNames = "memberStore", key = "#email")
     @Transactional(readOnly = true)
     public MemberResponse retrieveMemberBy(String email) {
         Member member = memberRepository.findByEmail(email)
