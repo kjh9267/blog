@@ -17,12 +17,12 @@ public class CacheConfig {
     @Bean
     CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        ConcurrentMapCache postsCache = new ConcurrentMapCache("postStore");
-        ConcurrentMapCache tokenCache = new ConcurrentMapCache("tokenStore");
+        ConcurrentMapCache postStore = new ConcurrentMapCache("postStore");
+        ConcurrentMapCache memberStore = new ConcurrentMapCache("memberStore");
         List<ConcurrentMapCache> caches = unmodifiableList(
                 Arrays.asList(
-                        postsCache,
-                        tokenCache
+                        postStore,
+                        memberStore
         ));
         simpleCacheManager.setCaches(caches);
         return simpleCacheManager;

@@ -2,9 +2,8 @@ package me.jun.support;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jun.common.MemberExtractor;
 import me.jun.common.security.InvalidTokenException;
-import me.jun.common.security.JwtProvider;
-import me.jun.member.application.dto.MemberInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -21,7 +20,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 public class JwtSubjectResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtProvider provider;
+    private final MemberExtractor memberExtractor;
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
@@ -35,12 +34,9 @@ public class JwtSubjectResolver implements HandlerMethodArgumentResolver {
                                   WebDataBinderFactory binderFactory) throws Exception {
 
         String token = extractToken(webRequest)
-                .orElseThrow(() -> new InvalidTokenException("No token"));
+                .orElseThrow(InvalidTokenException::new);
 
-        provider.validateToken(token);
-        String email = provider.extractSubject(token);
-
-        return MemberInfo.from(email);
+        return memberExtractor.extractMemberFrom(token);
     }
 
     private Optional<String> extractToken(NativeWebRequest nativeWebRequest) {

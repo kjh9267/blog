@@ -47,7 +47,7 @@ public class JwtProvider {
             extractClaimsJws(jwt);
         }
         catch (Exception e) {
-            throw new InvalidTokenException("invalid token");
+            throw new InvalidTokenException();
         }
     }
 
