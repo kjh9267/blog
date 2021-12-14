@@ -76,11 +76,12 @@ public class MemberControllerTest {
     @Test
     void DuplicatedEmail_registerFailTest() throws Exception {
         given(registerService.register(any()))
-                .willThrow(DuplicatedEmailException.class);
+                .willThrow(new DuplicatedEmailException(EMAIL));
 
         String content = objectMapper.writeValueAsString(memberRequest());
 
         mockMvc.perform(post("/api/member/register")
+                        .contentType(APPLICATION_JSON)
                         .content(content)
                         .accept(APPLICATION_JSON))
                 .andDo(print())
