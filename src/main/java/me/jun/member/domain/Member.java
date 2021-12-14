@@ -13,11 +13,12 @@ import javax.persistence.*;
 public class Member {
 
     @Builder
-    protected Member(Long id, String name, String email, String password) {
+    protected Member(Long id, String name, String email, String password, Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = new Password(password);
+        this.role = role;
     }
 
     @Id
@@ -32,6 +33,9 @@ public class Member {
 
     @Embedded
     private Password password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public void validate(String password) {
         if (!this.password.match(password)) {
