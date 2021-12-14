@@ -2,8 +2,10 @@ package me.jun.blog.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.blog.application.ArticleService;
+import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.common.security.JwtProvider;
+import org.apache.http.auth.AUTH;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +114,22 @@ public class ArticleControllerTest {
     }
 
     @Test
+    void noArticle_updateArticleFailTest() throws Exception {
+        String content = objectMapper.writeValueAsString(articleUpdateRequest());
+
+        given(articleService.updateArticleInfo(any()))
+                .willThrow(new ArticleNotFoundException(ARTICLE_ID));
+
+        mockMvc.perform(put("/api/blog/articles")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(content))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void queryPostsTest() throws Exception {
         String expected = objectMapper.writeValueAsString(pagedArticleResponse());
 
@@ -125,5 +143,24 @@ public class ArticleControllerTest {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(expected));
+    }
+
+    @Test
+    void InvalidInputTest() throws Exception {
+        String content = objectMapper.writeValueAsString(
+                ArticleCreateRequest.builder()
+                        .title("     ")
+                        .content(" ")
+                        .categoryName("")
+                        .build()
+        );
+
+        mockMvc.perform(put("/api/blog/articles")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON)
+                .content(content)
+                .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 }

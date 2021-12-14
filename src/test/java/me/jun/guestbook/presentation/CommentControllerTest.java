@@ -3,19 +3,18 @@ package me.jun.guestbook.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.common.security.JwtProvider;
 import me.jun.guestbook.application.CommentService;
+import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
+import me.jun.guestbook.application.exception.CommentNotFoundException;
 import me.jun.guestbook.domain.Comment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -24,6 +23,7 @@ import static me.jun.guestbook.CommentFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -65,7 +65,7 @@ public class CommentControllerTest {
                         .content(content)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, jwt))
+                        .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("id").value(COMMENT_ID))
@@ -88,6 +88,18 @@ public class CommentControllerTest {
     }
 
     @Test
+    void noComment_retrieveCommentFailTest() throws Exception {
+        given(commentService.retrieveComment(any()))
+                .willThrow(new CommentNotFoundException(COMMENT_ID));
+
+        mockMvc.perform(get("/api/guestbook/comments/1")
+                .accept(APPLICATION_JSON)
+                .header(AUTHORIZATION, jwt))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void updateCommentTest() throws Exception {
         String content = objectMapper.writeValueAsString(commentUpdateRequest());
 
@@ -98,7 +110,7 @@ public class CommentControllerTest {
                         .content(content)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, jwt))
+                        .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("id").value(COMMENT_ID))
@@ -107,16 +119,40 @@ public class CommentControllerTest {
     }
 
     @Test
+    void noComment_updateCommentFailTest() throws Exception {
+        given(commentService.deleteComment(any(), any()))
+                .willThrow(new CommentNotFoundException(COMMENT_ID));
+
+        mockMvc.perform(delete("/api/guestbook/comments/1")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void deleteCommentTest() throws Exception {
         given(commentService.deleteComment(any(), any()))
                 .willReturn(COMMENT_ID);
 
         mockMvc.perform(delete("/api/guestbook/comments/1")
-                        .header(HttpHeaders.AUTHORIZATION, jwt)
+                        .header(AUTHORIZATION, jwt)
                         .accept(APPLICATION_JSON))
                 .andDo(print());
 
         verify(commentService).deleteComment(any(), any());
+    }
+
+    @Test
+    void noComment_deleteCommentFailTest() throws Exception {
+        given(commentService.deleteComment(any(), any()))
+                .willThrow(new CommentNotFoundException(COMMENT_ID));
+
+        mockMvc.perform(delete("/api/guestbook/comments/2")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
     }
 
     @Test
@@ -131,5 +167,22 @@ public class CommentControllerTest {
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void invalidInputTest() throws Exception {
+        String content = objectMapper.writeValueAsString(
+                CommentCreateRequest.builder()
+                        .postId(-1L)
+                        .content(" ")
+                        .build()
+        );
+
+        mockMvc.perform(post("/api/guestbook/comments")
+                .header(AUTHORIZATION, jwt)
+                .contentType(APPLICATION_JSON)
+                .content(content))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 }
