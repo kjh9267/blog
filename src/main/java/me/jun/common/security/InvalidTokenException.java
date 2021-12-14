@@ -1,8 +1,12 @@
 package me.jun.common.security;
 
-public class InvalidTokenException extends RuntimeException {
+import me.jun.support.exception.BusinessException;
 
-    public InvalidTokenException(String message) {
-        super(message);
+import static me.jun.common.error.ErrorCode.INVALID_TOKEN;
+
+public class InvalidTokenException extends BusinessException {
+
+    public InvalidTokenException() {
+        super(INVALID_TOKEN, INVALID_TOKEN.getMessage());
     }
 }

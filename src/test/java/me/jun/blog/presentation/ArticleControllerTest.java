@@ -5,18 +5,20 @@ import me.jun.blog.application.ArticleService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.common.security.JwtProvider;
-import org.apache.http.auth.AUTH;
+import me.jun.member.application.MemberService;
+import me.jun.member.application.dto.MemberResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static me.jun.blog.ArticleFixture.*;
+import static me.jun.member.MemberFixture.memberResponse;
+import static me.jun.member.domain.Role.ADMIN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -43,11 +45,21 @@ public class ArticleControllerTest {
     @MockBean
     private ArticleService articleService;
 
+    @MockBean
+    private MemberService memberService;
+
     private String jwt;
 
     @BeforeEach
     void setUp() {
         jwt = jwtProvider.createJwt(ARTICLE_WRITER_EMAIL);
+
+        MemberResponse admin = memberResponse().toBuilder()
+                .role(ADMIN)
+                .build();
+
+        given(memberService.retrieveMemberBy(any()))
+                .willReturn(admin);
     }
 
     @Test
