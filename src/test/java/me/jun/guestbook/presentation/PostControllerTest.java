@@ -10,17 +10,15 @@ import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.guestbook.application.exception.PostNotFoundException;
 import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
-import org.apache.http.auth.AUTH;
+import me.jun.member.application.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.lang.reflect.Field;
@@ -28,6 +26,7 @@ import java.security.Key;
 import java.util.Arrays;
 
 import static me.jun.guestbook.PostFixture.*;
+import static me.jun.member.MemberFixture.memberResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -56,11 +55,17 @@ public class PostControllerTest {
     @Autowired
     private JwtProvider jwtProvider;
 
+    @MockBean
+    private MemberService memberService;
+
     private String jwt;
 
     @BeforeEach
     public void setUp() {
         jwt = jwtProvider.createJwt(WRITER_EMAIL);
+
+        given(memberService.retrieveMemberBy(any()))
+                .willReturn(memberResponse());
     }
 
     @Test
