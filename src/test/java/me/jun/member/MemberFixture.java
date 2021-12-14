@@ -7,6 +7,8 @@ import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
 import me.jun.member.domain.Member;
 
+import static me.jun.member.domain.Role.USER;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class MemberFixture {
 
@@ -28,6 +30,7 @@ public abstract class MemberFixture {
                 .name(MEMBER_NAME)
                 .password(PASSWORD)
                 .email(EMAIL)
+                .role(USER)
                 .build();
     }
 

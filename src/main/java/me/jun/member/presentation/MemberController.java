@@ -33,7 +33,6 @@ public class MemberController {
                 .body(response);
     }
 
-//    @Cacheable(cacheNames = "tokenStore", key = "#request.email")
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid MemberRequest request) {
 
