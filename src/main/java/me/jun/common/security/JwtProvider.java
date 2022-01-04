@@ -1,24 +1,29 @@
 package me.jun.common.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
 import java.util.Date;
+
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
 @Component
 @PropertySource("classpath:application.properties")
 public class JwtProvider {
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final String secretKey;
 
     private final Long expiredTime;
 
-    public JwtProvider(@Value("#{T(java.lang.Long).parseLong(${expired-time})}") Long expiredTime) {
+    public JwtProvider(@Value("#{T(java.lang.Long).parseLong(${expired-time})}") Long expiredTime,
+                       @Value("#{${jwt-key}}") String secretKey) {
         this.expiredTime = expiredTime;
+        this.secretKey = secretKey;
     }
 
     public String createJwt(String subject) {
@@ -32,7 +37,7 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(HS256, secretKey)
                 .compact();
     }
 
@@ -45,8 +50,7 @@ public class JwtProvider {
     public void validateToken(String jwt) {
         try {
             extractClaimsJws(jwt);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new InvalidTokenException();
         }
     }
@@ -58,7 +62,7 @@ public class JwtProvider {
 
     private JwtParser createParser() {
         return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(secretKey)
                 .build();
     }
 }
