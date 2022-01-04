@@ -1,40 +1,36 @@
 package me.jun.common.security;
 
-import sun.security.rsa.RSAKeyPairGenerator;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
+
+import static javax.crypto.Cipher.DECRYPT_MODE;
 
 @Converter
+@PropertySource("classpath:application.properties")
 public class PasswordConverter implements AttributeConverter<String, String> {
 
     private final String ALGORITHM = "RSA";
 
-    private final PublicKey publicKey;
+    private PublicKey publicKey;
 
-    private final PrivateKey privateKey;
+    private PrivateKey privateKey;
 
-    private final Encoder base64Encoder = Base64.getEncoder();
+    public PasswordConverter(@Value("#{${db-public-key}}") String publicKey,
+                             @Value("#{${db-private-key}}") String privateKey) {
 
-    private final Decoder base64Decoder = Base64.getDecoder();
-
-    public PasswordConverter() {
-        RSAKeyPairGenerator rsaKeyPairGenerator = new RSAKeyPairGenerator();
-        double keySize = Math.pow(2, 12);
-        rsaKeyPairGenerator.initialize((int) keySize, new SecureRandom());
-
-        KeyPair keyPair = rsaKeyPairGenerator.generateKeyPair();
-
-        publicKey = keyPair.getPublic();
-        privateKey = keyPair.getPrivate();
+        initKeys(publicKey, privateKey);
     }
 
     @Override
@@ -44,10 +40,14 @@ public class PasswordConverter implements AttributeConverter<String, String> {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             byte[] encryptedData = cipher.doFinal(attribute.getBytes());
-            byte[] encodedData = base64Encoder.encode(encryptedData);
+            byte[] encodedData = Base64.getEncoder()
+                    .encode(encryptedData);
 
             return new String(encodedData);
-        } catch (Exception e) {
+
+        } catch (BadPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | NoSuchAlgorithmException |
+                NoSuchPaddingException e) {
             throw new RuntimeException(e);
         }
     }
@@ -56,15 +56,38 @@ public class PasswordConverter implements AttributeConverter<String, String> {
     public String convertToEntityAttribute(String dbData) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            cipher.init(DECRYPT_MODE, privateKey);
 
-            byte[] decodedData = base64Decoder.decode(dbData);
+            byte[] decodedData = Base64.getDecoder()
+                    .decode(dbData);
             byte[] decryptedData = cipher.doFinal(decodedData);
 
             return new String(decryptedData);
-        } catch (Exception e) {
-            // wrong key, padding,
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException |
+                InvalidKeyException | IllegalBlockSizeException |
+                BadPaddingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void initKeys(String publicKey, String privateKey) {
+        try {
+            byte[] decodedPublicKey = Base64.getDecoder()
+                    .decode(publicKey);
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(decodedPublicKey);
+
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+            this.publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
+
+            byte[] decodedPrivateKey = Base64.getDecoder()
+                    .decode(privateKey);
+
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(decodedPrivateKey);
+
+            this.privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
         }
     }
 }
