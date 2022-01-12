@@ -6,6 +6,7 @@ import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
 import me.jun.member.domain.Member;
+import me.jun.member.domain.Password;
 
 import static me.jun.member.domain.Role.USER;
 
@@ -28,7 +29,7 @@ public abstract class MemberFixture {
         return Member.builder()
                 .id(MEMBER_ID)
                 .name(MEMBER_NAME)
-                .password(PASSWORD)
+                .password(new Password(PASSWORD))
                 .email(EMAIL)
                 .role(USER)
                 .build();
