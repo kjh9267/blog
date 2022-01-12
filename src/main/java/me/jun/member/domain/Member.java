@@ -9,17 +9,9 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Builder
 @EqualsAndHashCode(of = "id")
 public class Member {
-
-    @Builder
-    protected Member(Long id, String name, String email, String password, Role role) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = new Password(password);
-        this.role = role;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
