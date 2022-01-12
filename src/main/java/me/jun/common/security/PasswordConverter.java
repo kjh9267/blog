@@ -16,6 +16,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import static javax.crypto.Cipher.DECRYPT_MODE;
+import static javax.crypto.Cipher.ENCRYPT_MODE;
 
 @Converter
 @PropertySource("classpath:application.properties")
@@ -37,7 +38,7 @@ public class PasswordConverter implements AttributeConverter<String, String> {
     public String convertToDatabaseColumn(String attribute) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            cipher.init(ENCRYPT_MODE, publicKey);
 
             byte[] encryptedData = cipher.doFinal(attribute.getBytes());
             byte[] encodedData = Base64.getEncoder()
@@ -87,7 +88,7 @@ public class PasswordConverter implements AttributeConverter<String, String> {
             this.privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
