@@ -17,7 +17,7 @@ public class MemberTest {
                 .id(1L)
                 .name("test user")
                 .email("testuser@email.com")
-                .password("pass")
+                .password(new Password("pass"))
                 .role(USER)
                 .build();
 
