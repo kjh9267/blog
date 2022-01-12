@@ -46,8 +46,8 @@ public abstract class E2ETest {
 
                 .then()
                 .statusCode(OK.value())
-                .assertThat().body("$", hasKey(ACCESS_TOKEN))
+                .assertThat().cookie(ACCESS_TOKEN)
                 .extract()
-                .path(ACCESS_TOKEN);
+                .cookie(ACCESS_TOKEN);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jun.member.domain.Member;
+import me.jun.member.domain.Password;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -29,7 +30,7 @@ public class MemberRequest {
         return Member.builder()
                 .email(this.email)
                 .name(this.name)
-                .password(this.password)
+                .password(new Password(password))
                 .build();
     }
 }
