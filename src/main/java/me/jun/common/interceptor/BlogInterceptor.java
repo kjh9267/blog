@@ -10,6 +10,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Enumeration;
+
 import static me.jun.member.domain.Role.ADMIN;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.GET;
@@ -33,7 +35,7 @@ public class BlogInterceptor extends HandlerInterceptorAdapter {
 
         MemberInfo memberInfo = memberExtractor.extractMemberFrom(token);
 
-        if (!memberInfo.getRole().equals(ADMIN)) {
+        if (!isAdmin(memberInfo)) {
             throw new InvalidTokenException();
         }
 
@@ -43,5 +45,9 @@ public class BlogInterceptor extends HandlerInterceptorAdapter {
     private boolean isGetMethod(HttpServletRequest request) {
         String method = request.getMethod();
         return GET.matches(method);
+    }
+
+    private boolean isAdmin(MemberInfo memberInfo) {
+        return memberInfo.getRole().equals(ADMIN);
     }
 }
