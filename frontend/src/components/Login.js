@@ -30,19 +30,12 @@ function Login(props) {
                         'name': userName,
                         'password': password
                     },
-                    {
-                        headers: {
-                            'Access-Control-Allow-Origin': 'http://localhost:8080'
-                        },
-                        withCredentials: true
-                    }
                 )
                 .then(response => {
-                    // if(response.status === 200) {
-                    //     props.setCookie('access_token', response.data['access_token']);
-                    // }
+                    if(response.status === 200) {
+                        props.setCookie('access_token', response.data['access_token']);
+                    }
                     console.log(response);
-                    // console.log(props.cookie['access_token'])
                 }
                 )
                 .catch(reason => console.log(reason));
