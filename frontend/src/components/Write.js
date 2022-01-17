@@ -30,8 +30,7 @@ function Write(props) {
                         'content': content,
                         'categoryName': categoryName
                     },
-                    { withCredentials: true }
-                    // {headers: {'Authorization': props.cookie['access_token']}}
+                    {headers: {'Authorization': props.cookie['access_token']}}
                 )
                 .then(response => console.log(response))
                 .catch(reason => console.log(reason));
