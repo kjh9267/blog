@@ -38,17 +38,12 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Valid MemberRequest request) {
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid MemberRequest request) {
 
         TokenResponse response = loginService.login(request);
 
-        HttpHeaders headers = new HttpHeaders();
-        String cookieValue = String.format("access_token=%s; HttpOnly", response.getAccessToken());
-        headers.add(SET_COOKIE, cookieValue);
-
         return ResponseEntity.ok()
-                .headers(headers)
-                .build();
+                .body(response);
     }
 
     @DeleteMapping("/leave")
