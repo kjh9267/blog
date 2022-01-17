@@ -99,8 +99,8 @@ public class MemberControllerTest {
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(cookie().httpOnly(ACCESS_TOKEN, true))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath(ACCESS_TOKEN).value(jwt));;
     }
 
     @Test
