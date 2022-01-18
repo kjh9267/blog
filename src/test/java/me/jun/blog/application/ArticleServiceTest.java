@@ -20,8 +20,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
-import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
-import static me.jun.blog.CategoryFixture.category;
+import static me.jun.blog.CategoryFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -132,6 +131,9 @@ public class ArticleServiceTest {
     void queryArticlesTest() {
         given(articleRepository.findAll((Pageable) any()))
                 .willReturn(pagedArticle());
+
+        given(categoryService.retrieveCategoryById(any()))
+                .willReturn(category());
 
         PagedArticleResponse response = articleService.queryArticles(PageRequest.of(0, 10));
 
