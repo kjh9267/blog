@@ -40,7 +40,10 @@ function ArticleList(props) {
             (article, index) => {
                 return (
                     <div key={index}>
-                        <h4 onClick={ChangeVisible} index={index}>{article.title}</h4>
+                        <div onClick={ChangeVisible} index={index}>
+                            <h3>title: {article.title}</h3>
+                            <h4>category: {article.categoryName}</h4>
+                        </div>
                         <p>{isShow[index] === true ? article.content : null}</p>
                     </div>
                 )

@@ -1,6 +1,12 @@
 package me.jun.blog;
 
 import me.jun.blog.domain.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 abstract public class CategoryFixture {
 
@@ -18,5 +24,13 @@ abstract public class CategoryFixture {
                 .name(CATEGORY_NAME)
                 .mappedArticleCount(MAPPED_ARTICLE_COUNT)
                 .build();
+    }
+
+    public static Page<Category> pagedCategory() {
+        return new PageImpl<Category>(
+                IntStream.range(0, 10)
+                        .mapToObj(count -> category())
+                        .collect(toList())
+        );
     }
 }
