@@ -6,9 +6,12 @@ import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
+import me.jun.blog.domain.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
@@ -84,6 +87,6 @@ abstract public class ArticleFixture {
     }
 
     public static PagedArticleResponse pagedArticleResponse() {
-        return PagedArticleResponse.from(pagedArticle());
+        return PagedArticleResponse.from(pagedArticle(), pagedCategory());
     }
 }
