@@ -67,6 +67,11 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public PagedArticleResponse queryArticles(PageRequest request) {
         Page<Article> articles = articleRepository.findAll(request);
-        return PagedArticleResponse.from(articles);
+
+        Page<Category> categories = articles.map(article ->
+                categoryService.retrieveCategoryById(article.getCategoryId())
+        );
+
+        return PagedArticleResponse.from(articles, categories);
     }
 }
