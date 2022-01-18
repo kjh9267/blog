@@ -23,29 +23,24 @@ function Login(props) {
         setUserName(e.target.value);
     }
 
-    const handleSubmit = () => {
-        axios.post(LOGIN,
+    const handleSubmit = async () => {
+        const response = await axios.post(LOGIN,
                     {
                         'email': email,
                         'name': userName,
                         'password': password
                     },
-                    {
-                        headers: {
-                            'Access-Control-Allow-Origin': 'http://localhost:8080'
-                        },
-                        withCredentials: true
-                    }
                 )
                 .then(response => {
-                    // if(response.status === 200) {
-                    //     props.setCookie('access_token', response.data['access_token']);
-                    // }
                     console.log(response);
-                    // console.log(props.cookie['access_token'])
+                    return response;
                 }
                 )
                 .catch(reason => console.log(reason));
+
+        if(response.status === 200) {
+            props.setCookie('access_token', response.data['access_token']);
+        }
     }
 
     return (
