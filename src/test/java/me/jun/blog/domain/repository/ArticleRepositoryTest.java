@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import java.time.Instant;
 
 import static me.jun.blog.ArticleFixture.*;
+import static me.jun.blog.CategoryFixture.CATEGORY_ID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
@@ -56,13 +57,29 @@ public class ArticleRepositoryTest {
                 .id(null)
                 .build();
 
-        for (int count = 0; count < 10; count++) {
+        for (int count = 0; count < 30; count++) {
             articleRepository.save(article);
         }
 
-        Page<Article> all = articleRepository.findAll(PageRequest.of(0, 10));
+        Page<Article> all = articleRepository.findAll(PageRequest.of(2, 10));
 
         assertThat(all.getSize())
+                .isEqualTo(10);
+    }
+
+    @Test
+    void findAllByCategoryIdTest() {
+        for (long id = 1; id <= 30; id++) {
+            articleRepository.save(
+                    article().toBuilder()
+                            .id(id)
+                            .build()
+            );
+        }
+
+        Page<Article> articles = articleRepository.findByCategoryId(CATEGORY_ID, PageRequest.of(2, 10));
+
+        assertThat(articles.getSize())
                 .isEqualTo(10);
     }
 }
