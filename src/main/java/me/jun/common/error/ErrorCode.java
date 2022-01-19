@@ -29,7 +29,9 @@ public enum ErrorCode {
 
     ARTICLE_NOT_FOUND(NOT_FOUND, "No article with Id %s."),
 
-    CATEGORY_NOT_FOUND(NOT_FOUND, "No category with Id %s");
+    CATEGORY_ID_NOT_FOUND(NOT_FOUND, "No category with Id %s."),
+
+    CATEGORY_NAME_NOT_FOUND(NOT_FOUND, "No category with Name %s.");
 
     private final int statusCode;
 
