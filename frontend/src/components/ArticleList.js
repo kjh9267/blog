@@ -10,18 +10,22 @@ function ArticleList(props) {
 
     const [isShow, setIsShow] = useState([]);
 
+    const [page, setPage] = useState(0);
+
     const getArticleList = async () => {
         const queryString = qs.stringify(
             {
-                page: props.page,
-                size: props.size
+                page: page,
+                size: 10
             }
         )
+        setPage(page + 1);
+        console.log(page);
         const response = await axios.get(QUERY_BLOG_ARTICLES + queryString)
             .then(response => response)
             .catch(reason => console.log(reason));
 
-        const articleArray = [];
+        const articleArray = [...articleList];
         const isShowArray = [];
 
         Object.values(response.data.articleResponses.content).map(
@@ -64,7 +68,7 @@ function ArticleList(props) {
 
     return (
         <div>
-            <button onClick={getArticleList}>page</button>
+            <button onClick={getArticleList}>load more</button>
             <div>
                 {showList()}
             </div>
