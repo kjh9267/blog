@@ -25,4 +25,9 @@ public class CategoryService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
+
+    public Category retrieveCategoryByName(String name) {
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new CategoryNotFoundException(name));
+    }
 }

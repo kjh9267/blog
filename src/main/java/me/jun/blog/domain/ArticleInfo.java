@@ -13,10 +13,10 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode
 public class ArticleInfo {
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 65536)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 65536)
     private String content;
 
     public ArticleInfo update(String title, String content) {
