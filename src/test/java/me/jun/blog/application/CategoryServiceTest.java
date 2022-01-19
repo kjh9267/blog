@@ -59,7 +59,7 @@ public class CategoryServiceTest {
     void retrieveCategoryIdTest() {
         given(categoryRepository.findById(any()))
                 .willReturn(Optional.of(category()));
-        
+
         assertThat(categoryService.retrieveCategoryById(CATEGORY_ID))
                 .isEqualToComparingFieldByField(category());
     }
@@ -72,6 +72,25 @@ public class CategoryServiceTest {
         assertThrows(
                 CategoryNotFoundException.class,
                 () -> categoryService.retrieveCategoryById(CATEGORY_ID)
+        );
+    }
+
+    @Test
+    void retrieveCategoryByNameTest() {
+        given(categoryRepository.findByName(any()))
+                .willReturn(Optional.of(category()));
+
+        assertThat(categoryService.retrieveCategoryByName(CATEGORY_NAME))
+                .isEqualToComparingFieldByField(category());
+    }
+
+    @Test
+    void noCategory_retrieveCategoryByNameFailTest() {
+        given(categoryRepository.findByName(any()))
+                .willThrow(CategoryNotFoundException.class);
+
+        assertThrows(CategoryNotFoundException.class,
+                () -> categoryService.retrieveCategoryByName("system programming")
         );
     }
 }
