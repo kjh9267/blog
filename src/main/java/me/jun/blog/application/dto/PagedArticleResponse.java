@@ -29,4 +29,12 @@ public class PagedArticleResponse {
                 new PageImpl<ArticleResponse>(collect)
         );
     }
+
+    public static PagedArticleResponse from(Page<Article> articles, Category category) {
+        return PagedArticleResponse.builder()
+                .articleResponses(
+                        articles.map(article -> ArticleResponse.from(article, category))
+                )
+                .build();
+    }
 }
