@@ -1,10 +1,13 @@
 package me.jun.blog;
 
+import me.jun.blog.application.dto.CategoryListResponse;
 import me.jun.blog.domain.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -32,5 +35,20 @@ abstract public class CategoryFixture {
                         .mapToObj(count -> category())
                         .collect(toList())
         );
+    }
+
+    public static List<Category> categoryList() {
+        return LongStream.range(65, 75)
+                .mapToObj(
+                        num -> category().toBuilder()
+                                .id(num)
+                                .name(String.valueOf((char) num))
+                                .build()
+                )
+                .collect(toList());
+    }
+
+    public static CategoryListResponse categoryListResponse() {
+        return CategoryListResponse.from(categoryList());
     }
 }
