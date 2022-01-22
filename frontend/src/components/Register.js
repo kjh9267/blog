@@ -37,7 +37,7 @@ function Register() {
     }
 
     return (
-        <div>
+        <div className="list">
             <h3>Register</h3>
             <label htmlFor='input_email'>Email : </label>
             <input type='text' name='input_email' value={email} onChange={handleInputEmail} />
