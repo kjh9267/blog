@@ -1,3 +1,45 @@
+.nav-element {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.navbar {
+  position: fixed;
+  background: whitesmoke;
+  width: 100%;
+  display: flex;
+  color : black;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+.list {
+  margin-top: 10px;
+  padding-top: 100px;
+}
+
+.article {
+  margin: 30px;
+  border: dotted darkgray;
+}
+
+.title {
+  margin: 1px;
+  padding: 1px;
+  font-size: 30px;
+  border-color: black;
+}
+
+.content {
+  margin: 1px;
+  padding: 1px;
+  font-size: 20px;
+}
+
+body {
+  font-family: 'SimSun-ExtB';
+}
+
 .App {
   text-align: center;
 }

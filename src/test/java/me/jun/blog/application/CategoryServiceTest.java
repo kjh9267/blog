@@ -93,4 +93,13 @@ public class CategoryServiceTest {
                 () -> categoryService.retrieveCategoryByName("system programming")
         );
     }
+
+    @Test
+    void retrieveCategoriesTest() {
+        given(categoryRepository.findAll())
+                .willReturn(categoryList());
+
+        assertThat(categoryService.retrieveCategories())
+                .isEqualToComparingFieldByField(categoryListResponse());
+    }
 }
