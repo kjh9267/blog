@@ -1,10 +1,10 @@
 import React from "react";
 import axios from "axios";
-import { useState } from "react";
+import {useState} from "react";
 import qs from "qs";
-import { QUERY_BLOG_ARTICLES } from "../support/UrlUtils";
+import {QUERY_BLOG_ARTICLES} from "../support/UrlUtils";
 
-function ArticleList(props) {
+function ArticleList() {
 
     const [articleList, setArticleList] = useState([]);
 
@@ -43,12 +43,12 @@ function ArticleList(props) {
         return articleList.map(
             (article, index) => {
                 return (
-                    <div key={index}>
+                    <div className="article" key={index}>
                         <div onClick={ChangeVisible} index={index}>
-                            <h3>title: {article.title}</h3>
-                            <h4>category: {article.categoryName}</h4>
+                            <div className="title">title: {article.title}</div>
+                            <h3>category: {article.categoryName}</h3>
+                            <div className="content">{isShow[index] === true ? article.content : null}</div>
                         </div>
-                        <p>{isShow[index] === true ? article.content : null}</p>
                     </div>
                 )
             }
@@ -59,7 +59,7 @@ function ArticleList(props) {
         const isShowArray = [...isShow];
         const index = event.target.getAttribute('index');
 
-        const changeState = isShow[index] === true ? false: true
+        const changeState = isShow[index] === true ? false : true
 
         isShowArray[index] = changeState;
 
@@ -68,10 +68,10 @@ function ArticleList(props) {
 
     return (
         <div>
-            <button onClick={getArticleList}>load more</button>
-            <div>
+            <div className="list">
                 {showList()}
             </div>
+            <h2 onClick={getArticleList}>load more ... </h2>
         </div>
     )
 }

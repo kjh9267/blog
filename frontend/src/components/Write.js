@@ -37,7 +37,7 @@ function Write(props) {
     }
 
     return(
-        <div>
+        <div className="list">
             <h3>Write</h3>
             <label htmlFor='input_title'>Title : </label>
             <input type='text' name='input_title' value={title} onChange={handleInputTitle} />
