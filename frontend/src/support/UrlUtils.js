@@ -8,7 +8,7 @@ const BLOG_ARTICLE = HOST + '/api/blog/articles';
 
 const QUERY_BLOG_ARTICLES = HOST + '/api/blog/articles/query?';
 
-const CATEGORY = HOST + '/api/category';
+const CATEGORY = HOST + '/api/blog/category';
 
 const GUESTBOOK_POST = HOST + '/api/guestbook/posts';
 
