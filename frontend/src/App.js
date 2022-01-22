@@ -4,8 +4,9 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Write from './components/Write';
 import ArticleList from './components/ArticleList';
-import Category from "./components/Category";
+import CategoryList from "./components/CategoryList";
 import {Link, Route, Routes} from 'react-router-dom';
+import Category from "./components/Category";
 
 function App() {
 
@@ -41,11 +42,12 @@ function App() {
                 </div>
             </div>
             <Routes>
-                <Route exact path='/' element={<ArticleList></ArticleList>}/>
-                <Route path='/register' element={<Register></Register>}/>
-                <Route path='/login' element={<Login cookie={cookie} setCookie={setCookie}></Login>}/>
-                <Route path='/category' element={<Category></Category>}/>
-                <Route path='/write' element={<Write cookie={cookie} setCookie={setCookie}></Write>}/>
+                <Route exact path='/' element={<ArticleList/>}/>
+                <Route path='/register' element={<Register/>}/>
+                <Route path='/login' element={<Login cookie={cookie} setCookie={setCookie}/>}/>
+                <Route exact path='/category' element={<CategoryList/>}/>
+                <Route exact path='/category/:name' element={<Category/>}/>
+                <Route path='/write' element={<Write cookie={cookie} setCookie={setCookie}/>}/>
             </Routes>
         </div>
     );
