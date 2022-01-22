@@ -44,7 +44,7 @@ function Login(props) {
     }
 
     return (
-        <div>
+        <div className="list">
             <h3>Login</h3>
             <label htmlFor='input_email'>Email : </label>
             <input type='text' name='input_email' value={email} onChange={handleInputEmail} />
