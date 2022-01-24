@@ -4,7 +4,7 @@ import {useState} from "react";
 import qs from "qs";
 import {QUERY_BLOG_ARTICLES} from "../support/UrlUtils";
 
-function ArticleList() {
+function ArticleList(props) {
 
     const [articleList, setArticleList] = useState([]);
 
@@ -21,7 +21,7 @@ function ArticleList() {
         )
         setPage(page + 1);
         console.log(page);
-        const response = await axios.get(QUERY_BLOG_ARTICLES + queryString)
+        const response = await axios.get(props.url + queryString)
             .then(response => response)
             .catch(reason => console.log(reason));
 
