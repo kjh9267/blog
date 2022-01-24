@@ -6,7 +6,8 @@ import Write from './components/Write';
 import ArticleList from './components/ArticleList';
 import CategoryList from "./components/CategoryList";
 import {Link, Route, Routes} from 'react-router-dom';
-import Category from "./components/Category";
+import CategoryArticleList from "./components/CategoryArticleList";
+import {QUERY_BLOG_ARTICLES} from "./support/UrlUtils";
 
 function App() {
 
@@ -42,11 +43,11 @@ function App() {
                 </div>
             </div>
             <Routes>
-                <Route exact path='/' element={<ArticleList/>}/>
+                <Route exact path='/' element={<ArticleList url={QUERY_BLOG_ARTICLES}/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/login' element={<Login cookie={cookie} setCookie={setCookie}/>}/>
                 <Route exact path='/category' element={<CategoryList/>}/>
-                <Route exact path='/category/:name' element={<Category/>}/>
+                <Route path='/category/:name' element={<CategoryArticleList/>}/>
                 <Route path='/write' element={<Write cookie={cookie} setCookie={setCookie}/>}/>
             </Routes>
         </div>
