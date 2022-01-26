@@ -33,7 +33,10 @@ function Write(props) {
                     {headers: {'Authorization': props.cookie['access_token']}}
                 )
                 .then(response => console.log(response))
-                .catch(reason => console.log(reason));
+                .catch(reason => {
+                    console.log(reason);
+                    alert(reason);
+                });
     }
 
     return(
