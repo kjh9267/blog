@@ -43,6 +43,7 @@ abstract public class CategoryFixture {
                         num -> category().toBuilder()
                                 .id(num)
                                 .name(String.valueOf((char) num))
+                                .mappedArticleCount(MAPPED_ARTICLE_COUNT)
                                 .build()
                 )
                 .collect(toList());
