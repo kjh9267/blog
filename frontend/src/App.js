@@ -8,7 +8,6 @@ import CategoryList from "./components/CategoryList";
 import {Link, Route, Routes} from 'react-router-dom';
 import CategoryArticleList from "./components/CategoryArticleList";
 import {QUERY_BLOG_ARTICLES} from "./support/UrlUtils";
-import ArticleContainer from "./blog/presentation/container/ArticleContainer";
 
 function App() {
 
@@ -51,7 +50,6 @@ function App() {
                 <Route path='/category/:name' element={<CategoryArticleList/>}/>
                 <Route path='/write' element={<Write cookie={cookie} setCookie={setCookie}/>}/>
             </Routes>
-            <ArticleContainer/>
         </div>
     );
 }
