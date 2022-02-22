@@ -33,7 +33,10 @@ function Register() {
                     }
                 )
                 .then(response => console.log(response))
-                .catch(reason => console.log(reason));
+                .catch(reason => {
+                    console.log(reason);
+                    alert(reason);
+                });
     }
 
     return (
