@@ -33,7 +33,10 @@ function Write(props) {
                     {headers: {'Authorization': props.cookie['access_token']}}
                 )
                 .then(response => console.log(response))
-                .catch(reason => console.log(reason));
+                .catch(reason => {
+                    console.log(reason);
+                    alert(reason);
+                });
     }
 
     return(
@@ -44,7 +47,7 @@ function Write(props) {
             <br/>
 
             <label htmlFor='input_content'>Content : </label>
-            <input type='text' name='input_content' value={content} onChange={handleInputContent} />
+            <textarea name='input_content' value={content} onChange={handleInputContent} />
             <br/>
 
             <label htmlFor='input_categoryName'>Category :</label>
