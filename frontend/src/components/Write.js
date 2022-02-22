@@ -47,7 +47,7 @@ function Write(props) {
             <br/>
 
             <label htmlFor='input_content'>Content : </label>
-            <input type='text' name='input_content' value={content} onChange={handleInputContent} />
+            <textarea name='input_content' value={content} onChange={handleInputContent} />
             <br/>
 
             <label htmlFor='input_categoryName'>Category :</label>

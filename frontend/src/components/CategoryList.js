@@ -39,8 +39,9 @@ function CategoryList() {
                 return (
                     <h1 key={index}>
                         {isShow[index] ?
-                            <Link to={'/category/' + category}>
-                                {category}
+                            <Link to={'/category/' + category.categoryName}>
+                                {category.categoryName}
+                                {`(${category.mappedArticleCount})`}
                             </Link>
                             : null}
                     </h1>

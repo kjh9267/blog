@@ -14,12 +14,12 @@ import static java.util.stream.Collectors.*;
 @Getter
 public class CategoryListResponse {
     
-    private List<String> categories;
+    private List<CategoryResponse> categories;
     
     public static CategoryListResponse from(List<Category> categories) {
         return CategoryListResponse.builder()
                 .categories(
-                        categories.stream().map(Category::getName)
+                        categories.stream().map(CategoryResponse::from)
                                 .collect(toList())
                 )
                 .build();
