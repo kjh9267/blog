@@ -1,8 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
-import {useState} from "react";
 import qs from "qs";
-import {QUERY_BLOG_ARTICLES} from "../support/UrlUtils";
 
 function ArticleList(props) {
 
@@ -28,7 +26,7 @@ function ArticleList(props) {
         const articleArray = [...articleList];
         const isShowArray = [];
 
-        Object.values(response.data.articleResponses.content).map(
+        response.data.articleResponses.content.map(
             article => {
                 articleArray.push(article);
                 isShowArray.push(false);
