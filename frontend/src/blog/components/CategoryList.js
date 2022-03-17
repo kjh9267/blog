@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
-import {CATEGORY} from "../support/UrlUtils";
+import {CATEGORY} from "../../support/UrlUtils";
 import {Link} from "react-router-dom";
 
 function CategoryList() {

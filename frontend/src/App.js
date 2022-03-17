@@ -1,12 +1,12 @@
 import './App.css';
 import {useCookies} from 'react-cookie';
-import Register from './components/Register';
-import Login from './components/Login';
-import Write from './components/Write';
-import ArticleList from './components/ArticleList';
-import CategoryList from "./components/CategoryList";
+import Register from './blog/components/Register';
+import Login from './blog/components/Login';
+import Write from './blog/components/Write';
+import ArticleList from './blog/components/ArticleList';
+import CategoryList from "./blog/components/CategoryList";
 import {Link, Route, Routes} from 'react-router-dom';
-import CategoryArticleList from "./components/CategoryArticleList";
+import CategoryArticleList from "./blog/components/CategoryArticleList";
 import {QUERY_BLOG_ARTICLES} from "./support/UrlUtils";
 
 function App() {

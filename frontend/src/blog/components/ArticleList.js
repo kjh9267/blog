@@ -1,8 +1,7 @@
-import React, {useState} from "react";
-import axios from "axios";
-import qs from "qs";
+import {useState} from "react";
+import {getPage} from "../api/getPage";
 
-function ArticleList(props) {
+function ArticleList({url}) {
 
     const [articleList, setArticleList] = useState([]);
 
@@ -11,25 +10,18 @@ function ArticleList(props) {
     const [page, setPage] = useState(0);
 
     const getArticleList = async () => {
-        const queryString = qs.stringify(
-            {
-                page: page,
-                size: 10
-            }
-        )
+
         setPage(page + 1);
-        console.log(page);
-        const response = await axios.get(props.url + queryString)
-            .then(response => response)
-            .catch(reason => console.log(reason));
+
+        const response = await getPage({url: url, page: page});
 
         const articleArray = [...articleList];
         const isShowArray = [];
 
         response.data.articleResponses.content.map(
-            article => {
+            (article, index) => {
                 articleArray.push(article);
-                isShowArray.push(false);
+                isShowArray.push(isShow[index]);
             }
         )
 
