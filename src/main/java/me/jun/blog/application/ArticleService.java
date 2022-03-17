@@ -2,8 +2,8 @@ package me.jun.blog.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.blog.application.dto.ArticleCreateRequest;
-import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
+import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.blog.application.exception.ArticleNotFoundException;
 import me.jun.blog.domain.Article;
@@ -12,11 +12,8 @@ import me.jun.blog.domain.repository.ArticleRepository;
 import me.jun.blog.domain.service.CategoryMatchingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
