@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
-import { BLOG_ARTICLE } from '../support/UrlUtils';
+import { BLOG_ARTICLE } from '../../support/UrlUtils';
 
 function Write(props) {
 
