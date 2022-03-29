@@ -35,8 +35,8 @@ function ArticleList({url}) {
                 return (
                     <div className="article" key={index}>
                         <div onClick={ChangeVisible} index={index}>
-                            <div className="title">title: {article.title}</div>
-                            <h3>category: {article.categoryName}</h3>
+                            <div className="title">{article.title}</div>
+                            <h3>{article.categoryName}</h3>
                             <div className="content">{isShow[index] === true ? article.content : null}</div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@ function ArticleList({url}) {
             <div className="list">
                 {showList()}
             </div>
-            <h2 onClick={getArticleList}>load more ... </h2>
+            <h2 onClick={getArticleList}>load more</h2>
         </div>
     )
 }
