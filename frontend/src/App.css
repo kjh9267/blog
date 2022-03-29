@@ -5,10 +5,10 @@
 
 .navbar {
   position: fixed;
-  background: whitesmoke;
+  background: #5ABEFF;
   width: 100%;
   display: flex;
-  color : black;
+  color : moccasin;
   font-weight: 300;
   font-size: 20px;
 }
@@ -26,7 +26,7 @@
 .title {
   margin: 1px;
   padding: 1px;
-  font-size: 30px;
+  font-size: 40px;
   border-color: black;
 }
 
@@ -38,7 +38,15 @@
 }
 
 body {
-  font-family: 'SimSun-ExtB';
+  font-family: 'source-code-pro';
+}
+
+a:visited {
+  color: moccasin;
+}
+
+a {
+  text-decoration-line: none;
 }
 
 .App {
