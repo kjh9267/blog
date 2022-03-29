@@ -1,36 +1,33 @@
 import React, {useState} from "react";
-import axios from "axios";
-import {CATEGORY} from "../../support/UrlUtils";
 import {Link} from "react-router-dom";
+import {getApi} from "../api/getApi";
 
-function CategoryList() {
+
+function CategoryList({url}) {
 
     const [categories, setCategories] = useState([]);
 
     const [isShow, setIsShow] = useState([]);
 
-    const getCategory = () => {
-        return axios.get(CATEGORY)
-            .then(response => {
-                console.log(response);
+    const getCategory = async () => {
 
-                const categoryArray = [];
+        const response = await getApi({url: url});
 
-                const isShowArray = [];
+        const categoryArray = [];
 
-                response.data.categories.map(
-                    category => {
-                        categoryArray.push(category);
-                        isShowArray.push(true);
-                    }
-                );
+        const isShowArray = [];
 
-                setCategories(categoryArray);
-                setIsShow(isShowArray);
+        response.data.categories.map(
+            category => {
+                categoryArray.push(category);
+                isShowArray.push(true);
+            }
+        );
 
-                return categories;
-            })
-            .catch(reason => console.log(reason));
+        setCategories(categoryArray);
+        setIsShow(isShowArray);
+
+        return categories;
     }
 
     const showCategories = () => {

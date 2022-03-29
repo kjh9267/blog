@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {getPage} from "../api/getPage";
+import {getPage} from "../api/getPageApi";
 
 function ArticleList({url}) {
 
