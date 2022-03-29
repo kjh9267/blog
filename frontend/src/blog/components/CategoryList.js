@@ -34,14 +34,14 @@ function CategoryList({url}) {
         return categories.map(
             (category, index) => {
                 return (
-                    <h1 key={index}>
+                    <div className='title' key={index}>
                         {isShow[index] ?
                             <Link to={'/category/' + category.categoryName}>
                                 {category.categoryName}
-                                {`(${category.mappedArticleCount})`}
+                                {` (${category.mappedArticleCount})`}
                             </Link>
                             : null}
-                    </h1>
+                    </div>
                 )
             }
         );
