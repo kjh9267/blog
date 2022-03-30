@@ -1,9 +1,7 @@
-import React from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import { BLOG_ARTICLE } from '../support/UrlUtils';
+import React, {useState} from 'react';
+import {writeApi} from "../api/writeApi";
 
-function Write(props) {
+function Write({cookie}) {
 
     const [title, setTitle] = useState('');
 
@@ -24,19 +22,14 @@ function Write(props) {
     }
 
     const handleSubmit = () => {
-        axios.post(BLOG_ARTICLE,
-                    {
-                        'title': title,
-                        'content': content,
-                        'categoryName': categoryName
-                    },
-                    {headers: {'Authorization': props.cookie['access_token']}}
-                )
-                .then(response => console.log(response))
-                .catch(reason => {
-                    console.log(reason);
-                    alert(reason);
-                });
+        writeApi({
+            data: {
+                'title': title,
+                'content': content,
+                'categoryName': categoryName
+            },
+            cookie: cookie
+        })
     }
 
     return(
