@@ -1,13 +1,13 @@
 import './App.css';
 import {useCookies} from 'react-cookie';
-import Register from './components/Register';
-import Login from './components/Login';
-import Write from './components/Write';
-import ArticleList from './components/ArticleList';
-import CategoryList from "./components/CategoryList";
+import Register from './blog/components/Register';
+import Login from './blog/components/Login';
+import Write from './blog/components/Write';
+import ArticleList from './blog/components/ArticleList';
+import CategoryList from "./blog/components/CategoryList";
 import {Link, Route, Routes} from 'react-router-dom';
-import CategoryArticleList from "./components/CategoryArticleList";
-import {QUERY_BLOG_ARTICLES} from "./support/UrlUtils";
+import CategoryArticleList from "./blog/components/CategoryArticleList";
+import {CATEGORY, QUERY_BLOG_ARTICLES} from "./support/UrlUtils";
 
 function App() {
 
@@ -45,10 +45,10 @@ function App() {
             <Routes>
                 <Route exact path='/' element={<ArticleList url={QUERY_BLOG_ARTICLES}/>}/>
                 <Route path='/register' element={<Register/>}/>
-                <Route path='/login' element={<Login cookie={cookie} setCookie={setCookie}/>}/>
-                <Route exact path='/category' element={<CategoryList/>}/>
+                <Route path='/login' element={<Login setCookie={setCookie}/>}/>
+                <Route exact path='/category' element={<CategoryList url={CATEGORY}/>}/>
                 <Route path='/category/:name' element={<CategoryArticleList/>}/>
-                <Route path='/write' element={<Write cookie={cookie} setCookie={setCookie}/>}/>
+                <Route path='/write' element={<Write cookie={cookie}/>}/>
             </Routes>
         </div>
     );
