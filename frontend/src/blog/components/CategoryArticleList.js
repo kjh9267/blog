@@ -1,5 +1,5 @@
 import React from "react";
-import {CATEGORY} from "../support/UrlUtils";
+import {CATEGORY} from "../../support/UrlUtils";
 import {useParams} from "react-router-dom";
 import ArticleList from "./ArticleList";
 
