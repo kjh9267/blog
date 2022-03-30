@@ -1,9 +1,7 @@
-import React from "react";
-import axios from "axios";
-import {useState} from "react";
-import {LOGIN} from "../../support/UrlUtils";
+import React, {useState} from "react";
+import {loginApi} from "../api/loginApi";
 
-function Login(props) {
+function Login({setCookie}) {
 
     const [email, setEmail] = useState('');
 
@@ -24,22 +22,15 @@ function Login(props) {
     }
 
     const handleSubmit = async () => {
-        const response = await axios.post(LOGIN,
-            {
-                'email': email,
-                'name': userName,
-                'password': password
-            },
+        await loginApi(
+            {data:
+                    {
+                        'email': email,
+                        'name': userName,
+                        'password': password
+                    },
+                setCookie: setCookie}
         )
-            .then(response => {
-                    console.log(response);
-                    props.setCookie('access_token', response.data['access_token']);
-                }
-            )
-            .catch(reason => {
-                console.log(reason);
-                alert(reason);
-            });
     }
 
     return (

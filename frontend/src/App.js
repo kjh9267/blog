@@ -45,10 +45,10 @@ function App() {
             <Routes>
                 <Route exact path='/' element={<ArticleList url={QUERY_BLOG_ARTICLES}/>}/>
                 <Route path='/register' element={<Register/>}/>
-                <Route path='/login' element={<Login cookie={cookie} setCookie={setCookie}/>}/>
+                <Route path='/login' element={<Login setCookie={setCookie}/>}/>
                 <Route exact path='/category' element={<CategoryList url={CATEGORY}/>}/>
                 <Route path='/category/:name' element={<CategoryArticleList/>}/>
-                <Route path='/write' element={<Write cookie={cookie} setCookie={setCookie}/>}/>
+                <Route path='/write' element={<Write cookie={cookie}/>}/>
             </Routes>
         </div>
     );
