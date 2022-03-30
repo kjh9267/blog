@@ -1,9 +1,8 @@
-import React from "react";
-import axios from "axios";
-import {useState} from "react";
-import {LOGIN} from "../support/UrlUtils";
+import React, {useState} from 'react'
+import {registerApi} from "../api/registerApi";
 
-function Login(props) {
+
+function Register() {
 
     const [email, setEmail] = useState('');
 
@@ -23,28 +22,20 @@ function Login(props) {
         setUserName(e.target.value);
     }
 
-    const handleSubmit = async () => {
-        const response = await axios.post(LOGIN,
-            {
-                'email': email,
-                'name': userName,
-                'password': password
-            },
-        )
-            .then(response => {
-                    console.log(response);
-                    props.setCookie('access_token', response.data['access_token']);
+    const handleSubmit = () => {
+        registerApi({
+            data:
+                {
+                    'email': email,
+                    'name': userName,
+                    'password': password
                 }
-            )
-            .catch(reason => {
-                console.log(reason);
-                alert(reason);
-            });
+        });
     }
 
     return (
         <div className="list">
-            <h3>Login</h3>
+            <h3>Register</h3>
             <label htmlFor='input_email'>Email : </label>
             <input type='text' name='input_email' value={email} onChange={handleInputEmail}/>
             <br/>
@@ -63,4 +54,4 @@ function Login(props) {
 }
 
 
-export default Login;
+export default Register;
