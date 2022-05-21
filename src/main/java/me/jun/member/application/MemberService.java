@@ -1,8 +1,8 @@
 package me.jun.member.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.guestbook.application.CommentService;
-import me.jun.guestbook.application.PostService;
+import me.jun.common.event.EventPublisher;
+import me.jun.common.event.MemberLeaveEvent;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.exception.MemberNotFoundException;
 import me.jun.member.domain.Member;
@@ -18,9 +18,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    private final PostService postService;
-
-    private final CommentService commentService;
+    private final EventPublisher eventPublisher;
 
     @Cacheable(cacheNames = "memberStore", key = "#email")
     @Transactional(readOnly = true)
@@ -33,7 +31,6 @@ public class MemberService {
 
     public void deleteMember(String email) {
         memberRepository.deleteByEmail(email);
-        postService.deletePostByWriterEmail(email);
-        commentService.deleteCommentByWriterEmail(email);
+        eventPublisher.raise(new MemberLeaveEvent(email));
     }
 }
