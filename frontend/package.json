@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.24.0",
     "create-react-app": "^4.0.3",
-    "npm": "^8.5.3",
+    "npm": "^8.11.0",
     "qs": "^6.10.2",
     "react": "^17.0.2",
     "react-cookie": "^4.1.1",
