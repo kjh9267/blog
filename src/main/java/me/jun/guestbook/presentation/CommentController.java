@@ -9,10 +9,14 @@ import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.member.application.dto.MemberInfo;
 import me.jun.support.Member;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 @RestController
@@ -22,17 +26,27 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
+    @PostMapping(
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<CommentResponse> createComment(@RequestBody @Valid CommentCreateRequest request,
                                                                @Member MemberInfo writer) {
 
         CommentResponse response = commentService.createComment(request, writer.getEmail());
 
-        return ResponseEntity.ok()
+        URI uri = WebMvcLinkBuilder.linkTo(getClass())
+                .withRel(String.valueOf(response.getId()))
+                .toUri();
+
+        return ResponseEntity.created(uri)
                 .body(response);
     }
 
-    @GetMapping("/{commentId}")
+    @GetMapping(
+            value = "/{commentId}",
+            produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<CommentResponse> retrieveComment(@PathVariable Long commentId) {
 
         CommentResponse response = commentService.retrieveComment(commentId);
@@ -41,7 +55,10 @@ public class CommentController {
                 .body(response);
     }
 
-    @PutMapping
+    @PutMapping(
+            produces = APPLICATION_JSON_VALUE,
+            consumes = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<CommentResponse>
         updateComment(@RequestBody @Valid CommentUpdateRequest request,
                       @Member MemberInfo writerInfo) {
@@ -52,7 +69,10 @@ public class CommentController {
                 .body(response);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping(
+            value = "/{commentId}",
+            produces = APPLICATION_JSON_VALUE
+    )
     ResponseEntity<Long> deleteComment(@PathVariable Long commentId,
                                              @Member MemberInfo writerInfo) {
 
@@ -62,7 +82,10 @@ public class CommentController {
                 .body(response);
     }
 
-    @GetMapping("/query/post-id/{postId}")
+    @GetMapping(
+            value = "/query/post-id/{postId}",
+            produces = APPLICATION_JSON_VALUE
+    )
     ResponseEntity<PagedCommentsResponse> queryCommentsByPostId(@PathVariable Long postId,
                                                           @RequestParam("page") Integer page,
                                                           @RequestParam("size") Integer size) {

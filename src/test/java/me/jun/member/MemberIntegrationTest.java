@@ -1,14 +1,14 @@
 
 package me.jun.member;
 
-import me.jun.support.E2ETest;
+import me.jun.support.IntegrationTest;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
-public class E2EMemberTest extends E2ETest {
+public class MemberIntegrationTest extends IntegrationTest {
 
     @Test
     void memberTest() {
