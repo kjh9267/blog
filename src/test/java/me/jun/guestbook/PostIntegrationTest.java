@@ -4,20 +4,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import me.jun.guestbook.application.dto.CommentResponse;
-import me.jun.support.E2ETest;
+import me.jun.common.error.ErrorResponse;
+import me.jun.guestbook.application.dto.PostResponse;
+import me.jun.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static me.jun.guestbook.CommentFixture.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static me.jun.guestbook.PostFixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class E2ECommentTest extends E2ETest {
+public class PostIntegrationTest extends IntegrationTest {
 
     private Gson gson;
 
@@ -29,34 +30,35 @@ public class E2ECommentTest extends E2ETest {
     }
 
     @Test
-    void commentTest() {
+    void postTest() {
         register();
         token = login();
 
-        createComment(token, COMMENT_ID);
-        retrieveComment();
-        updateComment(token);
-        deleteComment(token);
+        createPost(token, POST_ID);
+        retrievePost(token);
+        updatePost(token);
+        deletePost(token);
     }
 
     @Test
-    void commentQueryTest() {
+    void postQueryTest() {
         register();
         token = login();
 
         for (long id = 1; id <= 30; id++) {
-            createComment(token, id);
+            createPost(token, id);
         }
 
         String response = given()
-                .port(port)
                 .log().all()
-                .header(AUTHORIZATION, token)
-                .queryParam("page", 2)
+                .port(port)
+                .header(AUTHORIZATION, this.token)
+                .contentType(APPLICATION_JSON_VALUE)
+                .queryParam("page", 2 )
                 .queryParam("size", 10)
 
                 .when()
-                .get("/api/guestbook/comments/query/post-id/1")
+                .get("api/guestbook/posts/query")
 
                 .then()
                 .statusCode(OK.value())
@@ -69,91 +71,89 @@ public class E2ECommentTest extends E2ETest {
         System.out.println(response);
     }
 
-    private void createComment(String token, Long commentId) {
-        CommentResponse commentResponse = given()
+    public void createPost(String token, Long postId) {
+        PostResponse postResponse = given()
                 .log().all()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, token)
-                .body(commentCreateRequest())
+                .body(postCreateRequest())
 
                 .when()
-                .post("/api/guestbook/comments")
+                .post("/api/guestbook/posts")
 
                 .then()
                 .statusCode(OK.value())
                 .extract()
-                .as(CommentResponse.class);
+                .as(PostResponse.class);
 
-        assertThat(commentResponse)
+        assertThat(postResponse)
                 .isEqualToComparingFieldByField(
-                        commentResponse().toBuilder()
-                                .id(commentId)
+                        postResponse().toBuilder()
+                                .id(postId)
                                 .build()
                 );
     }
 
-    private void retrieveComment() {
-        CommentResponse commentResponse = given()
+    private void retrievePost(String token) {
+        PostResponse postResponse = given()
                 .log().all()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
 
                 .when()
-                .get("/api/guestbook/comments/1")
+                .get("/api/guestbook/posts/1")
 
                 .then()
                 .statusCode(OK.value())
                 .extract()
-                .as(CommentResponse.class);
+                .as(PostResponse.class);
 
-        assertThat(commentResponse)
-                .isEqualToComparingFieldByField(CommentFixture.commentResponse());
+        assertThat(postResponse).isEqualToComparingFieldByField(postResponse());
     }
 
-    private void updateComment(String token) {
-        CommentResponse commentResponse = given()
+    private void updatePost(String token) {
+        PostResponse postResponse = given()
                 .log().all()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, token)
-                .body(commentUpdateRequest())
+                .body(postUpdateRequest())
 
                 .when()
-                .put("/api/guestbook/comments")
+                .put("/api/guestbook/posts")
 
                 .then()
-                .statusCode(OK.value())
                 .extract()
-                .as(CommentResponse.class);
+                .as(PostResponse.class);
 
-        assertThat(commentResponse)
-                .isEqualToComparingFieldByField(updatedCommentResponse());
+        assertThat(postResponse).isEqualToComparingFieldByField(updatedPostResponse());
     }
 
-    private void deleteComment(String token) {
+    private void deletePost(String token) {
         given()
-                .log().all()
                 .port(port)
+                .log().all()
                 .contentType(APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, token)
 
                 .when()
-                .delete("/api/guestbook/comments/1")
+                .delete("/api/guestbook/posts/1")
 
                 .then()
                 .statusCode(OK.value());
 
-        given()
-                .log().all()
+        ErrorResponse errorResponse = given()
                 .port(port)
+                .log().all()
                 .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, token)
 
                 .when()
-                .get("/api/guestbook/comments/1")
+                .get("api/guestbook/posts/1")
 
                 .then()
-                .statusCode(NOT_FOUND.value());
+                .statusCode(NOT_FOUND.value())
+                .extract()
+                .as(ErrorResponse.class);
     }
 }

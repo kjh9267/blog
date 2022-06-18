@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequestMapping("/api/blog/category")
 @RequiredArgsConstructor
@@ -18,7 +20,10 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/{categoryName}")
+    @GetMapping(
+            value = "/{categoryName}",
+            produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<PagedArticleResponse> retrieveCategoryArticles(@PathVariable String categoryName,
                                                                          @RequestParam("page") int page,
                                                                          @RequestParam("size") int size) {
@@ -28,7 +33,9 @@ public class CategoryController {
                 .body(response);
     }
 
-    @GetMapping
+    @GetMapping(
+            produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<CategoryListResponse> retrieveCategories() {
         CategoryListResponse response = categoryService.retrieveCategories();
 
