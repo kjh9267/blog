@@ -6,7 +6,6 @@ import me.jun.guestbook.application.CommentService;
 import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.guestbook.application.exception.CommentNotFoundException;
-import me.jun.guestbook.domain.Comment;
 import me.jun.member.application.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Arrays;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static me.jun.guestbook.CommentFixture.*;
 import static me.jun.member.MemberFixture.memberResponse;
@@ -29,8 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -69,16 +65,14 @@ public class CommentControllerTest {
         given(commentService.createComment(any(), any()))
                 .willReturn(commentResponse());
 
-        mockMvc.perform(post("/api/guestbook/comments")
+        ResultActions resultActions = mockMvc.perform(post("/api/guestbook/comments")
                         .content(content)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .header(AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(COMMENT_ID))
-                .andExpect(jsonPath("post_id").value(POST_ID))
-                .andExpect(jsonPath("content").value(CONTENT));
+                .andDo(print());
+
+        expectedJson(resultActions);
     }
 
     @Test
@@ -86,13 +80,11 @@ public class CommentControllerTest {
         given(commentService.retrieveComment(any()))
                 .willReturn(commentResponse());
 
-        mockMvc.perform(get("/api/guestbook/comments/1")
+        ResultActions resultActions = mockMvc.perform(get("/api/guestbook/comments/1")
                         .accept(APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value(COMMENT_ID))
-                .andExpect(jsonPath("post_id").value(POST_ID))
-                .andExpect(jsonPath("content").value(CONTENT))
                 .andDo(print());
+
+        expectedJson(resultActions);
     }
 
     @Test
@@ -121,6 +113,7 @@ public class CommentControllerTest {
                         .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("_links").exists())
                 .andExpect(jsonPath("id").value(COMMENT_ID))
                 .andExpect(jsonPath("post_id").value(POST_ID))
                 .andExpect(jsonPath("content").value(CONTENT));
@@ -165,8 +158,9 @@ public class CommentControllerTest {
 
     @Test
     void queryCommentsByPostIdTest() throws Exception {
-        PagedCommentsResponse response = PagedCommentsResponse.from(new PageImpl<Comment>(
-                Arrays.asList(comment())));
+        PagedCommentsResponse response = pagedCommentsResponse();
+
+        String expected = objectMapper.writeValueAsString(response);
 
         given(commentService.queryCommentsByPostId(any(), any()))
                 .willReturn(response);
@@ -174,7 +168,8 @@ public class CommentControllerTest {
         mockMvc.perform(get("/api/guestbook/comments/query/post-id/1?page=1&size=10")
                         .accept(APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(expected));
     }
 
     @Test

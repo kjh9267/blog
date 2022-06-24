@@ -2,6 +2,7 @@ package me.jun.guestbook.presentation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jun.common.hateoas.LinkCreator;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
@@ -27,6 +28,8 @@ public class PostController {
 
     private final PostService postService;
 
+    private final LinkCreator linkCreator;
+
     @PostMapping(
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
@@ -35,6 +38,8 @@ public class PostController {
                                                          @Member MemberInfo writer) {
 
         PostResponse response = postService.createPost(request, writer.getEmail());
+
+        linkCreator.createLink(getClass(), response);
 
         URI uri = WebMvcLinkBuilder.linkTo(getClass())
                 .withRel(String.valueOf(response.getId()))
@@ -52,6 +57,8 @@ public class PostController {
 
         PostResponse response = postService.retrievePost(postId);
 
+        linkCreator.createLink(getClass(), response);
+
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -65,6 +72,8 @@ public class PostController {
 
         PostResponse response = postService.updatePost(requestDto, writer.getEmail());
 
+        linkCreator.createLink(getClass(), response);
+
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -73,13 +82,13 @@ public class PostController {
             value = "/{postId}",
             produces = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Long> deletePost(@PathVariable Long postId,
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId,
                                                  @Member MemberInfo writer) {
 
-        Long response = postService.deletePost(postId, writer.getEmail());
+        postService.deletePost(postId, writer.getEmail());
 
-        return ResponseEntity.ok()
-                .body(response);
+        return ResponseEntity.noContent()
+                .build();
     }
 
     @GetMapping(

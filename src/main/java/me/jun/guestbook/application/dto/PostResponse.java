@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jun.guestbook.domain.Post;
+import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
@@ -15,7 +16,7 @@ import me.jun.guestbook.domain.Post;
 @Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostResponse {
+public class PostResponse extends RepresentationModel<PostResponse> {
 
     private final Long id;
 

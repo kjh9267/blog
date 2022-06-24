@@ -1,6 +1,7 @@
 package me.jun.guestbook.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.common.hateoas.LinkCreator;
 import me.jun.guestbook.application.CommentService;
 import me.jun.guestbook.application.dto.CommentCreateRequest;
 import me.jun.guestbook.application.dto.CommentResponse;
@@ -26,6 +27,8 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    private final LinkCreator linkCreator;
+
     @PostMapping(
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
@@ -34,6 +37,8 @@ public class CommentController {
                                                                @Member MemberInfo writer) {
 
         CommentResponse response = commentService.createComment(request, writer.getEmail());
+
+        linkCreator.createLink(getClass(), response);
 
         URI uri = WebMvcLinkBuilder.linkTo(getClass())
                 .withRel(String.valueOf(response.getId()))
@@ -51,6 +56,8 @@ public class CommentController {
 
         CommentResponse response = commentService.retrieveComment(commentId);
 
+        linkCreator.createLink(getClass(), response);
+
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -65,6 +72,8 @@ public class CommentController {
 
         CommentResponse response = commentService.updateComment(request, writerInfo.getEmail());
 
+        linkCreator.createLink(getClass(), response);
+
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -73,13 +82,13 @@ public class CommentController {
             value = "/{commentId}",
             produces = APPLICATION_JSON_VALUE
     )
-    ResponseEntity<Long> deleteComment(@PathVariable Long commentId,
+    ResponseEntity<Void> deleteComment(@PathVariable Long commentId,
                                              @Member MemberInfo writerInfo) {
 
-        Long response = commentService.deleteComment(commentId, writerInfo.getEmail());
+        commentService.deleteComment(commentId, writerInfo.getEmail());
 
-        return ResponseEntity.ok()
-                .body(response);
+        return ResponseEntity.noContent()
+                .build();
     }
 
     @GetMapping(
@@ -90,6 +99,7 @@ public class CommentController {
                                                           @RequestParam("page") Integer page,
                                                           @RequestParam("size") Integer size) {
         PagedCommentsResponse response = commentService.queryCommentsByPostId(postId, PageRequest.of(page, size));
+
         return ResponseEntity.ok()
                 .body(response);
     }

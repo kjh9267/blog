@@ -15,7 +15,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static me.jun.blog.ArticleFixture.ARTICLE_ID;
 import static me.jun.blog.ArticleFixture.ARTICLE_WRITER_EMAIL;
+import static me.jun.blog.TagFixture.TAG_ID;
 import static me.jun.blog.TaggedArticleFixture.addTagRequest;
 import static me.jun.blog.TaggedArticleFixture.taggedArticleResponse;
 import static me.jun.member.MemberFixture.memberResponse;
@@ -26,7 +28,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
@@ -66,12 +68,11 @@ class TagControllerTest {
 
     @Test
     void addTagTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(taggedArticleResponse());
-
         String content = objectMapper.writeValueAsString(addTagRequest());
 
         given(taggedArticleService.addTagToArticle(any()))
                 .willReturn(taggedArticleResponse());
+
         mockMvc.perform(post("/api/blog/tag")
                         .header(AUTHORIZATION, jwt)
                         .contentType(APPLICATION_JSON)
@@ -79,6 +80,8 @@ class TagControllerTest {
                         .content(content))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(content().json(expected));
+                .andExpect(jsonPath("_links").exists())
+                .andExpect(jsonPath("article_id").value(ARTICLE_ID))
+                .andExpect(jsonPath("tag_id").value(TAG_ID));
     }
 }
