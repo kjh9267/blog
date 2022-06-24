@@ -13,8 +13,7 @@ import static io.restassured.RestAssured.given;
 import static me.jun.guestbook.CommentFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class CommentIntegrationTest extends IntegrationTest {
@@ -81,7 +80,7 @@ public class CommentIntegrationTest extends IntegrationTest {
                 .post("/api/guestbook/comments")
 
                 .then()
-                .statusCode(OK.value())
+                .statusCode(CREATED.value())
                 .extract()
                 .as(CommentResponse.class);
 
@@ -142,7 +141,7 @@ public class CommentIntegrationTest extends IntegrationTest {
                 .delete("/api/guestbook/comments/1")
 
                 .then()
-                .statusCode(OK.value());
+                .statusCode(NO_CONTENT.value());
 
         given()
                 .log().all()

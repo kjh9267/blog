@@ -6,16 +6,16 @@ import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.ArticleInfo;
-import me.jun.blog.domain.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
 import static me.jun.blog.CategoryFixture.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 abstract public class ArticleFixture {
 
@@ -88,5 +88,14 @@ abstract public class ArticleFixture {
 
     public static PagedArticleResponse pagedArticleResponse() {
         return PagedArticleResponse.from(pagedArticle(), pagedCategory());
+    }
+
+    public static ResultActions expectedJson(ResultActions resultActions) throws Exception {
+        return resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("_links").exists())
+                .andExpect(jsonPath("article_id").value(ARTICLE_ID))
+                .andExpect(jsonPath("title").value(TITLE))
+                .andExpect(jsonPath("content").value(CONTENT));
     }
 }

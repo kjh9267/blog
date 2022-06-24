@@ -1,14 +1,20 @@
 package me.jun.blog.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
+import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 @Getter
-public class ArticleResponse {
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ArticleResponse extends RepresentationModel<ArticleResponse> {
 
     private Long articleId;
 
