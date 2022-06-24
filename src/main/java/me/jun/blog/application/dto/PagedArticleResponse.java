@@ -1,5 +1,8 @@
 package me.jun.blog.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
@@ -7,9 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.google.common.collect.Streams.zip;
 
@@ -17,6 +18,8 @@ import static com.google.common.collect.Streams.zip;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PagedArticleResponse {
 
     private Page<ArticleResponse> articleResponses;

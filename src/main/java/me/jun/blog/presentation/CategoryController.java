@@ -5,6 +5,7 @@ import me.jun.blog.application.ArticleCategoryService;
 import me.jun.blog.application.CategoryService;
 import me.jun.blog.application.dto.CategoryListResponse;
 import me.jun.blog.application.dto.PagedArticleResponse;
+import me.jun.common.hateoas.LinkCreator;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,8 @@ public class CategoryController {
     private final ArticleCategoryService articleCategoryService;
 
     private final CategoryService categoryService;
+
+    private final LinkCreator linkCreator;
 
     @GetMapping(
             value = "/{categoryName}",

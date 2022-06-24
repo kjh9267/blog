@@ -6,6 +6,7 @@ import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.PagedArticleResponse;
+import me.jun.common.hateoas.LinkCreator;
 import me.jun.member.application.dto.MemberInfo;
 import me.jun.support.Member;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,8 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    private final LinkCreator linkCreator;
+
     @PostMapping(
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
@@ -34,6 +37,8 @@ public class ArticleController {
                                                                @Member MemberInfo articleWriterInfo) {
 
         ArticleResponse response = articleService.createArticle(request, articleWriterInfo.getEmail());
+
+        linkCreator.createLink(getClass(), response);
 
         URI uri = WebMvcLinkBuilder.linkTo(getClass())
                 .withRel(String.valueOf(response.getArticleId()))
@@ -51,6 +56,8 @@ public class ArticleController {
 
         ArticleResponse response = articleService.retrieveArticle(articleId);
 
+        linkCreator.createLink(getClass(), response);
+
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -63,6 +70,8 @@ public class ArticleController {
                                                          @Member MemberInfo articleWriterInfo) {
 
         ArticleResponse response = articleService.updateArticleInfo(request);
+
+        linkCreator.createLink(getClass(), response);
 
         return ResponseEntity.ok()
                 .body(response);

@@ -14,8 +14,7 @@ import static io.restassured.RestAssured.given;
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class PostIntegrationTest extends IntegrationTest {
@@ -83,7 +82,7 @@ public class PostIntegrationTest extends IntegrationTest {
                 .post("/api/guestbook/posts")
 
                 .then()
-                .statusCode(OK.value())
+                .statusCode(CREATED.value())
                 .extract()
                 .as(PostResponse.class);
 
@@ -141,7 +140,7 @@ public class PostIntegrationTest extends IntegrationTest {
                 .delete("/api/guestbook/posts/1")
 
                 .then()
-                .statusCode(OK.value());
+                .statusCode(NO_CONTENT.value());
 
         ErrorResponse errorResponse = given()
                 .port(port)

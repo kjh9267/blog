@@ -1,6 +1,12 @@
 package me.jun.guestbook.application.dto;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import me.jun.guestbook.domain.Post;
 import org.springframework.data.domain.Page;
 
@@ -8,6 +14,8 @@ import org.springframework.data.domain.Page;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PagedPostsResponse {
 
     private final Page<PostResponse> postResponses;
