@@ -2,13 +2,11 @@ package me.jun.guestbook.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jun.common.security.JwtProvider;
-import me.jun.guestbook.PostFixture;
 import me.jun.guestbook.application.PostService;
 import me.jun.guestbook.application.dto.PagedPostsResponse;
 import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.guestbook.application.exception.PostNotFoundException;
-import me.jun.guestbook.domain.Post;
 import me.jun.guestbook.domain.exception.PostWriterMismatchException;
 import me.jun.member.application.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,13 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.lang.reflect.Field;
 import java.security.Key;
-import java.util.Arrays;
 
 import static me.jun.guestbook.PostFixture.*;
 import static me.jun.member.MemberFixture.memberResponse;
@@ -35,8 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -75,13 +71,14 @@ public class PostControllerTest {
         given(postService.createPost(any(), any()))
                 .willReturn(postResponse());
 
-        mockMvc.perform(post("/api/guestbook/posts")
+        ResultActions resultActions = mockMvc.perform(post("/api/guestbook/posts")
                         .content(content)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .header(AUTHORIZATION, jwt))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andDo(print());
+
+        expectedJson(resultActions);
     }
 
 
@@ -108,14 +105,12 @@ public class PostControllerTest {
         given(postService.retrievePost(any()))
                 .willReturn(postResponse());
 
-        mockMvc.perform(get("/api/guestbook/posts/1")
+        ResultActions resultActions = mockMvc.perform(get("/api/guestbook/posts/1")
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value("1"))
-                .andExpect(jsonPath("title").value(TITLE))
-                .andExpect(jsonPath("content").value(CONTENT));
+                .andDo(print());
+
+        expectedJson(resultActions);
     }
 
     @Test
@@ -142,7 +137,8 @@ public class PostControllerTest {
                         .header(AUTHORIZATION, jwt))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("id").value("1"))
+                .andExpect(jsonPath("_links").exists())
+                .andExpect(jsonPath("id").value(POST_ID))
                 .andExpect(jsonPath("title").value(TITLE))
                 .andExpect(jsonPath("content").value(CONTENT));
     }
@@ -243,8 +239,8 @@ public class PostControllerTest {
 
     @Test
     void queryPostsTest() throws Exception {
-        PagedPostsResponse response = PagedPostsResponse.from(new PageImpl<Post>(
-                Arrays.asList(PostFixture.post())));
+        PagedPostsResponse response = pagedPostsResponse();
+        String expected = objectMapper.writeValueAsString(response);
 
         given(postService.queryPosts(any()))
                 .willReturn(response);
@@ -252,7 +248,8 @@ public class PostControllerTest {
         mockMvc.perform(get("/api/guestbook/posts/query/?page=1&size=10")
                         .accept(APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(expected));
     }
 
     private Key getKey() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {

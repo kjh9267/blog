@@ -1,6 +1,7 @@
 package me.jun.member.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.common.hateoas.LinkCreator;
 import me.jun.member.application.LoginService;
 import me.jun.member.application.MemberService;
 import me.jun.member.application.RegisterService;
@@ -27,6 +28,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    private final LinkCreator linkCreator;
+
     @PostMapping(
             value = "/register",
             produces = APPLICATION_JSON_VALUE,
@@ -34,6 +37,8 @@ public class MemberController {
     )
     public ResponseEntity<MemberResponse> register(@RequestBody @Valid MemberRequest request) {
         MemberResponse response = registerService.register(request);
+
+        linkCreator.createLink(getClass(), response);
 
         return ResponseEntity.ok()
                 .body(response);
@@ -48,6 +53,8 @@ public class MemberController {
 
         TokenResponse response = loginService.login(request);
 
+        linkCreator.createLink(getClass(), response);
+
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -59,7 +66,7 @@ public class MemberController {
     public ResponseEntity<Void> leave(@Member MemberInfo memberInfo) {
         memberService.deleteMember(memberInfo.getEmail());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

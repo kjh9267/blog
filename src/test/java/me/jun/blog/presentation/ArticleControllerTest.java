@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static me.jun.blog.ArticleFixture.*;
 import static me.jun.member.MemberFixture.memberResponse;
@@ -25,8 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -64,35 +64,31 @@ public class ArticleControllerTest {
 
     @Test
     void createArticleTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(articleResponse());
-
         String content = objectMapper.writeValueAsString(articleCreateRequest());
 
         given(articleService.createArticle(any(), any()))
                 .willReturn(articleResponse());
 
-        mockMvc.perform(
+        ResultActions resultActions = mockMvc.perform(
                         post("/api/blog/articles")
                                 .content(content)
                                 .header(AUTHORIZATION, jwt)
                                 .contentType(APPLICATION_JSON)
                 )
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(content().json(expected));
+                .andDo(print());
+
+        expectedJson(resultActions);
     }
 
     @Test
     void retrieveArticleTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(articleResponse());
-
         given(articleService.retrieveArticle(any()))
                 .willReturn(articleResponse());
 
-        mockMvc.perform(get("/api/blog/articles/1"))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(content().json(expected));
+        ResultActions resultActions = mockMvc.perform(get("/api/blog/articles/1"))
+                .andDo(print());
+
+        expectedJson(resultActions);
     }
 
     @Test
@@ -107,8 +103,6 @@ public class ArticleControllerTest {
 
     @Test
     void updateArticleTest() throws Exception {
-        String expected = objectMapper.writeValueAsString(updatedArticleResponse());
-
         String content = objectMapper.writeValueAsString(articleUpdateRequest());
 
         given(articleService.updateArticleInfo(any()))
@@ -122,7 +116,10 @@ public class ArticleControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(content().json(expected));
+                .andExpect(jsonPath("_links").exists())
+                .andExpect(jsonPath("article_id").value(ARTICLE_ID))
+                .andExpect(jsonPath("title").value(NEW_TITLE))
+                .andExpect(jsonPath("content").value(NEW_CONTENT));
     }
 
     @Test

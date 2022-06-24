@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 public class MemberIntegrationTest extends IntegrationTest {
 
@@ -27,6 +27,6 @@ public class MemberIntegrationTest extends IntegrationTest {
                 .delete("/api/member/leave")
 
                 .then()
-                .statusCode(OK.value());
+                .statusCode(NO_CONTENT.value());
     }
 }
