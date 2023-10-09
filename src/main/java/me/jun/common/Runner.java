@@ -3,7 +3,6 @@ package me.jun.common;
 import lombok.RequiredArgsConstructor;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.Password;
-import me.jun.member.domain.Role;
 import me.jun.member.domain.repository.MemberRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

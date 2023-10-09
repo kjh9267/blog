@@ -1,8 +1,6 @@
 package me.jun.blog.application.dto;
 
 import lombok.*;
-import me.jun.blog.domain.Article;
-import me.jun.blog.domain.ArticleInfo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
