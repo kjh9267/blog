@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static me.jun.blog.ArticleFixture.ARTICLE_ID;
 import static me.jun.blog.TagFixture.TAG_ID;
-import static me.jun.blog.TagFixture.tag;
 import static me.jun.blog.TaggedArticleFixture.taggedArticle;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
