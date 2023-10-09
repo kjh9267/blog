@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import me.jun.guestbook.domain.Comment;
 import org.springframework.data.domain.Page;
-import org.springframework.hateoas.RepresentationModel;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

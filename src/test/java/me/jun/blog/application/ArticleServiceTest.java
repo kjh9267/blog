@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
 import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
