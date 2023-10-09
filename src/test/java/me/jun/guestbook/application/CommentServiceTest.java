@@ -1,10 +1,10 @@
 package me.jun.guestbook.application;
 
+import me.jun.guestbook.application.dto.CommentResponse;
+import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.guestbook.application.exception.CommentNotFoundException;
 import me.jun.guestbook.domain.exception.CommentWriterMismatchException;
 import me.jun.guestbook.domain.repository.CommentRepository;
-import me.jun.guestbook.application.dto.CommentResponse;
-import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.CommentFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -39,7 +38,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void createCommentTest() throws ExecutionException, InterruptedException {
+    void createCommentTest() {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
@@ -72,7 +71,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void updateCommentTest() throws ExecutionException, InterruptedException {
+    void updateCommentTest() {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.of(comment()));
 

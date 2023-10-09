@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.guestbook.PostCountFixture.postCount;
 import static me.jun.guestbook.PostFixture.*;
@@ -45,7 +44,7 @@ public class PostServiceTest {
     }
 
     @Test
-    void createPostTest() throws ExecutionException, InterruptedException {
+    void createPostTest() {
         given(postRepository.save(any()))
                 .willReturn(post());
 
@@ -57,7 +56,7 @@ public class PostServiceTest {
     }
 
     @Test
-    void retrievePostTest() throws ExecutionException, InterruptedException {
+    void retrievePostTest() {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()
                         .toBuilder()
@@ -78,7 +77,7 @@ public class PostServiceTest {
     }
 
     @Test
-    void updatePostTest() throws ExecutionException, InterruptedException {
+    void updatePostTest() {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 

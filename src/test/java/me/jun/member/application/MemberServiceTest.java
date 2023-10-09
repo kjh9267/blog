@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.common.event.EventFixture.memberLeaveEvent;
 import static me.jun.member.MemberFixture.*;
@@ -35,7 +34,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void retrieveMemberByEmailTest() throws ExecutionException, InterruptedException {
+    void retrieveMemberByEmailTest() {
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member()));
 

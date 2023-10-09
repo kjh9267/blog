@@ -2,7 +2,6 @@ package me.jun.guestbook.domain.repository;
 
 
 import me.jun.guestbook.domain.Post;
-import me.jun.guestbook.domain.repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
