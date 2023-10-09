@@ -1,17 +1,14 @@
 package me.jun.member.application;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.member.application.dto.MemberRequest;
+import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.exception.DuplicatedEmailException;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.repository.MemberRepository;
-import me.jun.member.application.dto.MemberRequest;
-import me.jun.member.application.dto.MemberResponse;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor

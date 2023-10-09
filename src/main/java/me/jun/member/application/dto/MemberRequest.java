@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.Password;
-import me.jun.member.domain.Role;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
