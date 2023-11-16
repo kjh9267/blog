@@ -4,10 +4,6 @@ import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 
 import static me.jun.blog.ArticleFixture.article;
 import static me.jun.blog.CategoryFixture.category;

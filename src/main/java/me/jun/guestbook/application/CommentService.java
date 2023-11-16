@@ -11,11 +11,8 @@ import me.jun.guestbook.domain.CommentWriter;
 import me.jun.guestbook.domain.repository.CommentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -42,15 +39,14 @@ public class CommentService {
     }
 
     public CommentResponse updateComment(CommentUpdateRequest request, String writerEmail) {
-        Comment comment = commentRepository.findById(request.getId())
+        Comment updatedComment = commentRepository.findById(request.getId())
+                .map(comment -> comment.validateWriter(writerEmail))
+                .map(comment -> comment.updateContent(request.getContent()))
                 .orElseThrow(() -> new CommentNotFoundException(request.getId()));
 
-        comment = comment.validateWriter(writerEmail)
-                .updateContent(request.getContent());
+        updatedComment = commentRepository.save(updatedComment);
 
-        comment = commentRepository.save(comment);
-
-        return CommentResponse.from(comment);
+        return CommentResponse.from(updatedComment);
     }
 
     public Long deleteComment(Long id, String writerEmail) {

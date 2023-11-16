@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.member.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -35,7 +34,7 @@ public class LoginServiceTest {
     }
 
     @Test
-    void loginTest() throws ExecutionException, InterruptedException {
+    void loginTest() {
         given(jwtProvider.createJwt(any()))
                 .willReturn(JWT);
 

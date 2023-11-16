@@ -12,15 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import static me.jun.blog.ArticleFixture.*;
-import static me.jun.blog.CategoryFixture.*;
+import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
+import static me.jun.blog.CategoryFixture.category;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +47,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void createArticleTest() throws ExecutionException, InterruptedException {
+    void createArticleTest() {
         ArticleResponse expected = articleResponse().toBuilder()
                 .articleId(null)
                 .categoryName(CATEGORY_NAME)
@@ -84,7 +83,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void retrieveArticleTest() throws ExecutionException, InterruptedException {
+    void retrieveArticleTest() {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 
@@ -106,7 +105,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void updateArticleInfoTest() throws ExecutionException, InterruptedException {
+    void updateArticleInfoTest() {
         given(articleRepository.findById(any()))
                 .willReturn(Optional.of(article()));
 

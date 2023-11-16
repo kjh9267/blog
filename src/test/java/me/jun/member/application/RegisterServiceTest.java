@@ -8,8 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.concurrent.ExecutionException;
-
 import static me.jun.member.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,7 +28,7 @@ class RegisterServiceTest {
     }
 
     @Test
-    void registerTest() throws ExecutionException, InterruptedException {
+    void registerTest() {
         given(memberRepository.save(any()))
                 .willReturn(member());
 

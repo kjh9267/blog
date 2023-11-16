@@ -1,6 +1,5 @@
 package me.jun.member.domain.exception;
 
-import me.jun.common.error.ErrorCode;
 import me.jun.support.exception.BusinessException;
 
 import static me.jun.common.error.ErrorCode.INVALID_PASSWORD;
