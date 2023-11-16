@@ -39,15 +39,14 @@ public class CommentService {
     }
 
     public CommentResponse updateComment(CommentUpdateRequest request, String writerEmail) {
-        Comment comment = commentRepository.findById(request.getId())
+        Comment updatedComment = commentRepository.findById(request.getId())
+                .map(comment -> comment.validateWriter(writerEmail))
+                .map(comment -> comment.updateContent(request.getContent()))
                 .orElseThrow(() -> new CommentNotFoundException(request.getId()));
 
-        comment = comment.validateWriter(writerEmail)
-                .updateContent(request.getContent());
+        updatedComment = commentRepository.save(updatedComment);
 
-        comment = commentRepository.save(comment);
-
-        return CommentResponse.from(comment);
+        return CommentResponse.from(updatedComment);
     }
 
     public Long deleteComment(Long id, String writerEmail) {

@@ -24,7 +24,8 @@ public class PostCount {
     @Version
     private Long version;
 
-    public void updateHits() {
+    public PostCount updateHits() {
         this.hits = hits.update();
+        return this;
     }
 }

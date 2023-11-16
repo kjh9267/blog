@@ -36,11 +36,10 @@ public class PostCountService {
     )
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long updateHits(Long postId) {
-        PostCount postCount = postCountRepository.findByPostId(postId)
+        PostCount updatedPostCount = postCountRepository.findByPostId(postId)
+                .map(postCount -> postCount.updateHits())
                 .orElseThrow(() -> new PostCountNotFoundException(postId));
 
-        postCount.updateHits();
-
-        return postCount.getHits().getValue();
+        return updatedPostCount.getHits().getValue();
     }
 }

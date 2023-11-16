@@ -54,17 +54,15 @@ public class PostService {
     @CachePut(cacheNames = "postStore")
     public PostResponse updatePost(PostUpdateRequest dto, String writerEmail) {
         Post requestPost = dto.toEntity();
-        Post post = postRepository.findById(requestPost.getId())
+        Post updatedPost = postRepository.findById(requestPost.getId())
+                .map(post -> post.validateWriter(writerEmail))
+                .map(post -> post.updatePost(
+                        requestPost.getTitle(),
+                        requestPost.getContent()
+                ))
                 .orElseThrow(() -> new PostNotFoundException(requestPost.getId()));
 
-        post.validateWriter(writerEmail);
-
-        post = post.updatePost(
-                requestPost.getTitle(),
-                requestPost.getContent()
-        );
-
-        return PostResponse.of(post);
+        return PostResponse.of(updatedPost);
     }
 
     @CacheEvict(cacheNames = "postStore", key = "#postId")

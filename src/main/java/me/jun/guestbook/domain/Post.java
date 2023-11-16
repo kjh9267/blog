@@ -33,9 +33,10 @@ public class Post {
         return this;
     }
 
-    public void validateWriter(String email) {
+    public Post validateWriter(String email) {
         if (!postWriter.match(email)) {
             throw new PostWriterMismatchException("writer mismatch");
         }
+        return this;
     }
 }

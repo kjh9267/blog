@@ -29,9 +29,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void validate(String password) {
+    public Member validate(String password) {
         if (!this.password.match(password)) {
             throw new WrongPasswordException();
         }
+        return this;
     }
 }
