@@ -8,7 +8,7 @@ import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.blog.application.dto.PagedArticleResponse;
 import me.jun.common.hateoas.LinkCreator;
 import me.jun.member.application.dto.MemberInfo;
-import me.jun.support.Member;
+import me.jun.common.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpEntity;
