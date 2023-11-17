@@ -1,4 +1,4 @@
-package me.jun.support;
+package me.jun.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

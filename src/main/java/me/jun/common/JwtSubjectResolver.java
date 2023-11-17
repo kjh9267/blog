@@ -1,8 +1,7 @@
-package me.jun.support;
+package me.jun.common;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jun.common.MemberExtractor;
 import me.jun.common.security.InvalidTokenException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

@@ -8,7 +8,7 @@ import me.jun.guestbook.application.dto.CommentResponse;
 import me.jun.guestbook.application.dto.CommentUpdateRequest;
 import me.jun.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.member.application.dto.MemberInfo;
-import me.jun.support.Member;
+import me.jun.common.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;

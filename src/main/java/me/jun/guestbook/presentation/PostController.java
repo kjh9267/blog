@@ -9,7 +9,7 @@ import me.jun.guestbook.application.dto.PostCreateRequest;
 import me.jun.guestbook.application.dto.PostResponse;
 import me.jun.guestbook.application.dto.PostUpdateRequest;
 import me.jun.member.application.dto.MemberInfo;
-import me.jun.support.Member;
+import me.jun.common.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package me.jun.common.config;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.common.interceptor.BlogInterceptor;
-import me.jun.support.JwtSubjectResolver;
+import me.jun.common.JwtSubjectResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

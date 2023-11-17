@@ -9,7 +9,7 @@ import me.jun.member.application.dto.MemberInfo;
 import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.MemberResponse;
 import me.jun.member.application.dto.TokenResponse;
-import me.jun.support.Member;
+import me.jun.common.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
