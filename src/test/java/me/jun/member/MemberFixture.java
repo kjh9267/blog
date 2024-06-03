@@ -19,9 +19,15 @@ public abstract class MemberFixture {
 
     public static final String MEMBER_NAME = "test user";
 
+    public static final String ADMIN_NAME = "junho";
+
     public static final String EMAIL = "testuser@email.com";
 
+    public static final String ADMIN_EMAIL = "admin@admin.com";
+
     public static final String PASSWORD = "pass";
+
+    public static final String ADMIN_PASSWORD = "123";
 
     public static final String JWT = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckBlbWFpbC5jb20iLCJpYXQiOjE2Mjk4ODAxMzQsImV4cCI6MTYyOTg4MTkzNH0.k2TUffQCtLTaWJ71JMCU_052ekg32sOsO4tJw8726cQ";
 
@@ -32,6 +38,14 @@ public abstract class MemberFixture {
                 .password(new Password(PASSWORD))
                 .email(EMAIL)
                 .role(USER)
+                .build();
+    }
+
+    public static MemberRequest adminRequest() {
+        return MemberRequest.builder()
+                .name(ADMIN_NAME)
+                .password(ADMIN_PASSWORD)
+                .email(ADMIN_EMAIL)
                 .build();
     }
 

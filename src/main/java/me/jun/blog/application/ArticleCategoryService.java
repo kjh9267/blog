@@ -48,6 +48,6 @@ public class ArticleCategoryService {
 
         Page<Article> articles = articleRepository.findByCategoryId(categoryId, pageRequest);
 
-        return PagedArticleResponse.from(articles, category);
+        return PagedArticleResponse.from(articles);
     }
 }

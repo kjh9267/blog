@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 import static me.jun.blog.ArticleFixture.*;
-import static me.jun.blog.CategoryFixture.CATEGORY_NAME;
 import static me.jun.blog.CategoryFixture.category;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +49,6 @@ public class ArticleServiceTest {
     void createArticleTest() {
         ArticleResponse expected = articleResponse().toBuilder()
                 .articleId(null)
-                .categoryName(CATEGORY_NAME)
                 .build();
 
         // Given
@@ -130,9 +128,6 @@ public class ArticleServiceTest {
     void queryArticlesTest() {
         given(articleRepository.findAll((Pageable) any()))
                 .willReturn(pagedArticle());
-
-        given(categoryService.retrieveCategoryById(any()))
-                .willReturn(category());
 
         PagedArticleResponse response = articleService.queryArticles(PageRequest.of(0, 10));
 
