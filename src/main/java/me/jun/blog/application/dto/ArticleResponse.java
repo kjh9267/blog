@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import me.jun.blog.domain.Article;
-import me.jun.blog.domain.Category;
 import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,22 +21,11 @@ public class ArticleResponse extends RepresentationModel<ArticleResponse> {
 
     private String content;
 
-    private String categoryName;
-
     public static ArticleResponse from(Article article) {
         return ArticleResponse.builder()
                 .articleId(article.getId())
                 .title(article.getArticleInfo().getTitle())
                 .content(article.getArticleInfo().getContent())
-                .build();
-    }
-
-    public static ArticleResponse from(Article article, Category category) {
-        return ArticleResponse.builder()
-                .articleId(article.getId())
-                .title(article.getArticleInfo().getTitle())
-                .content(article.getArticleInfo().getContent())
-                .categoryName(category.getName())
                 .build();
     }
 }

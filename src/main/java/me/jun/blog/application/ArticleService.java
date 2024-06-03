@@ -37,7 +37,7 @@ public class ArticleService {
 
         article = articleRepository.save(article);
 
-        return ArticleResponse.from(article, category);
+        return ArticleResponse.from(article);
     }
 
     @Transactional(readOnly = true)
@@ -65,10 +65,6 @@ public class ArticleService {
     public PagedArticleResponse queryArticles(PageRequest request) {
         Page<Article> articles = articleRepository.findAll(request);
 
-        Page<Category> categories = articles.map(article ->
-                categoryService.retrieveCategoryById(article.getCategoryId())
-        );
-
-        return PagedArticleResponse.from(articles, categories);
+        return PagedArticleResponse.from(articles);
     }
 }

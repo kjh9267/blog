@@ -13,7 +13,7 @@ import static me.jun.member.domain.Role.ADMIN;
 
 @Component
 @RequiredArgsConstructor
-@Profile({"default"})
+@Profile({"default", "test"})
 public class Runner implements ApplicationRunner {
 
     private final MemberRepository memberRepository;
@@ -22,7 +22,7 @@ public class Runner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         Member admin = Member.builder()
                 .name("junho")
-                .email("kjh9267z@naver.com")
+                .email("admin@admin.com")
                 .role(ADMIN)
                 .password(new Password("123"))
                 .build();

@@ -58,7 +58,11 @@ abstract public class ArticleFixture {
     }
 
     public static ArticleResponse articleResponse() {
-        return ArticleResponse.from(article());
+        return ArticleResponse.builder()
+                .articleId(ARTICLE_ID)
+                .title(TITLE)
+                .content(CONTENT)
+                .build();
     }
 
     public static ArticleInfoUpdateRequest articleUpdateRequest() {
@@ -87,7 +91,7 @@ abstract public class ArticleFixture {
     }
 
     public static PagedArticleResponse pagedArticleResponse() {
-        return PagedArticleResponse.from(pagedArticle(), pagedCategory());
+        return PagedArticleResponse.from(pagedArticle());
     }
 
     public static ResultActions expectedJson(ResultActions resultActions) throws Exception {

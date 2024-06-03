@@ -1,5 +1,6 @@
 package me.jun.support;
 
+import me.jun.member.application.dto.MemberRequest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
@@ -35,11 +36,11 @@ public abstract class IntegrationTest {
                 .statusCode(OK.value());
     }
 
-    protected String login() {
+    protected String login(MemberRequest memberRequest) {
         return given()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body(memberRequest())
+                .body(memberRequest)
 
                 .when()
                 .post("/api/member/login")
