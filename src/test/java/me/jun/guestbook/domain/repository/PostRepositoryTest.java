@@ -9,12 +9,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static me.jun.guestbook.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)

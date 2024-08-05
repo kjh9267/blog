@@ -8,12 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static me.jun.guestbook.CommentFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CommentRepositoryTest {
