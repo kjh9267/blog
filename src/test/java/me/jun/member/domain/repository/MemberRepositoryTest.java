@@ -4,6 +4,7 @@ import me.jun.member.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import static me.jun.member.MemberFixture.EMAIL;
 import static me.jun.member.MemberFixture.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @DataJpaTest
 class MemberRepositoryTest {
 
