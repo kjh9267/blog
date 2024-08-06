@@ -17,6 +17,8 @@ function CategoryList({url}) {
 
         const isShowArray = [];
 
+        console.log(response.data)
+
         response.data.categories.map(
             category => {
                 categoryArray.push(category);
@@ -33,12 +35,13 @@ function CategoryList({url}) {
     const showCategories = () => {
         return categories.map(
             (category, index) => {
+                console.log(category, index)
                 return (
                     <div className='title' key={index}>
                         {isShow[index] ?
-                            <Link to={'/category/' + category.categoryName}>
-                                {category.categoryName}
-                                {` (${category.mappedArticleCount})`}
+                            <Link to={'/category/' + category.category_name}>
+                                {category.category_name}
+                                {` (${category.mapped_article_count})`}
                             </Link>
                             : null}
                     </div>
