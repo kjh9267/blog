@@ -18,7 +18,7 @@ function ArticleList({url}) {
         const articleArray = [...articleList];
         const isShowArray = [];
 
-        response.data.articleResponses.content.map(
+        response.data.article_responses.content.map(
             (article, index) => {
                 articleArray.push(article);
                 isShowArray.push(isShow[index]);
@@ -36,7 +36,7 @@ function ArticleList({url}) {
                     <div className="article" key={index}>
                         <div onClick={ChangeVisible} index={index}>
                             <div className="title">{article.title}</div>
-                            <h3>{article.categoryName}</h3>
+                            <h3>{article.category_name}</h3>
                             <div className="content">{isShow[index] === true ? article.content : null}</div>
                         </div>
                     </div>
