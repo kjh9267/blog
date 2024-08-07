@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {getPage} from "../api/getPageApi";
+import {retrievePage} from "../api/retrievePageApi";
 
 function ArticleList({url}) {
 
@@ -9,11 +9,11 @@ function ArticleList({url}) {
 
     const [page, setPage] = useState(0);
 
-    const getArticleList = async () => {
+    const retrieveArticleList = async () => {
 
         setPage(page + 1);
 
-        const response = await getPage({url: url, page: page});
+        const response = await retrievePage({url: url, page: page});
 
         const articleArray = [...articleList];
         const isShowArray = [];
@@ -61,7 +61,7 @@ function ArticleList({url}) {
             <div className="list">
                 {showList()}
             </div>
-            <h2 onClick={getArticleList}>load more</h2>
+            <h2 onClick={retrieveArticleList}>load more</h2>
         </div>
     )
 }
