@@ -1,7 +1,7 @@
 import qs from "qs";
 import axios from "axios";
 
-export const getPage = ({url, page}) => {
+export const retrievePage = ({url, page}) => {
 
     const queryString = qs.stringify(
         {

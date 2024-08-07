@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
-import {getApi} from "../api/getApi";
+import {retrieveApi} from "../api/retrieveApi";
 
 
 function CategoryList({url}) {
@@ -9,9 +9,9 @@ function CategoryList({url}) {
 
     const [isShow, setIsShow] = useState([]);
 
-    const getCategory = async () => {
+    const retrieveCategory = async () => {
 
-        const response = await getApi({url: url});
+        const response = await retrieveApi({url: url});
 
         const categoryArray = [];
 
@@ -53,7 +53,7 @@ function CategoryList({url}) {
     return (
         <div>
             <div className="list">
-                <h2 onClick={getCategory}>
+                <h2 onClick={retrieveCategory}>
                     show categories
                 </h2>
                 {showCategories()}
