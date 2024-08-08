@@ -3,7 +3,7 @@ import {useCookies} from 'react-cookie';
 import Register from './blog/components/Register';
 import Login from './blog/components/Login';
 import Write from './blog/components/Write';
-import ArticleList from './blog/components/ArticleList';
+import ArticleList from './blog/presentation/ArticleList';
 import CategoryList from "./blog/components/CategoryList";
 import {Link, Route, Routes} from 'react-router-dom';
 import CategoryArticleList from "./blog/components/CategoryArticleList";
