@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {writeApi} from "../api/writeApi";
+import {writeService} from "../application/writeService";
 
-function Write({cookie}) {
+function WriteController({cookie}) {
 
     const [title, setTitle] = useState('');
 
@@ -22,14 +22,14 @@ function Write({cookie}) {
     }
 
     const handleSubmit = () => {
-        writeApi({
-            data: {
+        writeService(
+            {
                 'title': title,
                 'content': content,
                 'categoryName': categoryName
             },
-            cookie: cookie
-        })
+            cookie
+        )
     }
 
     return(
@@ -52,4 +52,4 @@ function Write({cookie}) {
     )
 }
 
-export default Write;
+export default WriteController;

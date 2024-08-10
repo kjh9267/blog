@@ -1,7 +1,7 @@
 import axios from "axios";
 import {LOGIN} from "../../support/UrlUtils";
 
-export const loginApi = ({data, setCookie}) => {
+export const loginServiceImpl = (data, setCookie) => {
     axios.post(LOGIN, data)
         .then(response => {
                 console.log(response);

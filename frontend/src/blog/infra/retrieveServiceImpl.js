@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const retrieveApi = ({url}) => {
+export const retrieveServiceImpl = (url) => {
 
     return axios.get(url)
         .then(response => response)

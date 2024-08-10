@@ -1,22 +1,22 @@
 import {useState} from "react";
-import {retrievePage} from "../api/retrievePageApi";
-import {articles, fillTempLists, page, updatePage, updateVisibility, visibilities} from "../domain/articles";
+import {fillTempLists, updatePage, updateVisibility} from "../domain/articles";
+import {retrievePageService} from "../application/retrievePageService";
 
-function ArticleList({url}) {
+function ArticleListController({url}) {
 
-    const [articleList, setArticleList] = useState(articles);
+    const [articleList, setArticleList] = useState([]);
 
-    const [visibilityList, setVisibilityList] = useState(visibilities);
+    const [visibilityList, setVisibilityList] = useState([]);
 
-    const [pageNum, setPageNum] = useState(page);
+    const [pageNum, setPageNum] = useState(0);
 
     const retrieveArticles = async () => {
-        const tempPageNum = updatePage();
+        const tempPageNum = updatePage(pageNum);
         setPageNum(tempPageNum);
 
-        const response = await retrievePage({url: url, page: pageNum});
+        const response = await retrievePageService(url, pageNum);
 
-        const [tempArticleList, tempVisibilityList] = fillTempLists(response.data.article_responses.content)
+        const [tempArticleList, tempVisibilityList] = fillTempLists(response.data.article_responses.content, articleList, visibilityList)
 
         setArticleList(tempArticleList);
         setVisibilityList(tempVisibilityList);
@@ -39,7 +39,7 @@ function ArticleList({url}) {
     }
 
     const changeVisibility = (event) => {
-        const tempVisibilityList = updateVisibility(event);
+        const tempVisibilityList = updateVisibility(event, visibilityList);
         setVisibilityList(tempVisibilityList);
     }
 
@@ -53,4 +53,4 @@ function ArticleList({url}) {
     )
 }
 
-export default ArticleList;
+export default ArticleListController;

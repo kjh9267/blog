@@ -1,7 +1,7 @@
 import axios from "axios";
 import {BLOG_ARTICLE} from "../../support/UrlUtils";
 
-export const writeApi = ({data, cookie}) => {
+export const writeServiceImpl = (data, cookie) => {
         axios.post(BLOG_ARTICLE, data,
             {headers: {'Authorization': cookie['access_token']}}
         )

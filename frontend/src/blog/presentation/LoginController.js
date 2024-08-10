@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {loginApi} from "../api/loginApi";
+import {loginService} from "../application/loginService";
 
-function Login({setCookie}) {
+function LoginController({setCookie}) {
 
     const [email, setEmail] = useState('');
 
@@ -22,14 +22,13 @@ function Login({setCookie}) {
     }
 
     const handleSubmit = async () => {
-        await loginApi(
-            {data:
-                    {
-                        'email': email,
-                        'name': userName,
-                        'password': password
-                    },
-                setCookie: setCookie}
+        await loginService(
+            {
+                'email': email,
+                'name': userName,
+                'password': password
+            },
+            setCookie
         )
     }
 
@@ -54,4 +53,4 @@ function Login({setCookie}) {
 }
 
 
-export default Login;
+export default LoginController;

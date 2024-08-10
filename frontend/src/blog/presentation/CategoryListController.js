@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
-import {retrieveApi} from "../api/retrieveApi";
+import {retrieveService} from "../application/retrieveService";
 
 
-function CategoryList({url}) {
+function CategoryListController({url}) {
 
     const [categories, setCategories] = useState([]);
 
@@ -11,7 +11,7 @@ function CategoryList({url}) {
 
     const retrieveCategory = async () => {
 
-        const response = await retrieveApi({url: url});
+        const response = await retrieveService(url);
 
         const categoryArray = [];
 
@@ -62,4 +62,4 @@ function CategoryList({url}) {
     )
 }
 
-export default CategoryList;
+export default CategoryListController;
