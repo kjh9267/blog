@@ -1,12 +1,6 @@
-export let articles = [];
-
-export let visibilities = [];
-
-export let page = 0;
-
-export const fillTempLists = (values) => {
-    const tempArticles = [...articles];
-    const tempVisibilities = [];
+export const fillTempLists = (values, articleList, visibilityList) => {
+    const tempArticles = [...articleList];
+    const tempVisibilities = [...visibilityList];
 
     values.map((article) => {
             tempArticles.push(article);
@@ -14,24 +8,19 @@ export const fillTempLists = (values) => {
         }
     )
 
-    articles = tempArticles;
-    visibilities = tempVisibilities;
-
     return [tempArticles, tempVisibilities];
 }
 
-export const updateVisibility = (event) => {
-    const tempVisibilities = [...visibilities];
+export const updateVisibility = (event, visibilityList) => {
+    const tempVisibilities = [...visibilityList];
     const index = event.target.getAttribute('index');
     console.log(event.target, index)
 
-    tempVisibilities[index] = !visibilities[index];
-    visibilities = tempVisibilities;
+    tempVisibilities[index] = !tempVisibilities[index];
 
     return tempVisibilities;
 }
 
-export const updatePage = () => {
-    page += 1;
-    return page;
+export const updatePage = (pageNum) => {
+    return pageNum + 1;
 }

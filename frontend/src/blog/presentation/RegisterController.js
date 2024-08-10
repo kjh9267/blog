@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import {registerApi} from "../api/registerApi";
+import {registerService} from "../application/registerService";
 
 
-function Register() {
+function RegisterController() {
 
     const [email, setEmail] = useState('');
 
@@ -23,14 +23,12 @@ function Register() {
     }
 
     const handleSubmit = () => {
-        registerApi({
-            data:
-                {
-                    'email': email,
-                    'name': userName,
-                    'password': password
-                }
-        });
+        registerService(
+            {
+                'email': email,
+                'name': userName,
+                'password': password
+            });
     }
 
     return (
@@ -54,4 +52,4 @@ function Register() {
 }
 
 
-export default Register;
+export default RegisterController;
