@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {retrieveService} from "../application/retrieveService";
 
@@ -17,8 +17,6 @@ function CategoryListController({url}) {
 
         const isShowArray = [];
 
-        console.log(response.data)
-
         response.data.categories.map(
             category => {
                 categoryArray.push(category);
@@ -32,10 +30,13 @@ function CategoryListController({url}) {
         return categories;
     }
 
+    useEffect(() => {
+        retrieveCategory()
+    }, [])
+
     const showCategories = () => {
         return categories.map(
             (category, index) => {
-                console.log(category, index)
                 return (
                     <div className='title' key={index}>
                         {isShow[index] ?
@@ -53,9 +54,6 @@ function CategoryListController({url}) {
     return (
         <div>
             <div className="list">
-                <h2 onClick={retrieveCategory}>
-                    show categories
-                </h2>
                 {showCategories()}
             </div>
         </div>

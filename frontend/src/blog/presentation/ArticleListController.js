@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {fillTempLists, updatePage, updateVisibility} from "../domain/articles";
 import {retrievePageService} from "../application/retrievePageService";
 
@@ -11,16 +11,19 @@ function ArticleListController({url}) {
     const [pageNum, setPageNum] = useState(0);
 
     const retrieveArticles = async () => {
-        const tempPageNum = updatePage(pageNum);
-        setPageNum(tempPageNum);
-
         const response = await retrievePageService(url, pageNum);
-
         const [tempArticleList, tempVisibilityList] = fillTempLists(response.data.article_responses.content, articleList, visibilityList)
 
         setArticleList(tempArticleList);
         setVisibilityList(tempVisibilityList);
+
+        const tempPageNum = updatePage(pageNum);
+        setPageNum(tempPageNum);
     }
+
+    useEffect(() => {
+        retrieveArticles()
+    }, [])
 
     const showList = () => {
         return articleList.map(
