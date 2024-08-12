@@ -7,7 +7,7 @@ function CategoryListController({url}) {
 
     const [categories, setCategories] = useState([]);
 
-    const [isShow, setIsShow] = useState([]);
+    const [visibilityList, setVisibilityList] = useState([]);
 
     const retrieveCategory = async () => {
 
@@ -25,7 +25,7 @@ function CategoryListController({url}) {
         );
 
         setCategories(categoryArray);
-        setIsShow(isShowArray);
+        setVisibilityList(isShowArray);
 
         return categories;
     }
@@ -39,7 +39,7 @@ function CategoryListController({url}) {
             (category, index) => {
                 return (
                     <div className='title' key={index}>
-                        {isShow[index] ?
+                        {visibilityList[index] ?
                             <Link to={'/category/' + category.category_name}>
                                 {category.category_name}
                                 {` (${category.mapped_article_count})`}

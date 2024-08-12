@@ -1,7 +1,7 @@
 import qs from "qs";
 import axios from "axios";
 
-export const retrievePageServiceImpl = (url, page) => {
+export const retrieveArticlesImpl = (url, page) => {
 
     const queryString = qs.stringify(
         {
@@ -9,7 +9,7 @@ export const retrievePageServiceImpl = (url, page) => {
             size: 10
         }
     )
-    console.log(page);
+    console.log("page: ", page);
 
     return axios.get(url + queryString)
         .then(response => response)
