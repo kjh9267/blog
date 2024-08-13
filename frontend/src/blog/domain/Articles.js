@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {Article} from "./Article";
 import {retrieveArticles} from "./repository/articlesRepository";
 
-export function Articles({url}) {
+export function Articles({url, key}) {
     const [articles, setArticles] = useState([])
 
     const [page, setPage] = useState(0);
@@ -29,8 +29,8 @@ export function Articles({url}) {
     return (
         <div className="list">
             {
-                articles.map(article => {
-                    return <Article article={article}/>
+                articles.map((article, index) => {
+                    return <Article article={article} key={index}/>
                 })
             }
             <h2 onClick={appendArticles}>LOAD MORE</h2>

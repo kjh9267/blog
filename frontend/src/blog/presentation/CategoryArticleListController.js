@@ -1,7 +1,7 @@
 import React from "react";
 import {CATEGORY} from "../../support/UrlUtils";
 import {useParams} from "react-router-dom";
-import ArticleListController from "./ArticleListController";
+import {ArticlesService} from "../application/ArticlesService";
 
 function CategoryArticleListController() {
 
@@ -11,7 +11,7 @@ function CategoryArticleListController() {
 
     return (
         <div>
-            <ArticleListController url={CATEGORY + '/' + params.name + '?'}/>
+            <ArticlesService url={CATEGORY + '/' + params.name + '?'}/>
         </div>
     )
 }
