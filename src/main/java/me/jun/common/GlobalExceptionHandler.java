@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> businessExceptionHandler(BusinessException exception) {
-        ErrorResponse errorResponse = ErrorResponse.from(exception, exception.getErrorCode());
+        ErrorResponse errorResponse = ErrorResponse.from(exception.getErrorCode());
 
         return new ResponseEntity<>(
                 errorResponse,

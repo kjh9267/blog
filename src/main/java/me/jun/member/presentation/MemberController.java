@@ -1,15 +1,12 @@
 package me.jun.member.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.common.Member;
 import me.jun.common.hateoas.LinkCreator;
 import me.jun.member.application.LoginService;
 import me.jun.member.application.MemberService;
 import me.jun.member.application.RegisterService;
-import me.jun.member.application.dto.MemberInfo;
-import me.jun.member.application.dto.MemberRequest;
-import me.jun.member.application.dto.MemberResponse;
-import me.jun.member.application.dto.TokenResponse;
-import me.jun.common.Member;
+import me.jun.member.application.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +32,7 @@ public class MemberController {
             produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<MemberResponse> register(@RequestBody @Valid MemberRequest request) {
+    public ResponseEntity<MemberResponse> register(@RequestBody @Valid RegisterRequest request) {
         MemberResponse response = registerService.register(request);
 
         linkCreator.createLink(getClass(), response);
@@ -49,7 +46,7 @@ public class MemberController {
             produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<TokenResponse> login(@RequestBody @Valid MemberRequest request) {
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest request) {
 
         TokenResponse response = loginService.login(request);
 

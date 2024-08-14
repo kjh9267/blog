@@ -41,7 +41,7 @@ public class LoginServiceTest {
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member()));
 
-        assertThat(loginService.login(memberRequest()))
+        assertThat(loginService.login(memberLoginRequest()))
                 .isEqualTo(tokenResponse());
     }
 
@@ -50,7 +50,7 @@ public class LoginServiceTest {
         given(memberRepository.findByEmail(EMAIL)).willReturn(Optional.empty());
 
         assertThrows(MemberNotFoundException.class,
-                () -> loginService.login(memberRequest())
+                () -> loginService.login(memberLoginRequest())
         );
     }
 }

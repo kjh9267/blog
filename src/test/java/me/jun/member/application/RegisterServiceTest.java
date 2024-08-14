@@ -32,7 +32,7 @@ class RegisterServiceTest {
         given(memberRepository.save(any()))
                 .willReturn(member());
 
-        assertThat(registerService.register(memberRequest()))
+        assertThat(registerService.register(memberRegisterRequest()))
                 .isEqualToComparingFieldByField(memberResponse());
     }
 
@@ -42,7 +42,7 @@ class RegisterServiceTest {
                 .willThrow(DuplicatedEmailException.class);
 
         assertThrows(DuplicatedEmailException.class,
-                () -> assertThat(registerService.register(memberRequest()))
+                () -> assertThat(registerService.register(memberRegisterRequest()))
         );
     }
 }

@@ -1,5 +1,10 @@
-import {loginServiceImpl} from "../infra/loginServiceImpl";
+import {Login} from "../domain/Login";
 
-export const loginService = (data, setCookie) => {
-    return loginServiceImpl(data, setCookie)
+export function LoginService({setCookie}) {
+
+    return (
+        <div>
+            <Login setCookie={setCookie}/>
+        </div>
+    )
 }

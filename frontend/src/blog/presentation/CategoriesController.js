@@ -2,7 +2,7 @@ import React from "react";
 import {CategoriesService} from "../application/CategoriesService";
 
 
-function CategoryListController({url}) {
+function CategoriesController({url}) {
 
     return (
         <div>
@@ -11,4 +11,4 @@ function CategoryListController({url}) {
     )
 }
 
-export default CategoryListController;
+export default CategoriesController;
