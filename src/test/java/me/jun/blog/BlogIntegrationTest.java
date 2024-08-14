@@ -7,7 +7,7 @@ import org.springframework.test.annotation.Rollback;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.blog.ArticleFixture.*;
-import static me.jun.member.MemberFixture.adminRequest;
+import static me.jun.member.MemberFixture.adminLoginRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -19,7 +19,7 @@ public class BlogIntegrationTest extends IntegrationTest {
     @Test
     @Rollback(value = false)
     void BlogTest() {
-        String token = login(adminRequest());
+        String token = login(adminLoginRequest());
 
         createArticle(token);
         retrieveArticle(token, 1);

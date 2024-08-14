@@ -60,7 +60,7 @@ public class MemberControllerTest {
 
     @Test
     public void registerTest() throws Exception {
-        String content = objectMapper.writeValueAsString(memberRequest());
+        String content = objectMapper.writeValueAsString(memberRegisterRequest());
 
         given(registerService.register(any()))
                 .willReturn(memberResponse());
@@ -79,7 +79,7 @@ public class MemberControllerTest {
         given(registerService.register(any()))
                 .willThrow(new DuplicatedEmailException(EMAIL));
 
-        String content = objectMapper.writeValueAsString(memberRequest());
+        String content = objectMapper.writeValueAsString(memberRegisterRequest());
 
         mockMvc.perform(post("/api/member/register")
                         .contentType(APPLICATION_JSON)
@@ -94,7 +94,7 @@ public class MemberControllerTest {
         given(loginService.login(any()))
                 .willReturn(TokenResponse.from(jwt));
 
-        String content = objectMapper.writeValueAsString(memberRequest());
+        String content = objectMapper.writeValueAsString(memberRegisterRequest());
 
         mockMvc.perform(post("/api/member/login")
                         .content(content)

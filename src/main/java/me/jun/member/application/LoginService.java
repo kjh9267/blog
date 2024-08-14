@@ -2,7 +2,7 @@ package me.jun.member.application;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.common.security.JwtProvider;
-import me.jun.member.application.dto.MemberRequest;
+import me.jun.member.application.dto.LoginRequest;
 import me.jun.member.application.dto.TokenResponse;
 import me.jun.member.application.exception.MemberNotFoundException;
 import me.jun.member.domain.repository.MemberRepository;
@@ -19,7 +19,7 @@ public class LoginService {
     private final JwtProvider jwtProvider;
 
     @Transactional(readOnly = true)
-    public TokenResponse login(MemberRequest request) {
+    public TokenResponse login(LoginRequest request) {
         String email = request.getEmail();
         memberRepository.findByEmail(email)
                 .map(member -> member.validate(request.getPassword()))

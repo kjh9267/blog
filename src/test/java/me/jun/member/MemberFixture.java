@@ -2,8 +2,9 @@ package me.jun.member;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.jun.member.application.dto.MemberRequest;
+import me.jun.member.application.dto.LoginRequest;
 import me.jun.member.application.dto.MemberResponse;
+import me.jun.member.application.dto.RegisterRequest;
 import me.jun.member.application.dto.TokenResponse;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.Password;
@@ -41,17 +42,31 @@ public abstract class MemberFixture {
                 .build();
     }
 
-    public static MemberRequest adminRequest() {
-        return MemberRequest.builder()
+    public static RegisterRequest adminRegisterRequest() {
+        return RegisterRequest.builder()
                 .name(ADMIN_NAME)
                 .password(ADMIN_PASSWORD)
                 .email(ADMIN_EMAIL)
                 .build();
     }
 
-    public static MemberRequest memberRequest() {
-        return MemberRequest.builder()
+    public static LoginRequest adminLoginRequest() {
+        return LoginRequest.builder()
+                .password(ADMIN_PASSWORD)
+                .email(ADMIN_EMAIL)
+                .build();
+    }
+
+    public static RegisterRequest memberRegisterRequest() {
+        return RegisterRequest.builder()
                 .name(MEMBER_NAME)
+                .password(PASSWORD)
+                .email(EMAIL)
+                .build();
+    }
+
+    public static LoginRequest memberLoginRequest() {
+        return LoginRequest.builder()
                 .password(PASSWORD)
                 .email(EMAIL)
                 .build();

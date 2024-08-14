@@ -3,7 +3,7 @@ import {CATEGORY} from "../../support/UrlUtils";
 import {useParams} from "react-router-dom";
 import {ArticlesService} from "../application/ArticlesService";
 
-function CategoryArticleListController() {
+function CategoryArticlesController() {
 
     const params = useParams();
 
@@ -16,4 +16,4 @@ function CategoryArticleListController() {
     )
 }
 
-export default CategoryArticleListController;
+export default CategoryArticlesController;

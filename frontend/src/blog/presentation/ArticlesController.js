@@ -1,6 +1,6 @@
 import {ArticlesService} from "../application/ArticlesService";
 
-function ArticleListController({url}) {
+function ArticlesController({url}) {
 
     return (
         <div>
@@ -9,4 +9,4 @@ function ArticleListController({url}) {
     )
 }
 
-export default ArticleListController;
+export default ArticlesController;

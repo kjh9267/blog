@@ -1,8 +1,8 @@
 package me.jun.member.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.member.application.dto.MemberRequest;
 import me.jun.member.application.dto.MemberResponse;
+import me.jun.member.application.dto.RegisterRequest;
 import me.jun.member.application.exception.DuplicatedEmailException;
 import me.jun.member.domain.Member;
 import me.jun.member.domain.repository.MemberRepository;
@@ -17,7 +17,7 @@ public class RegisterService {
 
     private final MemberRepository memberRepository;
 
-    public MemberResponse register(MemberRequest request) {
+    public MemberResponse register(RegisterRequest request) {
         Member member = request.toEntity();
         String email = member.getEmail();
 
