@@ -1,13 +1,11 @@
 import axios from "axios";
-import {REGISTER} from "../../support/UrlUtils";
+import {JOIN} from "../../support/UrlUtils";
 
-export const registerServiceImpl = (data) => {
-    axios.post(REGISTER, data)
+export const joinImpl = (data) => {
+    axios.post(JOIN, data)
         .then(response => console.log(response))
         .catch(reason => {
             console.log(reason);
             alert(reason);
         });
 }
-
-

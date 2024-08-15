@@ -1,6 +1,6 @@
 const HOST = 'http://localhost:8080';
 
-const REGISTER = HOST + '/api/member/register';
+const JOIN = HOST + '/api/member/register';
 
 const LOGIN = HOST + '/api/member/login';
 
@@ -17,7 +17,7 @@ const GUESTBOOK_COMMENT = HOST + '/api/guestbook/comments';
 
 export {
     HOST,
-    REGISTER,
+    JOIN,
     LOGIN,
     BLOG_ARTICLE,
     GUESTBOOK_POST,

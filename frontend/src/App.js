@@ -1,6 +1,6 @@
 import './App.css';
 import {useCookies} from 'react-cookie';
-import RegisterController from './blog/presentation/RegisterController';
+import JoinController from './blog/presentation/JoinController';
 import LoginController from './blog/presentation/LoginController';
 import WriteController from './blog/presentation/WriteController';
 import ArticlesController from './blog/presentation/ArticlesController';
@@ -44,7 +44,7 @@ function App() {
             </div>
             <Routes>
                 <Route exact path='/' element={<ArticlesController url={QUERY_BLOG_ARTICLES}/>}/>
-                <Route path='/register' element={<RegisterController/>}/>
+                <Route path='/register' element={<JoinController/>}/>
                 <Route path='/login' element={<LoginController setCookie={setCookie}/>}/>
                 <Route exact path='/category' element={<CategoriesController url={CATEGORY}/>}/>
                 <Route path='/category/:name' element={<CategoryArticlesController/>}/>
