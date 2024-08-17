@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("api/display")
+@RequestMapping("/api/display")
 @RequiredArgsConstructor
 public class DisplayController {
 
@@ -28,6 +28,7 @@ public class DisplayController {
 
         CategoryArticlesResponse response = displayService.retrieveDisplay(page, size);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok()
+                .body(response);
     }
 }

@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 
-export function Article({article}) {
+export function CategoryArticle({article}) {
     const [visibility, setVisibility] = useState(false)
 
     const changeVisibility = () => {
@@ -10,14 +10,11 @@ export function Article({article}) {
 
     return (
         <div className="article">
-            <div>{article[0]}</div>
+            <div>{article.article_id}</div>
             <div onClick={changeVisibility}>
-                title:
-                <div className="title">{article[1]}</div>
-                category:
-                <div className="title">{article[3]}</div>
+                <div className="title">{article.title}</div>
                 <div className="content">
-                    {visibility === true ? article[2] : null}
+                    {visibility === true ? article.content : null}
                 </div>
             </div>
         </div>

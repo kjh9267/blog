@@ -1,10 +1,10 @@
 import {ArticlesService} from "../application/ArticlesService";
 
-function ArticlesController({url}) {
+function ArticlesController() {
 
     return (
         <div>
-            <ArticlesService url={url} />
+            <ArticlesService />
         </div>
     )
 }
