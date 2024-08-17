@@ -1,5 +1,5 @@
 import {retrieveArticlesImpl} from "../../infra/articlesRepositoryImpl";
 
-export const retrieveArticles = (url, page) => {
-    return retrieveArticlesImpl(url, page);
+export const retrieveArticles = (page) => {
+    return retrieveArticlesImpl(page);
 }

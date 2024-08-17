@@ -1,8 +1,8 @@
 import qs from "qs";
 import axios from "axios";
-import {DISPLAY} from "../../support/UrlUtils";
 
-export const retrieveArticlesImpl = (page) => {
+export const retrieveCategoryArticlesImpl = (url, page) => {
+
     const queryString = qs.stringify(
         {
             page: page,
@@ -11,7 +11,7 @@ export const retrieveArticlesImpl = (page) => {
     )
     console.log("page: ", page);
 
-    return axios.get(DISPLAY + '?' + queryString)
+    return axios.get(url + queryString)
         .then(response => response)
         .catch(reason => console.log(reason));
 }

@@ -4,6 +4,8 @@ const JOIN = HOST + '/api/member/register';
 
 const LOGIN = HOST + '/api/member/login';
 
+const DISPLAY = HOST + '/api/display'
+
 const BLOG_ARTICLE = HOST + '/api/blog/articles';
 
 const QUERY_BLOG_ARTICLES = HOST + '/api/blog/articles/query?';
@@ -19,6 +21,7 @@ export {
     HOST,
     JOIN,
     LOGIN,
+    DISPLAY,
     BLOG_ARTICLE,
     GUESTBOOK_POST,
     CATEGORY,

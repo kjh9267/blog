@@ -1,10 +1,11 @@
 import {Articles} from "../domain/Articles";
 
-export function ArticlesService({url}) {
+export function ArticlesService() {
 
     return (
+
         <div>
-            <Articles url={url}/>
+            <Articles />
         </div>
     )
 }

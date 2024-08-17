@@ -1,22 +1,21 @@
 import {useEffect, useState} from "react";
-import {retrieveArticles} from "./repository/articlesRepository";
-import {Article} from "./Article";
+import {CategoryArticle} from "./CategoryArticle";
+import {retrieveCategoryArticles} from "./repository/categoryArticlesRepository";
 
-export function Articles() {
+export function CategoryArticles({url, key}) {
     const [articles, setArticles] = useState([])
 
     const [page, setPage] = useState(0);
 
     const appendArticles = async () => {
-        const response = await retrieveArticles(page);
+        const response = await retrieveCategoryArticles(url, page);
         const articleList = [...articles]
 
-        console.log(response.data)
-
-        response.data.page.content.map(article => {
-            console.log(article)
+        response.data.article_responses.content.map(article => {
             articleList.push(article);
         })
+
+        console.log(response.data)
 
         setArticles(articleList)
         setPage(page + 1);
@@ -31,7 +30,7 @@ export function Articles() {
         <div className="list">
             {
                 articles.map((article, index) => {
-                    return <Article article={article} key={index}/>
+                    return <CategoryArticle article={article} key={index}/>
                 })
             }
             <h2 onClick={appendArticles}>LOAD MORE</h2>
