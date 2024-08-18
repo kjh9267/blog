@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
-import static me.jun.blog.ArticleFixture.ARTICLE_WRITER_EMAIL;
 import static me.jun.blog.ArticleFixture.articleCreateRequest;
+import static me.jun.member.MemberFixture.ADMIN_EMAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -27,8 +27,7 @@ class DisplayRepositoryImplTest {
     void setUp() {
         for (long id = 0; id < 10; id++) {
             ArticleCreateRequest request = articleCreateRequest();
-
-            articleService.createArticle(request, ARTICLE_WRITER_EMAIL);
+            articleService.createArticle(request, ADMIN_EMAIL);
         }
     }
 
