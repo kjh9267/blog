@@ -18,4 +18,6 @@ public class CategoryArticleResponse {
     private String content;
 
     private String categoryName;
+
+    private String writer;
 }
