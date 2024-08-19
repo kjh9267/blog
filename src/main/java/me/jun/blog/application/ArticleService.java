@@ -10,13 +10,13 @@ import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
 import me.jun.blog.domain.repository.ArticleRepository;
 import me.jun.blog.domain.service.CategoryMatchingService;
+import me.jun.common.aop.CreateArticleLockBeforeTransaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ArticleService {
 
@@ -26,11 +26,13 @@ public class ArticleService {
 
     private final CategoryMatchingService categoryMatchingService;
 
+    @CreateArticleLockBeforeTransaction
     public ArticleResponse createArticle(ArticleCreateRequest request, String writerEmail) {
         Article article = request.toArticle()
                 .updateWriterId(writerEmail);
 
         String categoryName = request.getCategoryName();
+
         Category category = categoryService.createCategoryOrElseGet(categoryName);
 
         categoryMatchingService.newMatch(article, category);
@@ -48,6 +50,7 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
+    @Transactional
     public ArticleResponse updateArticleInfo(ArticleInfoUpdateRequest request) {
         Long requestId = request.getId();
 
