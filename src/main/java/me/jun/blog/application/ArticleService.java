@@ -10,7 +10,6 @@ import me.jun.blog.domain.Article;
 import me.jun.blog.domain.Category;
 import me.jun.blog.domain.repository.ArticleRepository;
 import me.jun.blog.domain.service.CategoryMatchingService;
-import me.jun.common.aop.CreateArticleLockBeforeTransaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class ArticleService {
 
     private final CategoryMatchingService categoryMatchingService;
 
-    @CreateArticleLockBeforeTransaction
+    @Transactional
     public ArticleResponse createArticle(ArticleCreateRequest request, String writerEmail) {
         Article article = request.toArticle()
                 .updateWriterId(writerEmail);

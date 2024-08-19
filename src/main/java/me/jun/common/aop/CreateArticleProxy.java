@@ -17,7 +17,7 @@ public class CreateArticleProxy {
 
     private final Lock createArticleLock;
 
-    @Around("execution(* me.jun.blog.application.ArticleService.createArticle(..))")
+    @Around("execution(* me.jun.blog.application.CategoryService.createCategoryOrElseGet(..))")
     public Object lockAdvise(ProceedingJoinPoint proceedingJoinPoint) {
         Object value = null;
 

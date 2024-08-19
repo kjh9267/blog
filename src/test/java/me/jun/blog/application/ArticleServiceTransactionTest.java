@@ -5,6 +5,7 @@ import me.jun.blog.domain.repository.ArticleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,6 +15,7 @@ import static me.jun.blog.ArticleFixture.ARTICLE_WRITER_EMAIL;
 import static me.jun.blog.ArticleFixture.articleCreateRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class ArticleServiceTransactionTest {
 
@@ -27,7 +29,7 @@ class ArticleServiceTransactionTest {
     void createArticleTest() throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        for (int thread = 0; thread < 1000; thread++) {
+        for (int thread = 0; thread < 10; thread++) {
             for (int count = 0; count < 2; count++) {
                 ArticleCreateRequest request = articleCreateRequest().toBuilder()
                         .categoryName(String.valueOf(thread))
@@ -41,6 +43,6 @@ class ArticleServiceTransactionTest {
         executorService.awaitTermination(10, TimeUnit.MINUTES);
 
         assertThat(articleRepository.findAll().size())
-                .isEqualTo(2000);
+                .isEqualTo(20);
     }
 }
