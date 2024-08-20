@@ -30,7 +30,7 @@ public class PostServiceTransactionTest {
 
         postService.createPost(postCreateRequest(), WRITER_EMAIL);
 
-        for (int thread = 0; thread < 9; thread++) {
+        for (int thread = 0; thread < 200; thread++) {
             executorService.execute(
                     () -> {
                         for (int request = 0; request < 10; request++) {
@@ -47,6 +47,6 @@ public class PostServiceTransactionTest {
                 .get();
 
         assertThat(postCount.getHits().getValue())
-                .isEqualTo(90L);
+                .isEqualTo(2000L);
     }
 }
