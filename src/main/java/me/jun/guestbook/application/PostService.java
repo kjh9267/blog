@@ -12,8 +12,10 @@ import me.jun.guestbook.domain.PostWriter;
 import me.jun.guestbook.domain.repository.PostRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +43,10 @@ public class PostService {
         return PostResponse.of(post);
     }
 
-    @Transactional(readOnly = true)
+    @Retryable(
+            maxAttempts = Integer.MAX_VALUE,
+            value = OptimisticLockingFailureException.class
+    )
     public PostResponse retrievePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));

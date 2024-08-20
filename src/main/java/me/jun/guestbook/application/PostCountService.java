@@ -6,10 +6,7 @@ import me.jun.guestbook.application.exception.PostCountNotFoundException;
 import me.jun.guestbook.domain.Hits;
 import me.jun.guestbook.domain.PostCount;
 import me.jun.guestbook.domain.repository.PostCountRepository;
-import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -30,11 +27,6 @@ public class PostCountService {
         return postCount;
     }
 
-    @Retryable(
-            maxAttempts = Integer.MAX_VALUE,
-            value = OptimisticLockingFailureException.class
-    )
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long updateHits(Long postId) {
         PostCount updatedPostCount = postCountRepository.findByPostId(postId)
                 .map(postCount -> postCount.updateHits())
