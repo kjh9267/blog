@@ -25,16 +25,13 @@ class DisplayRepositoryImplTest {
     @Autowired
     private ArticleService articleService;
 
-    @BeforeEach
-    void setUp() {
+    @Test
+    void retrieveDisplayTest() {
         for (long id = 0; id < 10; id++) {
             ArticleCreateRequest request = articleCreateRequest();
             articleService.createArticle(request, ADMIN_EMAIL);
         }
-    }
 
-    @Test
-    void retrieveDisplayTest() {
         Page page = displayRepositoryImpl.retrieveDisplay(0, 10);
 
         assertAll(
