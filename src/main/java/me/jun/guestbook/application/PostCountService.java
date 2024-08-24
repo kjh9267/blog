@@ -29,7 +29,7 @@ public class PostCountService {
 
     public Long updateHits(Long postId) {
         PostCount updatedPostCount = postCountRepository.findByPostId(postId)
-                .map(postCount -> postCount.updateHits())
+                .map(PostCount::updateHits)
                 .orElseThrow(() -> new PostCountNotFoundException(postId));
 
         return updatedPostCount.getHits().getValue();

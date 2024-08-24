@@ -64,7 +64,7 @@ class CategoryMatchingServiceTest {
         // Then
 
         assertThat(article.getCategoryId()).isEqualTo(2L);
-        assertThat(oldCategory.getMappedArticleCount()).isEqualTo(0L);
+        assertThat(oldCategory.getMappedArticleCount()).isZero();
         assertThat(newCategory.getMappedArticleCount()).isEqualTo(2L);
     }
 }

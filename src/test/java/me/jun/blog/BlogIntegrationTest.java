@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class BlogIntegrationTest extends IntegrationTest {
+class BlogIntegrationTest extends IntegrationTest {
 
     @Test
     @Rollback(value = false)
@@ -23,7 +23,7 @@ public class BlogIntegrationTest extends IntegrationTest {
 
         createArticle(token);
         retrieveArticle(token, 1);
-        updateArticle(token, 1);
+        updateArticle(token);
     }
 
     private void createArticle(String token) {
@@ -66,7 +66,7 @@ public class BlogIntegrationTest extends IntegrationTest {
                 .isEqualToComparingFieldByField(articleResponse());
     }
 
-    private void updateArticle(String token, long id) {
+    private void updateArticle(String token) {
         ArticleResponse articleResponse = given()
                 .log().all()
                 .port(port)

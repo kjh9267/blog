@@ -14,20 +14,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class PostTest {
+class PostTest {
 
     @Mock
     private PostWriter postWriter;
 
     @Test
-    public void constructorTest() {
+    void constructorTest() {
         Post post = new Post();
 
         assertThat(post).isInstanceOf(Post.class);
     }
 
     @Test
-    public void constructorTest2() {
+    void constructorTest2() {
         Post expected = Post.builder()
                 .id(POST_ID)
                 .title(TITLE)

@@ -11,6 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 @Getter
+@EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommentResponse extends RepresentationModel<CommentResponse> {

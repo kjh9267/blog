@@ -30,9 +30,9 @@ public class TagController {
             produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<TaggedArticleResponse> AddTag(@RequestBody @Valid AddTagRequest request) {
+    public ResponseEntity<TaggedArticleResponse> createTag(@RequestBody @Valid AddTagRequest request) {
 
-        TaggedArticleResponse response = taggedArticleService.addTagToArticle(request);
+        TaggedArticleResponse response = taggedArticleService.createTagToArticle(request);
 
         linkCreator.createLink(getClass(), response);
 

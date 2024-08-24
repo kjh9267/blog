@@ -4,7 +4,6 @@ import me.jun.blog.domain.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -38,6 +37,8 @@ class CategoryRepositoryTest {
 
     @Test
     void findAllTest() {
+        int expected = 100;
+
         for (long id = 1L; id <= 100; id++) {
             categoryRepository.save(
                     category().toBuilder()
@@ -50,6 +51,6 @@ class CategoryRepositoryTest {
         List<Category> categories = categoryRepository.findAll();
 
         assertThat(categories.size())
-                .isEqualTo(100);
+                .isEqualTo(expected);
     }
 }

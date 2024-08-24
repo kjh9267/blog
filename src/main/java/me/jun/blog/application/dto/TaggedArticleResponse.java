@@ -9,6 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)

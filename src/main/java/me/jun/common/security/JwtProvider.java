@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,7 +12,7 @@ import java.util.Date;
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
 @Component
-@PropertySource("classpath:application.properties")
+@SuppressWarnings("deprecation")
 public class JwtProvider {
 
     private final String secretKey;

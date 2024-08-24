@@ -19,10 +19,12 @@ class DefaultLinkCreatorTest {
 
     @Test
     void createLinkTest() {
+        String expected = "<http://localhost/api/blog/tag>;rel=\"self\"";
+
         PostResponse response = postResponse();
         linkCreator.createLink(TagController.class, response);
 
         assertThat(response.getLink("self").get().toString())
-                .isEqualTo("<http://localhost/api/blog/tag>;rel=\"self\"");
+                .isEqualTo(expected);
     }
 }

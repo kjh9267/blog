@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class MemberControllerTest {
+class MemberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -59,7 +59,7 @@ public class MemberControllerTest {
     }
 
     @Test
-    public void registerTest() throws Exception {
+    void registerTest() throws Exception {
         String content = objectMapper.writeValueAsString(memberRegisterRequest());
 
         given(registerService.register(any()))
@@ -90,7 +90,7 @@ public class MemberControllerTest {
     }
 
     @Test
-    public void loginTest() throws Exception {
+    void loginTest() throws Exception {
         given(loginService.login(any()))
                 .willReturn(TokenResponse.from(jwt));
 

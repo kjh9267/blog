@@ -1,7 +1,6 @@
 package me.jun.common.security;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -19,10 +18,9 @@ import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 
 @Converter
-@PropertySource("classpath:application.properties")
 public class PasswordConverter implements AttributeConverter<String, String> {
 
-    private final String ALGORITHM = "RSA";
+    private static final String ALGORITHM = "RSA";
 
     private PublicKey publicKey;
 
