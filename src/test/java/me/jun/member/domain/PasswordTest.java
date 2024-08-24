@@ -6,7 +6,7 @@ import static me.jun.member.MemberFixture.PASSWORD;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class PasswordTest {
+class PasswordTest {
 
     @Test
     void constructorTest() {

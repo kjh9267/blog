@@ -8,7 +8,6 @@ import me.jun.blog.application.dto.ArticleResponse;
 import me.jun.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.blog.ArticleFixture.articleCreateRequest;
@@ -20,7 +19,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class DisplayIntegrationTest extends IntegrationTest {
+class DisplayIntegrationTest extends IntegrationTest {
 
     private Gson gson;
 

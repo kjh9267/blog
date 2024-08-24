@@ -9,7 +9,7 @@ import static me.jun.member.MemberFixture.memberLoginRequest;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-public class MemberIntegrationTest extends IntegrationTest {
+class MemberIntegrationTest extends IntegrationTest {
 
     @Test
     void memberTest() {

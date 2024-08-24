@@ -1,6 +1,7 @@
 package me.jun.display.application;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.display.application.dto.CategoryArticleResponse;
 import me.jun.display.application.dto.CategoryArticlesResponse;
 import me.jun.display.domain.repository.DisplayRepository;
 import org.springframework.data.domain.Page;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DisplayService {
 
-    private final DisplayRepository displayRepositoryImpl;
+    private final DisplayRepository<CategoryArticleResponse> displayRepositoryImpl;
 
     public CategoryArticlesResponse retrieveDisplay(int page, int size) {
         Page result = displayRepositoryImpl.retrieveDisplay(page, size);

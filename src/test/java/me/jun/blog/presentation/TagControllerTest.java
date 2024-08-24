@@ -67,10 +67,10 @@ class TagControllerTest {
     }
 
     @Test
-    void addTagTest() throws Exception {
+    void createTagTest() throws Exception {
         String content = objectMapper.writeValueAsString(addTagRequest());
 
-        given(taggedArticleService.addTagToArticle(any()))
+        given(taggedArticleService.createTagToArticle(any()))
                 .willReturn(taggedArticleResponse());
 
         mockMvc.perform(post("/api/blog/tag")

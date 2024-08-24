@@ -19,9 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.lang.reflect.Field;
-import java.security.Key;
-
 import static me.jun.guestbook.PostFixture.*;
 import static me.jun.member.MemberFixture.memberResponse;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class PostControllerTest {
+class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,7 +54,7 @@ public class PostControllerTest {
     private String jwt;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         jwt = jwtProvider.createJwt(WRITER_EMAIL);
 
         given(memberService.retrieveMemberBy(any()))
@@ -65,7 +62,7 @@ public class PostControllerTest {
     }
 
     @Test
-    public void createPostTest() throws Exception {
+    void createPostTest() throws Exception {
         String content = objectMapper.writeValueAsString(postCreateRequest());
 
         given(postService.createPost(any(), any()))
@@ -101,7 +98,7 @@ public class PostControllerTest {
     }
 
     @Test
-    public void retrievePostTest() throws Exception {
+    void retrievePostTest() throws Exception {
         given(postService.retrievePost(any()))
                 .willReturn(postResponse());
 
@@ -124,7 +121,7 @@ public class PostControllerTest {
     }
 
     @Test
-    public void updatePostTest() throws Exception {
+    void updatePostTest() throws Exception {
         String content = objectMapper.writeValueAsString(postUpdateRequest());
 
         given(postService.updatePost(any(), any()))
@@ -201,7 +198,7 @@ public class PostControllerTest {
     }
 
     @Test
-    public void deletePostTest() throws Exception {
+    void deletePostTest() throws Exception {
         given(postService.deletePost(any(), any()))
                 .willReturn(POST_ID);
 
@@ -250,12 +247,5 @@ public class PostControllerTest {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(expected));
-    }
-
-    private Key getKey() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        Class<?> resolver = Class.forName("me.jun.common.security.JwtProvider");
-        Field secret_key = resolver.getDeclaredField("SECRET_KEY");
-        secret_key.setAccessible(true);
-        return (Key) secret_key.get(Key.class);
     }
 }

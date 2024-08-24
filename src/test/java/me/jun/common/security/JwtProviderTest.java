@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 import static me.jun.common.security.KeyFixture.JWT_KEY;
 import static me.jun.member.MemberFixture.EMAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JwtProviderTest {
+class JwtProviderTest {
 
     private JwtProvider jwtProvider;
 
@@ -20,10 +21,13 @@ public class JwtProviderTest {
 
     @Test
     void createJwtTest() {
+        int expected = 3;
         String jwt = jwtProvider.createJwt(EMAIL);
 
-        assertThat(jwt.getClass()).isEqualTo(String.class);
-        assertThat(jwt.split("\\.").length).isEqualTo(3);
+        assertAll(
+                () -> assertThat(jwt.getClass()).isEqualTo(String.class),
+                () -> assertThat(jwt.split("\\.").length).isEqualTo(expected)
+        );
     }
 
     @Test

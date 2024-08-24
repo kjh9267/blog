@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class CommentTest {
+class CommentTest {
 
     @Mock
     private CommentWriter commentWriter;

@@ -3,7 +3,6 @@ package me.jun.display.infra;
 import me.jun.blog.application.ArticleService;
 import me.jun.blog.application.dto.ArticleCreateRequest;
 import me.jun.display.domain.repository.DisplayRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +47,7 @@ class DisplayRepositoryImplTest {
 
         assertAll(
                 () -> assertThat(page.getTotalElements())
-                        .isEqualTo(0),
+                        .isZero(),
                 () -> assertThat(page.getTotalPages())
                         .isEqualTo(1)
         );

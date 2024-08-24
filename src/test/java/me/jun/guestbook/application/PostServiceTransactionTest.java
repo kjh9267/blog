@@ -16,7 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class PostServiceTransactionTest {
+class PostServiceTransactionTest {
 
     @Autowired
     private PostService postService;

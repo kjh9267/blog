@@ -27,7 +27,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ArticleServiceTest {
+class ArticleServiceTest {
 
     private ArticleService articleService;
 

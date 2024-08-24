@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class PostRepositoryTest {
+class PostRepositoryTest {
 
     @Autowired
     PostRepository postRepository;

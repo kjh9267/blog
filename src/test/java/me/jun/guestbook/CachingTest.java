@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Component
-public class CachingTest {
+class CachingTest {
 
     @Autowired
     private SlowPostRepository slowPostRepository;

@@ -18,7 +18,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class PostIntegrationTest extends IntegrationTest {
+class PostIntegrationTest extends IntegrationTest {
 
     private Gson gson;
 
@@ -35,7 +35,7 @@ public class PostIntegrationTest extends IntegrationTest {
         token = login(memberLoginRequest());
 
         createPost(token, POST_ID);
-        retrievePost(token);
+        retrievePost();
         updatePost(token);
         deletePost(token);
     }
@@ -95,7 +95,7 @@ public class PostIntegrationTest extends IntegrationTest {
                 );
     }
 
-    private void retrievePost(String token) {
+    private void retrievePost() {
         PostResponse postResponse = given()
                 .log().all()
                 .port(port)
@@ -155,5 +155,7 @@ public class PostIntegrationTest extends IntegrationTest {
                 .statusCode(NOT_FOUND.value())
                 .extract()
                 .as(ErrorResponse.class);
+
+        System.out.println(errorResponse);
     }
 }

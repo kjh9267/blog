@@ -27,9 +27,10 @@ class ArticleServiceTransactionTest {
 
     @Test
     void createArticleTest() throws InterruptedException {
+        int expected = 2_000;
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        for (int thread = 0; thread < 1000; thread++) {
+        for (int thread = 0; thread < 1_000; thread++) {
             for (int count = 0; count < 2; count++) {
                 ArticleCreateRequest request = articleCreateRequest().toBuilder()
                         .categoryName(String.valueOf(thread))
@@ -43,6 +44,6 @@ class ArticleServiceTransactionTest {
         executorService.awaitTermination(10, TimeUnit.MINUTES);
 
         assertThat(articleRepository.findAll().size())
-                .isEqualTo(2000);
+                .isEqualTo(expected);
     }
 }

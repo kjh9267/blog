@@ -37,7 +37,7 @@ class TaggedArticleServiceTest {
     }
 
     @Test
-    void addTagToArticleTest() {
+    void createTagToArticleTest() {
         Tag tag = tag();
         TaggedArticle taggedArticle = taggedArticle();
 
@@ -47,7 +47,7 @@ class TaggedArticleServiceTest {
         given(taggedArticleRepository.findByArticleIdAndTagId(any(), any()))
                 .willReturn(Optional.of(taggedArticle));
 
-        assertThat(taggedArticleService.addTagToArticle(addTagRequest()))
+        assertThat(taggedArticleService.createTagToArticle(addTagRequest()))
                 .isEqualToComparingFieldByField(taggedArticleResponse());
     }
 }

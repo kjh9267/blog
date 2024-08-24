@@ -18,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ActiveProfiles("test")
 @DataJpaTest
-public class ArticleRepositoryTest {
+class ArticleRepositoryTest {
 
     @PersistenceContext
     private EntityManager entityManager;

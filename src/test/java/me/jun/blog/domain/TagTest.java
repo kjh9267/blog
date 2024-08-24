@@ -7,7 +7,7 @@ import static me.jun.blog.TagFixture.tag;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class TagTest {
+class TagTest {
 
     @Test
     void constructorTest() {

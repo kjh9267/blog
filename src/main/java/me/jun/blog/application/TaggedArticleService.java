@@ -18,7 +18,7 @@ public class TaggedArticleService {
 
     private final TagService tagService;
 
-    public TaggedArticleResponse addTagToArticle(AddTagRequest request) {
+    public TaggedArticleResponse createTagToArticle(AddTagRequest request) {
         String tagName = request.getTagName();
         Long articleId = request.getArticleId();
 

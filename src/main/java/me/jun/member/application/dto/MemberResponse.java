@@ -13,6 +13,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 @Builder(toBuilder = true)
 @ToString
+@EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MemberResponse extends RepresentationModel<MemberResponse> {
