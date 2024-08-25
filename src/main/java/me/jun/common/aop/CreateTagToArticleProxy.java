@@ -13,23 +13,23 @@ import java.util.concurrent.locks.Lock;
 @Aspect
 @Component
 @Order(1)
-public class CreateArticleProxy {
+public class CreateTagToArticleProxy {
 
     @Autowired
-    @Qualifier("createArticleLock")
-    private Lock createArticleLock;
+    @Qualifier("createTagToArticleLock")
+    private Lock createTagToArticleLock;
 
-    @Around("execution(* me.jun.blog.application.ArticleService.createArticle(..))")
+    @Around("execution(* me.jun.blog.application.TaggedArticleService.createTagToArticle(..))")
     public Object lockAdvise(ProceedingJoinPoint proceedingJoinPoint) {
         Object value = null;
 
-        createArticleLock.lock();
+        createTagToArticleLock.lock();
         try {
             value = proceedingJoinPoint.proceed();
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        createArticleLock.unlock();
+        createTagToArticleLock.unlock();
 
         return value;
     }
