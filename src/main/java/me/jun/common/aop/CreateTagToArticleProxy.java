@@ -19,7 +19,7 @@ public class CreateTagToArticleProxy {
     @Qualifier("createTagToArticleLock")
     private Lock createTagToArticleLock;
 
-    @Around("execution(* me.jun.blog.application.TaggedArticleService.createTagToArticle(..))")
+    @Around("execution(* me.jun.core.blog.application.TaggedArticleService.createTagToArticle(..))")
     public Object lockAdvise(ProceedingJoinPoint proceedingJoinPoint) {
         Object value = null;
 

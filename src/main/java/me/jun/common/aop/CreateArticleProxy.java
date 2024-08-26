@@ -19,7 +19,7 @@ public class CreateArticleProxy {
     @Qualifier("createArticleLock")
     private Lock createArticleLock;
 
-    @Around("execution(* me.jun.blog.application.ArticleService.createArticle(..))")
+    @Around("execution(* me.jun.core.blog.application.ArticleService.createArticle(..))")
     public Object lockAdvise(ProceedingJoinPoint proceedingJoinPoint) {
         Object value = null;
 

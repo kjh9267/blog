@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jun.common.MemberExtractor;
 import me.jun.common.security.InvalidTokenException;
-import me.jun.member.application.dto.MemberInfo;
+import me.jun.core.member.application.dto.MemberInfo;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static me.jun.member.domain.Role.ADMIN;
+import static me.jun.core.member.domain.Role.ADMIN;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.OPTIONS;
