@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static me.jun.common.security.KeyFixture.JWT_KEY;
-import static me.jun.member.MemberFixture.EMAIL;
+import static me.jun.core.member.MemberFixture.EMAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;

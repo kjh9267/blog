@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static me.jun.common.security.KeyFixture.DB_PRIVATE_KEY;
 import static me.jun.common.security.KeyFixture.DB_PUBLIC_KEY;
-import static me.jun.member.MemberFixture.PASSWORD;
+import static me.jun.core.member.MemberFixture.PASSWORD;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

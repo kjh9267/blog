@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.jun.support.event.Event;
 
-import static me.jun.member.MemberFixture.EMAIL;
+import static me.jun.core.member.MemberFixture.EMAIL;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class EventFixture {

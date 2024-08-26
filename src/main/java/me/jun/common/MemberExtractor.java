@@ -2,9 +2,9 @@ package me.jun.common;
 
 import lombok.RequiredArgsConstructor;
 import me.jun.common.security.JwtProvider;
-import me.jun.member.application.MemberService;
-import me.jun.member.application.dto.MemberInfo;
-import me.jun.member.domain.Role;
+import me.jun.core.member.application.MemberService;
+import me.jun.core.member.application.dto.MemberInfo;
+import me.jun.core.member.domain.Role;
 import org.springframework.stereotype.Component;
 
 @Component

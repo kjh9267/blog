@@ -1,14 +1,14 @@
 package me.jun.support;
 
-import me.jun.member.application.dto.LoginRequest;
+import me.jun.core.member.application.dto.LoginRequest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
-import static me.jun.member.MemberFixture.ACCESS_TOKEN;
-import static me.jun.member.MemberFixture.memberRegisterRequest;
+import static me.jun.core.member.MemberFixture.ACCESS_TOKEN;
+import static me.jun.core.member.MemberFixture.memberRegisterRequest;
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
