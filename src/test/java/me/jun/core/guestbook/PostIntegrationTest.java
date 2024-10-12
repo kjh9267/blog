@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.core.guestbook.PostFixture.*;
-import static me.jun.core.member.MemberFixture.memberLoginRequest;
+import static me.jun.core.member.MemberFixture.adminLoginRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
@@ -32,7 +32,7 @@ class PostIntegrationTest extends IntegrationTest {
     @Test
     void postTest() {
         register();
-        token = login(memberLoginRequest());
+        token = login(adminLoginRequest());
 
         createPost(token, POST_ID);
         retrievePost();
@@ -43,7 +43,7 @@ class PostIntegrationTest extends IntegrationTest {
     @Test
     void postQueryTest() {
         register();
-        token = login(memberLoginRequest());
+        token = login(adminLoginRequest());
 
         for (long id = 1; id <= 30; id++) {
             createPost(token, id);

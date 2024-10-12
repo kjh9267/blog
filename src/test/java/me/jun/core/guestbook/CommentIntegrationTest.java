@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.core.guestbook.CommentFixture.*;
-import static me.jun.core.member.MemberFixture.memberLoginRequest;
+import static me.jun.core.member.MemberFixture.adminLoginRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
@@ -31,7 +31,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void commentTest() {
         register();
-        token = login(memberLoginRequest());
+        token = login(adminLoginRequest());
 
         createComment(token, COMMENT_ID);
         retrieveComment();
@@ -42,7 +42,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void commentQueryTest() {
         register();
-        token = login(memberLoginRequest());
+        token = login(adminLoginRequest());
 
         for (long id = 1; id <= 30; id++) {
             createComment(token, id);

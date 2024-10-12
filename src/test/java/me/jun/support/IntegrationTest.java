@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.core.member.MemberFixture.ACCESS_TOKEN;
-import static me.jun.core.member.MemberFixture.memberRegisterRequest;
+import static me.jun.core.member.MemberFixture.adminRegisterRequest;
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -27,7 +27,7 @@ public abstract class IntegrationTest {
         given()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body(memberRegisterRequest())
+                .body(adminRegisterRequest())
 
                 .when()
                 .post("/api/member/register")
@@ -36,11 +36,11 @@ public abstract class IntegrationTest {
                 .statusCode(OK.value());
     }
 
-    protected String login(LoginRequest registerRequest) {
+    protected String login(LoginRequest loginRequest) {
         return given()
                 .port(port)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body(registerRequest)
+                .body(loginRequest)
 
                 .when()
                 .post("/api/member/login")
