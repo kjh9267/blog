@@ -19,6 +19,7 @@ class BlogIntegrationTest extends IntegrationTest {
     @Test
     @Rollback(value = false)
     void BlogTest() {
+        register();
         String token = login(adminLoginRequest());
 
         createArticle(token);

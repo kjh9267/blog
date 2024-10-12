@@ -7,7 +7,7 @@ import me.jun.core.member.domain.Password;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import static me.jun.core.member.domain.Role.USER;
+import static me.jun.core.member.domain.Role.ADMIN;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,7 +30,7 @@ public class RegisterRequest {
                 .email(this.email)
                 .name(this.name)
                 .password(new Password(password))
-                .role(USER)
+                .role(ADMIN)
                 .build();
     }
 }
