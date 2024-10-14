@@ -21,6 +21,8 @@ public class ArticleCreateRequest {
     @NotBlank
     private String categoryName;
 
+    private Long writerId;
+
     public Article toArticle() {
         ArticleInfo articleInfo = ArticleInfo.builder()
                 .title(title)
@@ -29,6 +31,7 @@ public class ArticleCreateRequest {
 
         return Article.builder()
                 .articleInfo(articleInfo)
+                .writerId(writerId)
                 .build();
     }
 }

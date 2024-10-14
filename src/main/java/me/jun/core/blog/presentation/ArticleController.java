@@ -1,14 +1,14 @@
 package me.jun.core.blog.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.common.Member;
+import me.jun.common.hateoas.LinkCreator;
 import me.jun.core.blog.application.ArticleService;
 import me.jun.core.blog.application.dto.ArticleCreateRequest;
 import me.jun.core.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.core.blog.application.dto.ArticleResponse;
 import me.jun.core.blog.application.dto.PagedArticleResponse;
-import me.jun.common.hateoas.LinkCreator;
 import me.jun.core.member.application.dto.MemberInfo;
-import me.jun.common.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpEntity;
@@ -36,7 +36,11 @@ public class ArticleController {
     public ResponseEntity<ArticleResponse> createArticle(@RequestBody @Valid ArticleCreateRequest request,
                                                                @Member MemberInfo articleWriterInfo) {
 
-        ArticleResponse response = articleService.createArticle(request, articleWriterInfo.getEmail());
+        request = request.toBuilder()
+                .writerId(articleWriterInfo.getId())
+                .build();
+
+        ArticleResponse response = articleService.createArticle(request);
 
         linkCreator.createLink(getClass(), response);
 

@@ -31,10 +31,12 @@ public abstract class PostFixture {
 
     public static final Long POST_ID = 1L;
 
-    public static final String WRITER_EMAIL = "testuser@email.com";
+    public static final String POST_WRITER_EMAIL = "testuser@email.com";
+
+    public static final Long POST_WRITER_ID = 1L;
 
     public static PostWriter postWriter() {
-        return new PostWriter(WRITER_EMAIL);
+        return new PostWriter(POST_WRITER_ID);
     }
 
 
@@ -51,6 +53,7 @@ public abstract class PostFixture {
         return PostCreateRequest.builder()
                 .title(TITLE)
                 .content(CONTENT)
+                .writerId(POST_WRITER_ID)
                 .build();
     }
 
@@ -59,6 +62,7 @@ public abstract class PostFixture {
                 .id(POST_ID)
                 .title(NEW_TITLE)
                 .content(NEW_CONTENT)
+                .writerId(POST_WRITER_ID)
                 .build();
     }
 

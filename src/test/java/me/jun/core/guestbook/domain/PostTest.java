@@ -32,7 +32,7 @@ class PostTest {
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
-                .postWriter(new PostWriter(WRITER_EMAIL))
+                .postWriter(new PostWriter(POST_WRITER_ID))
                 .build();
 
         assertAll(() -> assertThat(expected).isEqualToComparingFieldByField(post()),
@@ -48,7 +48,7 @@ class PostTest {
                 .willReturn(false);
 
         assertThrows(PostWriterMismatchException.class,
-                () -> post.validateWriter("user@email.com")
+                () -> post.validateWriter(2L)
         );
     }
 }

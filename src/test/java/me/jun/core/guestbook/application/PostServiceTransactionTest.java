@@ -11,7 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static me.jun.core.guestbook.PostFixture.*;
+import static me.jun.core.guestbook.PostFixture.POST_ID;
+import static me.jun.core.guestbook.PostFixture.postCreateRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ActiveProfiles("test")
@@ -28,7 +29,7 @@ class PostServiceTransactionTest {
     void concurrent_updatePostCountTest() throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        postService.createPost(postCreateRequest(), WRITER_EMAIL);
+        postService.createPost(postCreateRequest());
 
         for (int thread = 0; thread < 200; thread++) {
             executorService.execute(

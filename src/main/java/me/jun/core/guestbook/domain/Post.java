@@ -33,8 +33,8 @@ public class Post {
         return this;
     }
 
-    public Post validateWriter(String email) {
-        if (!postWriter.match(email)) {
+    public Post validateWriter(Long writerId) {
+        if (!postWriter.match(writerId)) {
             throw new PostWriterMismatchException("writer mismatch");
         }
         return this;

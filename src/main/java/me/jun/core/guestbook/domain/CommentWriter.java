@@ -9,13 +9,13 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @Embeddable
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
 public class CommentWriter {
 
-    @Column(name = "writerEmail")
-    private String email;
+    @Column(name = "writer_id")
+    private Long value;
 
-    public boolean match(String writerEmail) {
-        return writerEmail.equals(email);
+    public boolean match(Long value) {
+        return value.equals(this.value);
     }
 }

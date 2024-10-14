@@ -62,7 +62,7 @@ class CommentControllerTest {
     void createCommentTest() throws Exception {
         String content = objectMapper.writeValueAsString(commentCreateRequest());
 
-        given(commentService.createComment(any(), any()))
+        given(commentService.createComment(any()))
                 .willReturn(commentResponse());
 
         ResultActions resultActions = mockMvc.perform(post("/api/guestbook/comments")
@@ -103,7 +103,7 @@ class CommentControllerTest {
     void updateCommentTest() throws Exception {
         String content = objectMapper.writeValueAsString(commentUpdateRequest());
 
-        given(commentService.updateComment(any(), any()))
+        given(commentService.updateComment(any()))
                 .willReturn(commentResponse());
 
         mockMvc.perform(put("/api/guestbook/comments")

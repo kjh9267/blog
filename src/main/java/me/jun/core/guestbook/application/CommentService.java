@@ -21,9 +21,8 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    public CommentResponse createComment(CommentCreateRequest request, String writerEmail) {
-        Comment comment = request.toEntity()
-                .updateCommentWriter(new CommentWriter(writerEmail));
+    public CommentResponse createComment(CommentCreateRequest request) {
+        Comment comment = request.toEntity();
 
         comment = commentRepository.save(comment);
 
@@ -38,9 +37,9 @@ public class CommentService {
         return CommentResponse.from(comment);
     }
 
-    public CommentResponse updateComment(CommentUpdateRequest request, String writerEmail) {
+    public CommentResponse updateComment(CommentUpdateRequest request) {
         Comment updatedComment = commentRepository.findById(request.getId())
-                .map(comment -> comment.validateWriter(writerEmail))
+                .map(comment -> comment.validateWriter(request.getWriterId()))
                 .map(comment -> comment.updateContent(request.getContent()))
                 .orElseThrow(() -> new CommentNotFoundException(request.getId()));
 
@@ -49,11 +48,11 @@ public class CommentService {
         return CommentResponse.from(updatedComment);
     }
 
-    public Long deleteComment(Long id, String writerEmail) {
+    public Long deleteComment(Long id, Long writerId) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException(id));
 
-        comment.validateWriter(writerEmail);
+        comment.validateWriter(writerId);
 
         commentRepository.deleteById(id);
 
@@ -64,8 +63,8 @@ public class CommentService {
         commentRepository.deleteByPostId(postId);
     }
 
-    public void deleteCommentByWriterEmail(String writerEmail) {
-        commentRepository.deleteAllByCommentWriter(new CommentWriter(writerEmail));
+    public void deleteCommentByWriterId(Long writerId) {
+        commentRepository.deleteAllByCommentWriter(new CommentWriter(writerId));
     }
 
     public PagedCommentsResponse queryCommentsByPostId(Long postId, PageRequest pageRequest) {

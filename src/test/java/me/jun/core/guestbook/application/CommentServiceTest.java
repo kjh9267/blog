@@ -1,6 +1,7 @@
 package me.jun.core.guestbook.application;
 
 import me.jun.core.guestbook.application.dto.CommentResponse;
+import me.jun.core.guestbook.application.dto.CommentUpdateRequest;
 import me.jun.core.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.core.guestbook.application.exception.CommentNotFoundException;
 import me.jun.core.guestbook.domain.exception.CommentWriterMismatchException;
@@ -42,7 +43,7 @@ class CommentServiceTest {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.createComment(commentCreateRequest(), EMAIL))
+        assertThat(commentService.createComment(commentCreateRequest()))
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
@@ -78,7 +79,7 @@ class CommentServiceTest {
         given(commentRepository.save(any()))
                 .willReturn(comment());
 
-        assertThat(commentService.updateComment(commentUpdateRequest(), EMAIL))
+        assertThat(commentService.updateComment(commentUpdateRequest()))
                 .isEqualToComparingFieldByField(commentResponse());
     }
 
@@ -88,7 +89,7 @@ class CommentServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(CommentNotFoundException.class,
-                () -> commentService.updateComment(commentUpdateRequest(), EMAIL));
+                () -> commentService.updateComment(commentUpdateRequest()));
     }
 
     @Test
@@ -96,8 +97,13 @@ class CommentServiceTest {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.of(comment()));
 
-        assertThrows(CommentWriterMismatchException.class,
-                () -> commentService.updateComment(commentUpdateRequest(), "user@email.com"));
+        CommentUpdateRequest request = commentUpdateRequest().toBuilder()
+                .writerId(2L)
+                .build();
+
+        assertThrows(
+                CommentWriterMismatchException.class,
+                () -> commentService.updateComment(request));
     }
 
     @Test
@@ -105,7 +111,7 @@ class CommentServiceTest {
         given(commentRepository.findById(any()))
                 .willReturn(Optional.of(comment()));
 
-        commentService.deleteComment(COMMENT_ID, EMAIL);
+        commentService.deleteComment(COMMENT_ID, COMMENT_WRITER_ID);
 
         verify(commentRepository).deleteById(any());
     }
@@ -116,7 +122,7 @@ class CommentServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(CommentNotFoundException.class,
-                () -> commentService.deleteComment(COMMENT_ID, EMAIL));
+                () -> commentService.deleteComment(COMMENT_ID, COMMENT_WRITER_ID));
     }
 
     @Test
@@ -125,7 +131,7 @@ class CommentServiceTest {
                 .willReturn(Optional.of(comment()));
 
         assertThrows(CommentWriterMismatchException.class,
-                () -> commentService.deleteComment(COMMENT_ID, "user@email.com"));
+                () -> commentService.deleteComment(COMMENT_ID, 2L));
     }
 
     @Test
@@ -143,7 +149,7 @@ class CommentServiceTest {
         doNothing().when(commentRepository)
                 .deleteAllByCommentWriter(any());
 
-        commentService.deleteCommentByWriterEmail(EMAIL);
+        commentService.deleteCommentByWriterId(COMMENT_WRITER_ID);
 
         verify(commentRepository).deleteAllByCommentWriter(commentWriter());
     }

@@ -1,6 +1,7 @@
 package me.jun.core.guestbook.presentation;
 
 import lombok.RequiredArgsConstructor;
+import me.jun.common.Member;
 import me.jun.common.hateoas.LinkCreator;
 import me.jun.core.guestbook.application.CommentService;
 import me.jun.core.guestbook.application.dto.CommentCreateRequest;
@@ -8,7 +9,6 @@ import me.jun.core.guestbook.application.dto.CommentResponse;
 import me.jun.core.guestbook.application.dto.CommentUpdateRequest;
 import me.jun.core.guestbook.application.dto.PagedCommentsResponse;
 import me.jun.core.member.application.dto.MemberInfo;
-import me.jun.common.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +33,15 @@ public class CommentController {
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<CommentResponse> createComment(@RequestBody @Valid CommentCreateRequest request,
-                                                               @Member MemberInfo writer) {
+    public ResponseEntity<CommentResponse> createComment(
+            @RequestBody @Valid CommentCreateRequest request,
+            @Member MemberInfo writer
+    ) {
+        request = request.toBuilder()
+                .writerId(writer.getId())
+                .build();
 
-        CommentResponse response = commentService.createComment(request, writer.getEmail());
+        CommentResponse response = commentService.createComment(request);
 
         linkCreator.createLink(getClass(), response);
 
@@ -67,10 +72,15 @@ public class CommentController {
             consumes = APPLICATION_JSON_VALUE
     )
     public ResponseEntity<CommentResponse>
-        updateComment(@RequestBody @Valid CommentUpdateRequest request,
-                      @Member MemberInfo writerInfo) {
+        updateComment(
+                @RequestBody @Valid CommentUpdateRequest request,
+                @Member MemberInfo writerInfo
+    ) {
+        request = request.toBuilder()
+                .writerId(writerInfo.getId())
+                .build();
 
-        CommentResponse response = commentService.updateComment(request, writerInfo.getEmail());
+        CommentResponse response = commentService.updateComment(request);
 
         linkCreator.createLink(getClass(), response);
 
@@ -82,10 +92,12 @@ public class CommentController {
             value = "/{commentId}",
             produces = APPLICATION_JSON_VALUE
     )
-    ResponseEntity<Void> deleteComment(@PathVariable Long commentId,
-                                             @Member MemberInfo writerInfo) {
+    ResponseEntity<Void> deleteComment(
+            @PathVariable Long commentId,
+            @Member MemberInfo writerInfo
+    ) {
 
-        commentService.deleteComment(commentId, writerInfo.getEmail());
+        commentService.deleteComment(commentId, writerInfo.getId());
 
         return ResponseEntity.noContent()
                 .build();

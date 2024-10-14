@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
+import static me.jun.core.blog.ArticleFixture.articleCreateRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,7 +71,7 @@ class ArticleServiceTest {
 
         // When
 
-        ArticleResponse response = articleService.createArticle(ArticleFixture.articleCreateRequest(), ArticleFixture.ARTICLE_WRITER_EMAIL);
+        ArticleResponse response = articleService.createArticle(articleCreateRequest());
 
         // Then
 

@@ -9,7 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static me.jun.common.event.EventFixture.memberLeaveEvent;
-import static me.jun.core.member.MemberFixture.EMAIL;
+import static me.jun.core.guestbook.CommentFixture.COMMENT_WRITER_ID;
+import static me.jun.core.guestbook.PostFixture.POST_WRITER_ID;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +35,7 @@ class EventHandlerTest {
 
         eventHandler.handleMemberLeaveEvent((MemberLeaveEvent) event);
 
-        verify(postService).deletePostByWriterEmail(EMAIL);
-        verify(commentService).deleteCommentByWriterEmail(EMAIL);
+        verify(postService).deletePostByWriterId(POST_WRITER_ID);
+        verify(commentService).deleteCommentByWriterId(COMMENT_WRITER_ID);
     }
 }

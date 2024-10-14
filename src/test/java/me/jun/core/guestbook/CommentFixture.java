@@ -28,10 +28,12 @@ public abstract class CommentFixture {
 
     public static final String NEW_CONTENT = "new content";
 
-    public static final String EMAIL = "testuser@email.com";
+    public static final String COMMENT_WRITER_EMAIL = "testuser@email.com";
+
+    public static final Long COMMENT_WRITER_ID = 1L;
 
     public static CommentWriter commentWriter() {
-        return new CommentWriter(EMAIL);
+        return new CommentWriter(COMMENT_WRITER_ID);
     }
 
     public static Comment comment() {
@@ -55,6 +57,7 @@ public abstract class CommentFixture {
                 .id(COMMENT_ID)
                 .postId(POST_ID)
                 .content(NEW_CONTENT)
+                .writerId(COMMENT_WRITER_ID)
                 .build();
     }
 

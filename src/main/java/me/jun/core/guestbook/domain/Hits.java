@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode(of = "value")
 public class Hits {
 
-    @Column(name = "hits")
+    @Column(name = "hits", nullable = false)
     private long value;
 
     public Hits update() {

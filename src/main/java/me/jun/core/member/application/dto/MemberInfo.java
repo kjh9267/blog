@@ -9,14 +9,17 @@ import me.jun.core.member.domain.Role;
 @Getter
 public class MemberInfo {
 
+    private Long id;
+
     private String email;
 
     private Role role;
 
-    public static MemberInfo from(String email, Role role) {
+    public static MemberInfo from(MemberResponse memberResponse) {
         return MemberInfo.builder()
-                .email(email)
-                .role(role)
+                .id(memberResponse.getId())
+                .email(memberResponse.getEmail())
+                .role(memberResponse.getRole())
                 .build();
     }
 }

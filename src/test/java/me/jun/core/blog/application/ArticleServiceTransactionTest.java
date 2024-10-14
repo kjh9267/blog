@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static me.jun.core.blog.ArticleFixture.ARTICLE_WRITER_EMAIL;
 import static me.jun.core.blog.ArticleFixture.articleCreateRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -36,7 +35,7 @@ class ArticleServiceTransactionTest {
                         .categoryName(String.valueOf(thread))
                         .build();
 
-                executorService.submit(() -> articleService.createArticle(request, ARTICLE_WRITER_EMAIL));
+                executorService.submit(() -> articleService.createArticle(request));
             }
         }
 

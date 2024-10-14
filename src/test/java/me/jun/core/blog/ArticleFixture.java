@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
+import static me.jun.core.blog.CategoryFixture.CATEGORY_NAME;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +36,7 @@ abstract public class ArticleFixture {
     public static Article article() {
         return Article.builder()
                 .id(ARTICLE_ID)
-                .writerEmail(ARTICLE_WRITER_EMAIL)
+                .writerId(ARTICLE_WRITER_ID)
                 .articleInfo(articleInfo())
                 .categoryId(CategoryFixture.CATEGORY_ID)
                 .build();
@@ -52,7 +53,8 @@ abstract public class ArticleFixture {
         return ArticleCreateRequest.builder()
                 .title(TITLE)
                 .content(CONTENT)
-                .categoryName(CategoryFixture.CATEGORY_NAME)
+                .writerId(ARTICLE_WRITER_ID)
+                .categoryName(CATEGORY_NAME)
                 .build();
     }
 
