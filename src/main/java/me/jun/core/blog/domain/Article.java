@@ -25,16 +25,16 @@ public class Article {
     private Long categoryId;
 
     @Column(nullable = false)
-    private String writerEmail;
+    private Long writerId;
 
     @Embedded
     private ArticleInfo articleInfo;
 
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     @CreatedDate
     private Instant createdAt;
 
-    @Column
+    @Column(nullable = false)
     @LastModifiedDate
     private Instant modifiedAt;
 
@@ -43,8 +43,8 @@ public class Article {
         return this;
     }
 
-    public Article updateWriterId(String writerEmail) {
-        this.writerEmail = writerEmail;
+    public Article updateWriterId(Long writerId) {
+        this.writerId = writerId;
         return this;
     }
 

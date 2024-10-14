@@ -55,7 +55,7 @@ class PostControllerTest {
 
     @BeforeEach
     void setUp() {
-        jwt = jwtProvider.createJwt(WRITER_EMAIL);
+        jwt = jwtProvider.createJwt(POST_WRITER_EMAIL);
 
         given(memberService.retrieveMemberBy(any()))
                 .willReturn(memberResponse());
@@ -65,7 +65,7 @@ class PostControllerTest {
     void createPostTest() throws Exception {
         String content = objectMapper.writeValueAsString(postCreateRequest());
 
-        given(postService.createPost(any(), any()))
+        given(postService.createPost(any()))
                 .willReturn(postResponse());
 
         ResultActions resultActions = mockMvc.perform(post("/api/guestbook/posts")
@@ -124,7 +124,7 @@ class PostControllerTest {
     void updatePostTest() throws Exception {
         String content = objectMapper.writeValueAsString(postUpdateRequest());
 
-        given(postService.updatePost(any(), any()))
+        given(postService.updatePost(any()))
                 .willReturn(postResponse());
 
         mockMvc.perform(put("/api/guestbook/posts")
@@ -146,7 +146,7 @@ class PostControllerTest {
 
         doThrow(new PostNotFoundException(POST_ID))
                 .when(postService)
-                .updatePost(any(), any());
+                .updatePost(any());
 
         mockMvc.perform(put("/api/guestbook/posts")
                         .header(AUTHORIZATION, jwt)
@@ -166,9 +166,9 @@ class PostControllerTest {
 
         String content = objectMapper.writeValueAsString(request);
 
-        doThrow(new PostWriterMismatchException(WRITER_EMAIL))
+        doThrow(new PostWriterMismatchException(POST_WRITER_EMAIL))
                 .when(postService)
-                .updatePost(any(), any());
+                .updatePost(any());
 
         mockMvc.perform(put("/api/guestbook/posts")
                         .header(AUTHORIZATION, jwt)
@@ -224,7 +224,7 @@ class PostControllerTest {
 
     @Test
     void memberMisMatch_deletePostFailTest() throws Exception {
-        doThrow(new PostWriterMismatchException(WRITER_EMAIL))
+        doThrow(new PostWriterMismatchException(POST_WRITER_EMAIL))
                 .when(postService)
                 .deletePost(any(), any());
 

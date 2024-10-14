@@ -1,6 +1,7 @@
 package me.jun.core.guestbook.application;
 
 import me.jun.core.guestbook.application.dto.PagedPostsResponse;
+import me.jun.core.guestbook.application.dto.PostUpdateRequest;
 import me.jun.core.guestbook.application.exception.PostNotFoundException;
 import me.jun.core.guestbook.domain.exception.PostWriterMismatchException;
 import me.jun.core.guestbook.domain.repository.PostRepository;
@@ -51,7 +52,7 @@ class PostServiceTest {
         given(postCountService.createPostCount(any()))
                 .willReturn(postCount());
 
-        assertThat(postService.createPost(postCreateRequest(), WRITER_EMAIL))
+        assertThat(postService.createPost(postCreateRequest()))
                 .isEqualToComparingFieldByField(postResponse());
     }
 
@@ -81,7 +82,7 @@ class PostServiceTest {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
-        assertThat(postService.updatePost(postUpdateRequest(), WRITER_EMAIL))
+        assertThat(postService.updatePost(postUpdateRequest()))
                 .isEqualToComparingFieldByField(updatedPostResponse());
     }
 
@@ -91,7 +92,7 @@ class PostServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class,
-                () -> postService.updatePost(postUpdateRequest(), WRITER_EMAIL)
+                () -> postService.updatePost(postUpdateRequest())
         );
     }
 
@@ -100,8 +101,12 @@ class PostServiceTest {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
 
+        PostUpdateRequest request = postUpdateRequest().toBuilder()
+                .writerId(2L)
+                .build();
+
         assertThrows(PostWriterMismatchException.class,
-                () -> postService.updatePost(postUpdateRequest(), "user@email.com")
+                () -> postService.updatePost(request)
         );
     }
 
@@ -112,7 +117,7 @@ class PostServiceTest {
         doNothing().when(postRepository)
                 .deleteById(any());
 
-        postService.deletePost(POST_ID, WRITER_EMAIL);
+        postService.deletePost(POST_ID, POST_WRITER_ID);
 
         verify(postRepository).deleteById(POST_ID);
         verify(commentService).deleteCommentByPostId(POST_ID);
@@ -123,7 +128,7 @@ class PostServiceTest {
         doNothing().when(postRepository)
                 .deleteAllByPostWriter(postWriter());
 
-        postService.deletePostByWriterEmail(WRITER_EMAIL);
+        postService.deletePostByWriterId(POST_WRITER_ID);
 
         verify(postRepository).deleteAllByPostWriter(postWriter());
     }

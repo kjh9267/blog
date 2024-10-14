@@ -50,10 +50,10 @@ class CachingTest {
 
     @Test
     void updateCacheTest() {
-        postService.createPost(postCreateRequest(), WRITER_EMAIL);
+        postService.createPost(postCreateRequest());
         postService.retrievePost(POST_ID);
 
-        postService.updatePost(postUpdateRequest(), WRITER_EMAIL);
+        postService.updatePost(postUpdateRequest());
 
         Post afterUpdate = (Post) cacheManager.getCache("postStore")
                 .get(POST_ID)
@@ -64,10 +64,10 @@ class CachingTest {
 
     @Test
     void deleteCacheTest() {
-        postService.createPost(postCreateRequest(), WRITER_EMAIL);
+        postService.createPost(postCreateRequest());
         postService.retrievePost(POST_ID);
 
-        postService.deletePost(POST_ID, WRITER_EMAIL);
+        postService.deletePost(POST_ID, POST_WRITER_ID);
 
         assertThrows(
                 NullPointerException.class,
@@ -80,11 +80,11 @@ class CachingTest {
     @Test
     void deleteAllCacheTest() {
         for (int request = 0; request < 10; request++) {
-            postService.createPost(postCreateRequest(), WRITER_EMAIL);
+            postService.createPost(postCreateRequest());
         }
         postService.retrievePost(POST_ID);
 
-        postService.deletePostByWriterEmail(WRITER_EMAIL);
+        postService.deletePostByWriterId(POST_WRITER_ID);
 
         assertThrows(
                 NullPointerException.class,

@@ -26,9 +26,9 @@ public class ArticleService {
     private final CategoryMatchingService categoryMatchingService;
 
     @Transactional
-    public ArticleResponse createArticle(ArticleCreateRequest request, String writerEmail) {
+    public ArticleResponse createArticle(ArticleCreateRequest request) {
         Article article = request.toArticle()
-                .updateWriterId(writerEmail);
+                .updateWriterId(request.getWriterId());
 
         String categoryName = request.getCategoryName();
 

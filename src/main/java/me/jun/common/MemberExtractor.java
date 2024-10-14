@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jun.common.security.JwtProvider;
 import me.jun.core.member.application.MemberService;
 import me.jun.core.member.application.dto.MemberInfo;
-import me.jun.core.member.domain.Role;
+import me.jun.core.member.application.dto.MemberResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,10 +18,8 @@ public class MemberExtractor {
     public MemberInfo extractMemberFrom(String token) {
         jwtProvider.validateToken(token);
         String email = jwtProvider.extractSubject(token);
+        MemberResponse memberResponse = memberService.retrieveMemberBy(email);
 
-        Role role = memberService.retrieveMemberBy(email)
-                .getRole();
-
-        return MemberInfo.from(email, role);
+        return MemberInfo.from(memberResponse);
     }
 }

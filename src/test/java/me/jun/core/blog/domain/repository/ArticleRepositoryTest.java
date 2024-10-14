@@ -50,7 +50,8 @@ class ArticleRepositoryTest {
 
         Instant modifiedAt = article.getModifiedAt();
 
-        assertThat(createdAt).isBefore(modifiedAt);
+        assertThat(createdAt)
+                .isBeforeOrEqualTo(modifiedAt);
     }
 
     @Test

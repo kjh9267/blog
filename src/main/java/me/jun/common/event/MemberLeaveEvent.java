@@ -7,8 +7,8 @@ import me.jun.support.event.Event;
 
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(of = "email")
+@EqualsAndHashCode(of = "id")
 public class MemberLeaveEvent extends Event {
 
-    private final String email;
+    private final Long id;
 }

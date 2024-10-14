@@ -31,10 +31,8 @@ public class PostService {
 
     private final PostCountService postCountService;
 
-    public PostResponse createPost(PostCreateRequest postCreateRequest, String writerEmail) {
+    public PostResponse createPost(PostCreateRequest postCreateRequest) {
         Post post = postCreateRequest.toEntity();
-
-        post.setPostWriter(new PostWriter(writerEmail));
         post = postRepository.save(post);
 
         Long postId = post.getId();
@@ -57,10 +55,10 @@ public class PostService {
     }
 
     @CachePut(cacheNames = "postStore")
-    public PostResponse updatePost(PostUpdateRequest dto, String writerEmail) {
-        Post requestPost = dto.toEntity();
+    public PostResponse updatePost(PostUpdateRequest request) {
+        Post requestPost = request.toEntity();
         Post updatedPost = postRepository.findById(requestPost.getId())
-                .map(post -> post.validateWriter(writerEmail))
+                .map(post -> post.validateWriter(request.getWriterId()))
                 .map(post -> post.updatePost(
                         requestPost.getTitle(),
                         requestPost.getContent()
@@ -71,11 +69,11 @@ public class PostService {
     }
 
     @CacheEvict(cacheNames = "postStore", key = "#postId")
-    public Long deletePost(Long postId, String writerEmail) {
+    public Long deletePost(Long postId, Long writerId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));
 
-        post.validateWriter(writerEmail);
+        post.validateWriter(writerId);
 
         postRepository.deleteById(postId);
         commentService.deleteCommentByPostId(postId);
@@ -83,8 +81,8 @@ public class PostService {
         return postId;
     }
 
-    public void deletePostByWriterEmail(String writerEmail) {
-        PostWriter postWriter = new PostWriter(writerEmail);
+    public void deletePostByWriterId(Long writerId) {
+        PostWriter postWriter = new PostWriter(writerId);
         postRepository.deleteAllByPostWriter(postWriter);
     }
 

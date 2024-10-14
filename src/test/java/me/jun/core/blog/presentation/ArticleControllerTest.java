@@ -1,11 +1,11 @@
 package me.jun.core.blog.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jun.common.security.JwtProvider;
 import me.jun.core.blog.ArticleFixture;
 import me.jun.core.blog.application.ArticleService;
 import me.jun.core.blog.application.dto.ArticleCreateRequest;
 import me.jun.core.blog.application.exception.ArticleNotFoundException;
-import me.jun.common.security.JwtProvider;
 import me.jun.core.member.MemberFixture;
 import me.jun.core.member.application.MemberService;
 import me.jun.core.member.application.dto.MemberResponse;
@@ -19,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static me.jun.core.blog.ArticleFixture.ARTICLE_WRITER_EMAIL;
 import static me.jun.core.member.domain.Role.ADMIN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -52,7 +53,7 @@ class ArticleControllerTest {
 
     @BeforeEach
     void setUp() {
-        jwt = jwtProvider.createJwt(ArticleFixture.ARTICLE_WRITER_EMAIL);
+        jwt = jwtProvider.createJwt(ARTICLE_WRITER_EMAIL);
 
         MemberResponse admin = MemberFixture.memberResponse().toBuilder()
                 .role(ADMIN)
@@ -66,7 +67,7 @@ class ArticleControllerTest {
     void createArticleTest() throws Exception {
         String content = objectMapper.writeValueAsString(ArticleFixture.articleCreateRequest());
 
-        given(articleService.createArticle(any(), any()))
+        given(articleService.createArticle(any()))
                 .willReturn(ArticleFixture.articleResponse());
 
         ResultActions resultActions = mockMvc.perform(

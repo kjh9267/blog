@@ -17,8 +17,8 @@ public class EventHandler {
 
     @EventListener(MemberLeaveEvent.class)
     public void handleMemberLeaveEvent(MemberLeaveEvent event) {
-        String email = event.getEmail();
-        postService.deletePostByWriterEmail(email);
-        commentService.deleteCommentByWriterEmail(email);
+        Long id = event.getId();
+        postService.deletePostByWriterId(id);
+        commentService.deleteCommentByWriterId(id);
     }
 }

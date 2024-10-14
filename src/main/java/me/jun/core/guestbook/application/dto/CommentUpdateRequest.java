@@ -9,7 +9,7 @@ import javax.validation.constraints.Positive;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class CommentUpdateRequest {
 
@@ -24,11 +24,5 @@ public class CommentUpdateRequest {
     @NotBlank
     private String content;
 
-    public Comment toEntity() {
-        return Comment.builder()
-                .id(id)
-                .postId(postId)
-                .content(content)
-                .build();
-    }
+    private Long writerId;
 }

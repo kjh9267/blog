@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 
-import static me.jun.core.member.MemberFixture.ADMIN_EMAIL;
 import static me.jun.core.member.MemberFixture.adminRegisterRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -35,7 +34,7 @@ class DisplayRepositoryImplTest {
 
         for (long id = 0; id < 10; id++) {
             ArticleCreateRequest request = ArticleFixture.articleCreateRequest();
-            articleService.createArticle(request, ADMIN_EMAIL);
+            articleService.createArticle(request);
         }
 
         Page page = displayRepositoryImpl.retrieveDisplay(0, 10);

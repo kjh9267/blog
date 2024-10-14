@@ -15,6 +15,7 @@ import static me.jun.core.member.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,8 +45,16 @@ class MemberServiceTest {
 
     @Test
     void deleteMemberTest() {
+        given(memberRepository.findByEmail(any()))
+                .willReturn(Optional.of(member()));
+
+        doNothing()
+                .when(memberRepository)
+                .deleteByEmail(any());
+
         memberService.deleteMember(EMAIL);
 
+        verify(memberRepository).deleteByEmail(EMAIL);
         verify(eventPublisher).raise(memberLeaveEvent());
     }
 }

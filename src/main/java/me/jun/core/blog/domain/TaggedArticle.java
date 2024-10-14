@@ -16,10 +16,10 @@ public class TaggedArticle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Long articleId;
 
-    @Column
+    @Column(nullable = false)
     private Long tagId;
 
     public TaggedArticle match(Long articleId, Long tagId) {

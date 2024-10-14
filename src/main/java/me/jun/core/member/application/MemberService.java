@@ -30,7 +30,10 @@ public class MemberService {
     }
 
     public void deleteMember(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(email));
+
         memberRepository.deleteByEmail(email);
-        eventPublisher.raise(new MemberLeaveEvent(email));
+        eventPublisher.raise(new MemberLeaveEvent(member.getId()));
     }
 }

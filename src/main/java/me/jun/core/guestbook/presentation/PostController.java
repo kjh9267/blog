@@ -2,6 +2,7 @@ package me.jun.core.guestbook.presentation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jun.common.Member;
 import me.jun.common.hateoas.LinkCreator;
 import me.jun.core.guestbook.application.PostService;
 import me.jun.core.guestbook.application.dto.PagedPostsResponse;
@@ -9,7 +10,6 @@ import me.jun.core.guestbook.application.dto.PostCreateRequest;
 import me.jun.core.guestbook.application.dto.PostResponse;
 import me.jun.core.guestbook.application.dto.PostUpdateRequest;
 import me.jun.core.member.application.dto.MemberInfo;
-import me.jun.common.Member;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +34,16 @@ public class PostController {
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PostResponse> createPost(@RequestBody @Valid PostCreateRequest request,
-                                                         @Member MemberInfo writer) {
+    public ResponseEntity<PostResponse> createPost(
+            @RequestBody @Valid PostCreateRequest request,
+            @Member MemberInfo writer
+    ) {
 
-        PostResponse response = postService.createPost(request, writer.getEmail());
+        request = request.toBuilder()
+                .writerId(writer.getId())
+                .build();
+
+        PostResponse response = postService.createPost(request);
 
         linkCreator.createLink(getClass(), response);
 
@@ -67,10 +73,15 @@ public class PostController {
             produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PostResponse> updatePost(@RequestBody @Valid PostUpdateRequest requestDto,
-                                                         @Member MemberInfo writer) {
+    public ResponseEntity<PostResponse> updatePost(
+            @RequestBody @Valid PostUpdateRequest request,
+            @Member MemberInfo writer
+    ) {
+        request = request.toBuilder()
+                .writerId(writer.getId())
+                .build();
 
-        PostResponse response = postService.updatePost(requestDto, writer.getEmail());
+        PostResponse response = postService.updatePost(request);
 
         linkCreator.createLink(getClass(), response);
 
@@ -82,10 +93,12 @@ public class PostController {
             value = "/{postId}",
             produces = APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId,
-                                                 @Member MemberInfo writer) {
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            @Member MemberInfo writer
+    ) {
 
-        postService.deletePost(postId, writer.getEmail());
+        postService.deletePost(postId, writer.getId());
 
         return ResponseEntity.noContent()
                 .build();

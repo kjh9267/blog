@@ -18,7 +18,7 @@ public class PostCount {
     @Embedded
     private Hits hits;
 
-    @Column
+    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @Version

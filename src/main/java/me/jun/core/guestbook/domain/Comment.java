@@ -20,14 +20,15 @@ public class Comment {
     @Embedded
     private CommentWriter commentWriter;
 
+    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @Column(length = 100, nullable = false)
     private String content;
 
-    public Comment validateWriter(String writerEmail) {
-        if (!commentWriter.match(writerEmail)) {
-            throw new CommentWriterMismatchException(writerEmail);
+    public Comment validateWriter(Long writerId) {
+        if (!commentWriter.match(writerId)) {
+            throw new CommentWriterMismatchException(writerId.toString());
         }
         return this;
     }

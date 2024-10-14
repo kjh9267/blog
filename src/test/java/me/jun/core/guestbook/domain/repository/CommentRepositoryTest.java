@@ -55,7 +55,7 @@ class CommentRepositoryTest {
 
     @Test
     @Rollback(value = false)
-    void deleteAllCommentByWriterIdTest() {
+    void deleteAllCommentByCommentWriterTest() {
         commentRepository.save(comment());
         commentRepository.save(comment().toBuilder().id(2L).build());
         commentRepository.save(comment().toBuilder().id(3L).build());
