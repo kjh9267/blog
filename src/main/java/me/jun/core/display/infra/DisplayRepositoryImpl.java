@@ -21,9 +21,9 @@ public class DisplayRepositoryImpl implements DisplayRepository<CategoryArticleR
     public Page<CategoryArticleResponse> retrieveDisplay(int page, int size) {
         String query = "SELECT /*+ JOIN_FIXED_ORDER() */ " +
                 "a.id, a.title, a.content, c.name, m.name member_name " +
-                "FROM member m " +
-                "JOIN article a " +
-                "ON m.id = a.writer_id " +
+                "FROM article a " +
+                "JOIN member m " +
+                "ON a.writer_id = m.id " +
                 "JOIN category c " +
                 "ON a.category_id = c.id " +
                 "ORDER BY a.id ASC LIMIT ? OFFSET ?";
