@@ -51,12 +51,12 @@ public class ArticleService {
 
     @Transactional
     public ArticleResponse updateArticleInfo(ArticleInfoUpdateRequest request) {
-        Long requestId = request.getId();
+        Long requestId = request.getArticleId();
 
         Article updatedArticle = articleRepository.findById(requestId)
                 .map(article -> article.updateInfo(
-                        request.getTitle(),
-                        request.getContent()
+                        request.getNewTitle(),
+                        request.getNewContent()
                 ))
                 .orElseThrow(() -> new ArticleNotFoundException(requestId));
 

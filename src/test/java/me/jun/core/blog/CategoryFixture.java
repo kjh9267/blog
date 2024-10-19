@@ -1,6 +1,7 @@
 package me.jun.core.blog;
 
 import me.jun.core.blog.application.dto.CategoryListResponse;
+import me.jun.core.blog.application.dto.CategoryOfArticleUpdateRequest;
 import me.jun.core.blog.domain.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,6 +11,8 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
+import static me.jun.core.blog.ArticleFixture.ARTICLE_ID;
+import static me.jun.core.blog.ArticleFixture.ARTICLE_WRITER_ID;
 
 abstract public class CategoryFixture {
 
@@ -47,6 +50,14 @@ abstract public class CategoryFixture {
                                 .build()
                 )
                 .collect(toList());
+    }
+
+    public static CategoryOfArticleUpdateRequest categoryOfArticleUpdateRequest() {
+        return CategoryOfArticleUpdateRequest.builder()
+                .articleId(ARTICLE_ID)
+                .newCategoryName(NEW_CATEGORY_NAME)
+                .writerId(ARTICLE_WRITER_ID)
+                .build();
     }
 
     public static CategoryListResponse categoryListResponse() {

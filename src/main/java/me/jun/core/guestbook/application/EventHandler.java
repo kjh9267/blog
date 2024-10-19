@@ -18,7 +18,7 @@ public class EventHandler {
     @EventListener(MemberLeaveEvent.class)
     public void handleMemberLeaveEvent(MemberLeaveEvent event) {
         Long id = event.getId();
-        postService.deletePostByWriterId(id);
         commentService.deleteCommentByWriterId(id);
+        postService.deletePostByWriterId(id);
     }
 }

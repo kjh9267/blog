@@ -2,10 +2,7 @@ package me.jun.core.guestbook;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.jun.core.guestbook.application.dto.PagedPostsResponse;
-import me.jun.core.guestbook.application.dto.PostCreateRequest;
-import me.jun.core.guestbook.application.dto.PostResponse;
-import me.jun.core.guestbook.application.dto.PostUpdateRequest;
+import me.jun.core.guestbook.application.dto.*;
 import me.jun.core.guestbook.domain.Post;
 import me.jun.core.guestbook.domain.PostWriter;
 import org.springframework.data.domain.PageImpl;
@@ -64,6 +61,10 @@ public abstract class PostFixture {
                 .content(NEW_CONTENT)
                 .writerId(POST_WRITER_ID)
                 .build();
+    }
+
+    public static PostDeleteRequest postDeleteRequest() {
+        return PostDeleteRequest.of(POST_ID, POST_WRITER_ID);
     }
 
     public static PostResponse postResponse() {

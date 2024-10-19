@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
 
+import static me.jun.core.blog.CategoryFixture.categoryOfArticleUpdateRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -72,7 +73,7 @@ class ArticleCategoryServiceTest {
 
         // When
 
-        articleCategoryService.updateCategoryOfArticle(ArticleFixture.articleUpdateRequest());
+        articleCategoryService.updateCategoryOfArticle(categoryOfArticleUpdateRequest());
 
         // Then
 

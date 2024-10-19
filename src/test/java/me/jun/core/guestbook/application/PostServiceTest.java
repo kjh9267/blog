@@ -3,6 +3,8 @@ package me.jun.core.guestbook.application;
 import me.jun.core.guestbook.application.dto.PagedPostsResponse;
 import me.jun.core.guestbook.application.dto.PostUpdateRequest;
 import me.jun.core.guestbook.application.exception.PostNotFoundException;
+import me.jun.core.guestbook.domain.Post;
+import me.jun.core.guestbook.domain.PostWriter;
 import me.jun.core.guestbook.domain.exception.PostWriterMismatchException;
 import me.jun.core.guestbook.domain.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,13 +116,43 @@ class PostServiceTest {
     void deletePostTest() {
         given(postRepository.findById(any()))
                 .willReturn(Optional.of(post()));
+
+        doNothing().when(commentService)
+                .deleteCommentByPostId(any());
+
         doNothing().when(postRepository)
                 .deleteById(any());
 
-        postService.deletePost(POST_ID, POST_WRITER_ID);
+        postService.deletePost(postDeleteRequest());
 
-        verify(postRepository).deleteById(POST_ID);
         verify(commentService).deleteCommentByPostId(POST_ID);
+        verify(postRepository).deleteById(POST_ID);
+    }
+
+    @Test
+    void noPost_deletePostFailTest() {
+        given(postRepository.findById(any()))
+                .willReturn(Optional.empty());
+
+        assertThrows(
+                PostNotFoundException.class,
+                () -> postService.deletePost(postDeleteRequest())
+        );
+    }
+
+    @Test
+    void invalidWriter_deletePostFailTest() {
+        Post post = post().toBuilder()
+                .postWriter(new PostWriter(2L))
+                .build();
+
+        given(postRepository.findById(any()))
+                .willReturn(Optional.of(post));
+
+        assertThrows(
+                PostWriterMismatchException.class,
+                () -> postService.deletePost(postDeleteRequest())
+        );
     }
 
     @Test

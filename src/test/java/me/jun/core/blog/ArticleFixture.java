@@ -68,10 +68,9 @@ abstract public class ArticleFixture {
 
     public static ArticleInfoUpdateRequest articleUpdateRequest() {
         return ArticleInfoUpdateRequest.builder()
-                .id(ARTICLE_ID)
-                .title(NEW_TITLE)
-                .content(NEW_CONTENT)
-                .categoryName(CategoryFixture.NEW_CATEGORY_NAME)
+                .articleId(ARTICLE_ID)
+                .newTitle(NEW_TITLE)
+                .newContent(NEW_CONTENT)
                 .build();
     }
 

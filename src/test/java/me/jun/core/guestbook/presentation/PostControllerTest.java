@@ -199,7 +199,7 @@ class PostControllerTest {
 
     @Test
     void deletePostTest() throws Exception {
-        given(postService.deletePost(any(), any()))
+        given(postService.deletePost(any()))
                 .willReturn(POST_ID);
 
         mockMvc.perform(delete("/api/guestbook/posts/1")
@@ -214,7 +214,7 @@ class PostControllerTest {
     void noPost_deletePostFailTest() throws Exception {
         doThrow(new PostNotFoundException(2L))
                 .when(postService)
-                .deletePost(any(), any());
+                .deletePost(any());
 
         mockMvc.perform(delete("/api/guestbook/posts/2")
                         .header(AUTHORIZATION, jwt))
@@ -226,7 +226,7 @@ class PostControllerTest {
     void memberMisMatch_deletePostFailTest() throws Exception {
         doThrow(new PostWriterMismatchException(POST_WRITER_EMAIL))
                 .when(postService)
-                .deletePost(any(), any());
+                .deletePost(any());
 
         mockMvc.perform(delete("/api/guestbook/posts/1")
                         .header(AUTHORIZATION, jwt))

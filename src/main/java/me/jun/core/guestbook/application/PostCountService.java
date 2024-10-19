@@ -34,4 +34,11 @@ public class PostCountService {
 
         return updatedPostCount.getHits().getValue();
     }
+
+    public void deletePostCount(Long postId) {
+        PostCount postCount = postCountRepository.findByPostId(postId)
+                .get();
+
+        postCountRepository.deleteById(postCount.getId());
+    }
 }

@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jun.common.Member;
 import me.jun.common.hateoas.LinkCreator;
 import me.jun.core.guestbook.application.PostService;
-import me.jun.core.guestbook.application.dto.PagedPostsResponse;
-import me.jun.core.guestbook.application.dto.PostCreateRequest;
-import me.jun.core.guestbook.application.dto.PostResponse;
-import me.jun.core.guestbook.application.dto.PostUpdateRequest;
+import me.jun.core.guestbook.application.dto.*;
 import me.jun.core.member.application.dto.MemberInfo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -98,7 +95,7 @@ public class PostController {
             @Member MemberInfo writer
     ) {
 
-        postService.deletePost(postId, writer.getId());
+        postService.deletePost(PostDeleteRequest.of(postId, writer.getId()));
 
         return ResponseEntity.noContent()
                 .build();

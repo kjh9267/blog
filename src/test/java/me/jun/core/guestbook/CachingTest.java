@@ -67,7 +67,7 @@ class CachingTest {
         postService.createPost(postCreateRequest());
         postService.retrievePost(POST_ID);
 
-        postService.deletePost(POST_ID, POST_WRITER_ID);
+        postService.deletePost(postDeleteRequest());
 
         assertThrows(
                 NullPointerException.class,

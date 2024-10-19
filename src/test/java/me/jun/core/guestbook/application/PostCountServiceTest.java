@@ -17,6 +17,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PostCountServiceTest {
@@ -59,5 +61,20 @@ class PostCountServiceTest {
                 PostCountNotFoundException.class,
                 () -> postCountService.updateHits(POST_ID)
         );
+    }
+
+    @Test
+    void deletePostCountTest() {
+        given(postCountRepository.findByPostId(any()))
+                .willReturn(Optional.of(postCount()));
+
+        doNothing()
+                .when(postCountRepository)
+                .deleteById(any());
+
+        postCountService.deletePostCount(POST_ID);
+
+        verify(postCountRepository)
+                .deleteById(POST_ID);
     }
 }
