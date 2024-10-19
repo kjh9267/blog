@@ -1,8 +1,8 @@
 package me.jun.core.blog.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.core.blog.application.dto.ArticleInfoUpdateRequest;
 import me.jun.core.blog.application.dto.ArticleResponse;
+import me.jun.core.blog.application.dto.CategoryOfArticleUpdateRequest;
 import me.jun.core.blog.application.dto.PagedArticleResponse;
 import me.jun.core.blog.application.exception.ArticleNotFoundException;
 import me.jun.core.blog.domain.Article;
@@ -25,12 +25,12 @@ public class ArticleCategoryService {
 
     private final CategoryMatchingService categoryMatchingService;
 
-    public ArticleResponse updateCategoryOfArticle(ArticleInfoUpdateRequest request) {
-        Long articleId = request.getId();
+    public ArticleResponse updateCategoryOfArticle(CategoryOfArticleUpdateRequest request) {
+        Long articleId = request.getArticleId();
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ArticleNotFoundException(articleId));
 
-        String newCategoryName = request.getCategoryName();
+        String newCategoryName = request.getNewCategoryName();
         Category newCategory = categoryService.createCategoryOrElseGet(newCategoryName);
 
         Long oldCategoryId = article.getCategoryId();

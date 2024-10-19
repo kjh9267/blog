@@ -10,15 +10,14 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class ArticleInfoUpdateRequest {
+public class CategoryOfArticleUpdateRequest {
 
     @NotNull
     @Positive
     private Long articleId;
 
     @NotBlank
-    private String newTitle;
+    private String newCategoryName;
 
-    @NotBlank
-    private String newContent;
+    private Long writerId;
 }

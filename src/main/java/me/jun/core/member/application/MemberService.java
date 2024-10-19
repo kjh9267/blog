@@ -33,7 +33,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(email));
 
-        memberRepository.deleteByEmail(email);
         eventPublisher.raise(new MemberLeaveEvent(member.getId()));
+        memberRepository.deleteByEmail(email);
     }
 }

@@ -2,10 +2,7 @@ package me.jun.core.guestbook.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jun.core.guestbook.application.dto.PagedPostsResponse;
-import me.jun.core.guestbook.application.dto.PostCreateRequest;
-import me.jun.core.guestbook.application.dto.PostResponse;
-import me.jun.core.guestbook.application.dto.PostUpdateRequest;
+import me.jun.core.guestbook.application.dto.*;
 import me.jun.core.guestbook.application.exception.PostNotFoundException;
 import me.jun.core.guestbook.domain.Post;
 import me.jun.core.guestbook.domain.PostWriter;
@@ -68,17 +65,17 @@ public class PostService {
         return PostResponse.of(updatedPost);
     }
 
-    @CacheEvict(cacheNames = "postStore", key = "#postId")
-    public Long deletePost(Long postId, Long writerId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId));
+    @CacheEvict(cacheNames = "postStore", key = "#request.getPostId()")
+    public Long deletePost(PostDeleteRequest request) {
+        Post post = postRepository.findById(request.getPostId())
+                .orElseThrow(() -> new PostNotFoundException(request.getPostId()));
 
-        post.validateWriter(writerId);
+        post.validateWriter(request.getWriterId());
 
-        postRepository.deleteById(postId);
-        commentService.deleteCommentByPostId(postId);
+        commentService.deleteCommentByPostId(request.getPostId());
+        postRepository.deleteById(request.getPostId());
 
-        return postId;
+        return request.getPostId();
     }
 
     public void deletePostByWriterId(Long writerId) {
